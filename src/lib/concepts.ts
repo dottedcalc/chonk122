@@ -1,7 +1,7 @@
 // Lecture concept map for 15-122: three big ideas, three parts, Lectures 1–26.
 // Summaries are trusted static HTML that uses only <b> and <code>.
 
-export type IdeaId = "con" | "inv" | "safe" | "cost" | "ord" | "dc" | "trade" | "rep" | "mem" | "abs" | "run";
+export type IdeaId = "con" | "inv" | "safe" | "cost" | "ord" | "dc" | "rand" | "trade" | "rep" | "mem" | "abs" | "run";
 
 export type Idea = { id: IdeaId; name: string; detail: string };
 
@@ -30,6 +30,7 @@ export const categories: Category[] = [
       { id: "cost", name: "Complexity", detail: "big-O, worst, average, amortized" },
       { id: "ord", name: "Order", detail: "sorted data makes things faster" },
       { id: "dc", name: "Divide & conquer", detail: "halve, recurse, combine" },
+      { id: "rand", name: "Randomness", detail: "random pivots, hashing, average case" },
       { id: "trade", name: "Design trade-offs", detail: "pick the right implementation" },
     ],
   },
@@ -100,7 +101,7 @@ export const lectures: Lecture[] = [
     title: "Quicksort",
     summary:
       "We apply divide and conquer to sorting using <b>recursion</b>. <b>Quicksort</b> is fast on average, but a bad <b>pivot</b> gives it a quadratic <b>worst case</b>. Choosing the pivot <b>randomly</b> makes that unlikely, and <b>mergesort</b> avoids the problem entirely.",
-    ideas: ["dc", "cost", "ord"],
+    ideas: ["dc", "cost", "ord", "rand"],
   },
   {
     n: 8,
@@ -135,14 +136,14 @@ export const lectures: Lecture[] = [
     title: "Hashing",
     summary:
       "A <b>dictionary</b> retrieves a value from its <b>key</b>, and a <b>hash table</b> implements one by turning each key into an array index. Two keys that land on the same index cause a <b>collision</b>, which <b>separate chaining</b> handles, and the <b>average-case</b> cost of a lookup depends on the <b>load factor</b>. When the table gets too full it doubles in size, so the <b>amortized analysis</b> from unbounded arrays applies again. The table works the same way whatever the keys are, so a <b>user-defined type</b> for keys lets the client choose them, which is the first step toward <b>genericity</b>.",
-    ideas: ["cost", "abs", "trade"],
+    ideas: ["cost", "abs", "trade", "rand"],
   },
   {
     n: 13,
     title: "Hash dictionaries",
     summary:
       "A hash table only needs to hash keys and compare them, and both operations depend on the key type. Rather than writing a new library for every key type, we let the <b>client</b> supply the <b>hash</b> and <b>compare</b> functions. The library implements the general behavior once and the client fills in the details, which is why <b>generic</b> libraries make sense. <b>Void pointers</b> (<code>void *</code>) let the library hold elements whose type it does not know.",
-    ideas: ["abs", "mem"],
+    ideas: ["abs", "mem", "rand"],
   },
   {
     n: 14,
@@ -156,14 +157,14 @@ export const lectures: Lecture[] = [
     title: "Binary search trees",
     summary:
       "A <b>binary search tree</b> is built from linked nodes like a linked list, but each node has two children, so a lookup can skip to the correct half as in binary search. Its <b>ordering invariant</b> keeps smaller keys on the left and larger keys on the right. This gives a new way to implement <b>dictionaries</b>, with a steady <b>O(log n)</b> cost when the tree is balanced. A tree can become <b>unbalanced</b> as keys are added, and the next lecture addresses this.",
-    ideas: ["ord", "inv", "cost", "abs"],
+    ideas: ["ord", "inv", "cost", "abs", "dc"],
   },
   {
     n: 16,
     title: "AVL trees",
     summary:
       "An <b>AVL tree</b> adds a <b>height invariant</b> that keeps the tree balanced and guarantees O(log n) operations. <b>Rotations</b> restore the balance after an insertion. The guarantee comes at the price of more complex code and invariants, which is a typical <b>trade-off</b>.",
-    ideas: ["inv", "cost", "trade"],
+    ideas: ["inv", "cost", "trade", "dc"],
   },
   {
     n: 17,

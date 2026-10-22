@@ -70,7 +70,7 @@ a { color: var(--link); }
   border-radius: 255px 18px 225px 18px / 18px 225px 18px 255px;
 }
 
-.container { max-width: 1040px; margin: 0 auto; padding: 20px 16px 72px; }
+.container { max-width: 1040px; margin: 0 auto; padding: 20px 16px 48px; }
 .narrow { max-width: 460px; }
 
 .nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
@@ -95,6 +95,19 @@ a { color: var(--link); }
   text-decoration-thickness: 3px;
   text-underline-offset: 8px;
 }
+.course-name {
+  display: inline-block; margin: 0 0 18px; padding: 4px 14px; white-space: nowrap;
+  font-family: var(--font-hand), "Comic Sans MS", cursive; font-weight: 700; line-height: 1.2;
+  font-size: clamp(1rem, 4.6vw, 1.6rem); color: var(--link);
+  background: var(--card); border: 2.5px solid var(--edge);
+  border-radius: 255px 18px 225px 18px / 18px 225px 18px 255px;
+  box-shadow: 4px 5px 0 var(--green); transform: rotate(-1deg);
+}
+.footer {
+  max-width: 1040px; margin: 0 auto; padding: 18px 16px 32px; text-align: center;
+  border-top: 2px dashed var(--paper-dot); color: var(--muted); font-size: 0.9rem;
+}
+.footer p { margin: 0; }
 .lede { font-size: 1.15rem; color: var(--muted); margin: 0; max-width: 34ch; }
 
 .hero-art { position: relative; padding-bottom: 6%; }
@@ -276,6 +289,9 @@ button.cm-dot.sel { box-shadow: 0 0 0 3px var(--beak); }
 @media (max-width: 480px) {
   .nav-links { gap: 12px; }
   .nav-link { font-size: 1.15rem; }
+  .logo { font-size: 1.45rem; }
+  .logo-honk { width: 34px; height: 41px; }
+  .nav .button.small { font-size: 1.05rem; padding: 5px 12px; }
 }
 @media (max-width: 720px) {
   .cm-cats { grid-template-columns: 1fr; }

@@ -21,14 +21,10 @@ export default function Home() {
 
       <section className="hero">
         <div className="hero-text">
-          <p className="kicker">CMU 15-122 · Principles of Imperative Computation</p>
+          <p className="course-name">Principles of Imperative Computation</p>
           <h1>
-            15-122, but make it <span className="squiggle">chonky.</span>
+            CS122, but made <span className="squiggle">chonky.</span>
           </h1>
-          <p className="lede">
-            Interactive explainers for contracts, pointers and data structures,
-            with Honk and Chonk as your TAs. Coming soon.
-          </p>
         </div>
         <div className="hero-art">
           <Ground className="ground" />
