@@ -60,22 +60,22 @@ export default function Home() {
       </section>
 
       <section className="meet">
-        <h2 className="section-title">Meet the course staff (the fluffy ones)</h2>
+        <h2 className="section-title">Meet your guides</h2>
         <div className="meet-grid">
           <div className="meet-card">
             <Honk className="meet-art" />
             <div>
               <h3>Honk!</h3>
               <p className="tag">Mascot</p>
-              <p>Small, grey and loyal to 15-122. Has never once violated a loop invariant.</p>
+              <p>A small grey goose who loves contracts and has never once broken a loop invariant.</p>
             </div>
           </div>
           <div className="meet-card">
             <Chonk className="meet-art" />
             <div>
               <h3>Chonk</h3>
-              <p className="tag">Mascot&apos;s buddy</p>
-              <p>Human-sized, extremely fluffy and mostly legs. Allocates generously, frees eventually.</p>
+              <p className="tag">Honk!&apos;s best friend</p>
+              <p>A human-sized, extremely fluffy goose who is mostly legs. Allocates memory generously and always frees it.</p>
             </div>
           </div>
         </div>

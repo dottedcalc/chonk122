@@ -223,15 +223,12 @@ button.link:hover { transform: none; box-shadow: none; }
 .cm-subs { display: grid; gap: 7px; }
 button.cm-sub {
   display: grid; gap: 1px; text-align: left; padding: 6px 12px;
-  font-family: var(--font-body), system-ui, sans-serif; font-size: 1rem; font-weight: 400; line-height: 1.35;
+  font-family: var(--font-body), system-ui, sans-serif; font-size: 0.95rem; font-weight: 800; line-height: 1.35;
   color: var(--fg); background: var(--ks); border: 2px solid var(--k);
   border-radius: 14px 6px 12px 8px / 8px 12px 6px 14px; box-shadow: 2px 3px 0 var(--k);
 }
 button.cm-sub:hover { background: var(--ks); box-shadow: 3px 4px 0 var(--k); }
-.cm-sub b { font-size: 0.95rem; font-weight: 800; }
-.cm-sub span { font-size: 0.8rem; color: var(--muted); }
 button.cm-sub[aria-pressed="true"] { background: var(--k); color: var(--card); }
-button.cm-sub[aria-pressed="true"] span { color: var(--card); }
 
 .cm-filterbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; min-height: 34px; margin-top: 18px; }
 button.cm-chip { font-size: 1.05rem; padding: 2px 14px; background: var(--card); color: var(--fg); box-shadow: 2px 3px 0 var(--edge); }

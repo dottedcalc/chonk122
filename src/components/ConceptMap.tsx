@@ -44,8 +44,7 @@ export function ConceptMap() {
                     aria-pressed={filter === idea.id}
                     onClick={() => setFilter(filter === idea.id ? null : idea.id)}
                   >
-                    <b>{idea.name}</b>
-                    <span>{idea.detail}</span>
+                    {idea.name}
                   </button>
                 ))}
               </div>
