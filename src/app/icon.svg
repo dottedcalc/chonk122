@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect x="1" y="1" width="62" height="62" rx="16" fill="#2f7d3b"/>
+  <g stroke="#23251f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Chonk, big and white, at the back -->
+    <path d="M33 64C33 52 32 42 33 34C27 30 27 16 37 11C46 7 56 12 56 22C56 29 51 32 49 35C49 45 50 55 52 64Z" fill="#fffdf6"/>
+    <path d="M33 18C27 18 21 21 18 25C24 27 30 25 35 22Z" fill="#f2902b"/>
+    <!-- Honk, small and grey, in front -->
+    <path d="M14 64C15 56 15 50 16 45C11 42 11 31 19 28C27 25 34 30 33 37C33 42 30 44 29 46C29 52 30 58 31 64Z" fill="#a9aba6"/>
+    <path d="M16 34C11 34 7 36 5 39C10 41 14 40 18 38Z" fill="#f2902b"/>
+  </g>
+  <circle cx="44" cy="18" r="2.6" fill="#23251f"/>
+  <circle cx="24" cy="33" r="2.2" fill="#23251f"/>
+</svg>
