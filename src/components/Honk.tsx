@@ -3,7 +3,7 @@ import { Wobble } from "./Wobble";
 // Honk: the grey goose plush in an "I ♥ 15-122" shirt.
 export function Honk({
   className,
-  title = "Honk",
+  title = "Honk!",
   decorative = false,
 }: {
   className?: string;

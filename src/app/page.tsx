@@ -29,7 +29,7 @@ export default function Home() {
         <div className="hero-art">
           <Ground className="ground" />
           <div className="duo">
-            <HonkButton name="Honk" lines={honkLines}>
+            <HonkButton name="Honk!" lines={honkLines}>
               <Honk className="honk" />
             </HonkButton>
             <HonkButton name="Chonk" lines={chonkLines}>
@@ -65,7 +65,7 @@ export default function Home() {
           <div className="meet-card">
             <Honk className="meet-art" />
             <div>
-              <h3>Honk</h3>
+              <h3>Honk!</h3>
               <p className="tag">Mascot</p>
               <p>Small, grey and loyal to 15-122. Has never once violated a loop invariant.</p>
             </div>
@@ -79,7 +79,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <p className="hint muted">Psst: click the geese up top.</p>
       </section>
     </main>
   );
