@@ -1,95 +1,54 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import { supabaseConfigured } from "@/lib/supabase/config";
 
-export default function Home() {
+const topics = [
+  { title: "Contracts", blurb: "Prove your loops do what you think they do." },
+  { title: "Pointers & memory", blurb: "Watch the heap change as code runs." },
+  { title: "Data structures", blurb: "Stacks, queues, hash tables, BSTs and more." },
+  { title: "C0 → C", blurb: "From safe training wheels to real systems code." },
+];
+
+export default async function Home() {
+  let email: string | undefined;
+  if (supabaseConfigured) {
+    const supabase = await createClient();
+    const { data } = await supabase.auth.getUser();
+    email = data.user?.email;
+  }
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <main className="container">
+      <header className="nav">
+        <span className="logo">chonk122</span>
+        {email ? (
+          <form action="/auth/signout" method="post">
+            <span className="muted">{email}</span>{" "}
+            <button type="submit" className="link">
+              Sign out
+            </button>
+          </form>
+        ) : (
+          <Link href="/login">Sign in</Link>
+        )}
+      </header>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      <section className="hero">
+        <h1>15-122, but make it chonky.</h1>
+        <p>
+          Interactive explainers for CMU&apos;s Principles of Imperative
+          Computation. Coming soon.
+        </p>
+      </section>
+
+      <section className="grid">
+        {topics.map((t) => (
+          <div key={t.title} className="card">
+            <h2>{t.title}</h2>
+            <p>{t.blurb}</p>
+          </div>
+        ))}
+      </section>
+    </main>
   );
 }

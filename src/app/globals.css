@@ -1,42 +1,51 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #fffaf0;
+  --fg: #1f1d1a;
+  --muted: #6b665e;
+  --card: #ffffff;
+  --border: #e8e1d3;
+  --accent: #c41230;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg: #17150f;
+    --fg: #f2ede4;
+    --muted: #a59e92;
+    --card: #221f18;
+    --border: #3a352b;
+    --accent: #ff5a6e;
   }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
+* { box-sizing: border-box; }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
   margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.5;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+a { color: var(--accent); }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-}
+.container { max-width: 960px; margin: 0 auto; padding: 24px 16px 64px; }
+.narrow { max-width: 420px; }
+.nav { display: flex; justify-content: space-between; align-items: center; }
+.logo { font-weight: 800; font-size: 1.2rem; }
+.hero { padding: 64px 0 40px; }
+.hero h1 { font-size: clamp(2rem, 6vw, 3.5rem); margin: 0 0 12px; line-height: 1.1; }
+.hero p { font-size: 1.15rem; color: var(--muted); margin: 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.card h2 { font-size: 1.1rem; margin: 0 0 6px; }
+.card p { margin: 0; color: var(--muted); }
+.muted { color: var(--muted); }
+.back { display: inline-block; margin-bottom: 24px; }
+.login { display: flex; flex-direction: column; gap: 10px; }
+.login input { padding: 10px 12px; font: inherit; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--fg); }
+button { font: inherit; padding: 10px 14px; border: 0; border-radius: 8px; background: var(--accent); color: #fff; cursor: pointer; }
+button:disabled { opacity: 0.6; }
+button.link { background: none; color: var(--accent); padding: 0; text-decoration: underline; }
+.error { color: var(--accent); }
