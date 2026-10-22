@@ -1,12 +1,17 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { supabaseConfigured } from "@/lib/supabase/config";
+import { Honk } from "@/components/Honk";
+import { Chonk } from "@/components/Chonk";
+import { Fence } from "@/components/Fence";
+import { HonkButton } from "@/components/HonkButton";
+import { ContractDoodle, EggDoodle, PointerDoodle, TreeDoodle } from "@/components/Doodles";
 
 const topics = [
-  { title: "Contracts", blurb: "Prove your loops do what you think they do." },
-  { title: "Pointers & memory", blurb: "Watch the heap change as code runs." },
-  { title: "Data structures", blurb: "Stacks, queues, hash tables, BSTs and more." },
-  { title: "C0 → C", blurb: "From safe training wheels to real systems code." },
+  { title: "Contracts", blurb: "Prove your loops do what you think they do.", Doodle: ContractDoodle },
+  { title: "Pointers & memory", blurb: "Watch the heap change as code runs.", Doodle: PointerDoodle },
+  { title: "Data structures", blurb: "Stacks, queues, hash tables, BSTs and more.", Doodle: TreeDoodle },
+  { title: "C0 → C", blurb: "From safe training wheels to real systems code.", Doodle: EggDoodle },
 ];
 
 export default async function Home() {
@@ -20,34 +25,84 @@ export default async function Home() {
   return (
     <main className="container">
       <header className="nav">
-        <span className="logo">chonk122</span>
+        <Link href="/" className="logo">
+          <Honk className="logo-honk" decorative />
+          chonk122
+        </Link>
         {email ? (
-          <form action="/auth/signout" method="post">
-            <span className="muted">{email}</span>{" "}
+          <form action="/auth/signout" method="post" className="who">
+            <span className="muted">{email}</span>
             <button type="submit" className="link">
               Sign out
             </button>
           </form>
         ) : (
-          <Link href="/login">Sign in</Link>
+          <Link href="/login" className="button small">
+            Sign in
+          </Link>
         )}
       </header>
 
       <section className="hero">
-        <h1>15-122, but make it chonky.</h1>
-        <p>
-          Interactive explainers for CMU&apos;s Principles of Imperative
-          Computation. Coming soon.
-        </p>
+        <div className="hero-text">
+          <p className="kicker">CMU 15-122 · Principles of Imperative Computation</p>
+          <h1>
+            15-122, but make it <span className="squiggle">chonky.</span>
+          </h1>
+          <p className="lede">
+            Interactive explainers for contracts, pointers and data structures,
+            with Honk and Chonk as your TAs. Coming soon.
+          </p>
+        </div>
+        <div className="hero-art">
+          <Fence className="fence" />
+          <div className="duo">
+            <HonkButton name="Honk">
+              <Honk className="honk" />
+            </HonkButton>
+            <HonkButton name="Chonk">
+              <Chonk className="chonk" />
+            </HonkButton>
+          </div>
+        </div>
       </section>
 
-      <section className="grid">
-        {topics.map((t) => (
-          <div key={t.title} className="card">
-            <h2>{t.title}</h2>
-            <p>{t.blurb}</p>
+      <section>
+        <h2 className="section-title">What you&apos;ll poke at</h2>
+        <div className="grid">
+          {topics.map(({ title, blurb, Doodle }) => (
+            <div key={title} className="card">
+              <div className="doodle">
+                <Doodle />
+              </div>
+              <h3>{title}</h3>
+              <p>{blurb}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="meet">
+        <h2 className="section-title">Meet the course staff (the fluffy ones)</h2>
+        <div className="meet-grid">
+          <div className="meet-card">
+            <Honk className="meet-art" />
+            <div>
+              <h3>Honk</h3>
+              <p className="tag">Mascot</p>
+              <p>Small, grey and loyal to 15-122. Has never once violated a loop invariant.</p>
+            </div>
           </div>
-        ))}
+          <div className="meet-card">
+            <Chonk className="meet-art" />
+            <div>
+              <h3>Chonk</h3>
+              <p className="tag">Mascot&apos;s buddy</p>
+              <p>Large, white and mostly legs. Allocates generously, frees eventually.</p>
+            </div>
+          </div>
+        </div>
+        <p className="hint muted">Psst: click the geese up top.</p>
       </section>
     </main>
   );
