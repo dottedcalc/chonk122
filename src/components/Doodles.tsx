@@ -11,7 +11,7 @@ export function ContractDoodle() {
     <svg viewBox="0 0 64 64" aria-hidden="true" {...ink}>
       <path d="M14 10C26 8 40 9 50 11C49 26 50 42 52 54C40 56 26 55 13 53C15 40 15 24 14 10Z" fill="var(--goose)" />
       <path d="M21 22C28 21 36 22 43 21M21 31C27 30 33 31 38 30" fill="none" strokeWidth="2.2" />
-      <path d="M22 43C25 46 27 48 29 49C33 43 38 38 44 34" fill="none" stroke="var(--fence)" strokeWidth="4" />
+      <path d="M22 43C25 46 27 48 29 49C33 43 38 38 44 34" fill="none" stroke="var(--green)" strokeWidth="4" />
     </svg>
   );
 }
@@ -32,7 +32,7 @@ export function TreeDoodle() {
   return (
     <svg viewBox="0 0 64 64" aria-hidden="true" {...ink}>
       <path d="M32 18C25 28 19 36 15 44M32 18C38 28 44 36 49 44M15 44C12 50 10 54 9 57M15 44C18 50 21 54 23 57" fill="none" />
-      <circle cx="32" cy="14" r="7" fill="var(--fence)" />
+      <circle cx="32" cy="14" r="7" fill="var(--green)" />
       <circle cx="15" cy="44" r="6" fill="var(--goose)" />
       <circle cx="49" cy="44" r="6" fill="var(--goose)" />
       <circle cx="9" cy="57" r="4" fill="var(--beak)" />

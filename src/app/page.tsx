@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { supabaseConfigured } from "@/lib/supabase/config";
 import { Honk } from "@/components/Honk";
 import { Chonk } from "@/components/Chonk";
-import { Fence } from "@/components/Fence";
+import { Ground } from "@/components/Ground";
 import { HonkButton } from "@/components/HonkButton";
 import { ContractDoodle, EggDoodle, PointerDoodle, TreeDoodle } from "@/components/Doodles";
 
@@ -55,7 +55,7 @@ export default async function Home() {
           </p>
         </div>
         <div className="hero-art">
-          <Fence className="fence" />
+          <Ground className="ground" />
           <div className="duo">
             <HonkButton name="Honk">
               <Honk className="honk" />
@@ -98,7 +98,7 @@ export default async function Home() {
             <div>
               <h3>Chonk</h3>
               <p className="tag">Mascot&apos;s buddy</p>
-              <p>Large, white and mostly legs. Allocates generously, frees eventually.</p>
+              <p>Human-sized, extremely fluffy and mostly legs. Allocates generously, frees eventually.</p>
             </div>
           </div>
         </div>

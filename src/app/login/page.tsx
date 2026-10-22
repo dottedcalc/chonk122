@@ -52,7 +52,7 @@ export default function LoginPage() {
       <div className="login-card">
         <Chonk className="login-chonk" />
         <h1>Sign in</h1>
-        <p className="muted">Chonk needs to see your Andrew ID before letting you on the fence.</p>
+        <p className="muted">Chonk needs to see your Andrew ID before letting you in.</p>
         <Suspense>
           <LoginForm />
         </Suspense>
