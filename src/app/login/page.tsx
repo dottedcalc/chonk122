@@ -1,55 +1,57 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { supabaseConfigured } from "@/lib/supabase/config";
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle",
-  );
+const errors: Record<string, string> = {
+  domain: "Please sign in with your CMU account (@andrew.cmu.edu).",
+  "1": "Sign-in didn't finish. Try again in a minute.",
+};
 
-  async function sendLink(e: React.FormEvent) {
-    e.preventDefault();
-    setStatus("sending");
-    const { error } = await createClient().auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+function LoginForm() {
+  const error = useSearchParams().get("error");
+  const [loading, setLoading] = useState(false);
+
+  async function signInWithCmu() {
+    setLoading(true);
+    // CMU accounts live in Microsoft Entra ID; Supabase calls this provider "azure".
+    const { error } = await createClient().auth.signInWithOAuth({
+      provider: "azure",
+      options: {
+        scopes: "email",
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
     });
-    setStatus(error ? "error" : "sent");
+    if (error) setLoading(false);
   }
 
+  if (!supabaseConfigured) {
+    return <p className="muted">Sign-in isn&apos;t switched on yet. Check back soon!</p>;
+  }
+
+  return (
+    <div className="login">
+      <button type="button" onClick={signInWithCmu} disabled={loading}>
+        {loading ? "Redirecting…" : "Sign in with CMU (Andrew ID)"}
+      </button>
+      {error && <p className="error">{errors[error] ?? errors["1"]}</p>}
+    </div>
+  );
+}
+
+export default function LoginPage() {
   return (
     <main className="container narrow">
       <Link href="/" className="back">
         ← chonk122
       </Link>
       <h1>Sign in</h1>
-      {!supabaseConfigured ? (
-        <p className="muted">Sign-in isn&apos;t switched on yet. Check back soon!</p>
-      ) : status === "sent" ? (
-        <p>Check {email} for a sign-in link. 🪿</p>
-      ) : (
-        <form onSubmit={sendLink} className="login">
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@andrew.cmu.edu"
-          />
-          <button type="submit" disabled={status === "sending"}>
-            {status === "sending" ? "Sending…" : "Email me a link"}
-          </button>
-          {status === "error" && (
-            <p className="error">That didn&apos;t work. Try again in a minute.</p>
-          )}
-        </form>
-      )}
+      <Suspense>
+        <LoginForm />
+      </Suspense>
     </main>
   );
 }
