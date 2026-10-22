@@ -20,8 +20,11 @@ export default function RootLayout({
       <body>
         {children}
         <footer className="footer">
-          <p>This isn&apos;t endorsed by CMU or the 122 staff.</p>
-          <p>© {new Date().getFullYear()} Made by Ken Liu. All rights reserved.</p>
+          <p>
+            This website is an independent project. It is not affiliated with or endorsed by
+            Carnegie Mellon University or the 15-122 course staff.
+          </p>
+          <p>© {new Date().getFullYear()} Ken Liu. All rights reserved.</p>
         </footer>
       </body>
     </html>

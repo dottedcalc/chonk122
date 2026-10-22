@@ -16,7 +16,7 @@ export async function SiteHeader() {
     <header className="nav">
       <Link href="/" className="logo">
         <Honk className="logo-honk" decorative />
-        chonk122
+        CS122 Guide
       </Link>
       <nav className="nav-links">
         <Link href="/concepts" className="nav-link">

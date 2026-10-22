@@ -47,7 +47,7 @@ export default function LoginPage() {
   return (
     <main className="container narrow">
       <Link href="/" className="back">
-        ← chonk122
+        ← CS122 Guide
       </Link>
       <div className="login-card">
         <Chonk className="login-chonk" />
