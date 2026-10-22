@@ -5,6 +5,7 @@ import { Honk } from "@/components/Honk";
 import { Chonk } from "@/components/Chonk";
 import { Ground } from "@/components/Ground";
 import { HonkButton } from "@/components/HonkButton";
+import { chonkLines, honkLines } from "@/components/mascotLines";
 import { ContractDoodle, EggDoodle, PointerDoodle, TreeDoodle } from "@/components/Doodles";
 
 const topics = [
@@ -57,10 +58,10 @@ export default async function Home() {
         <div className="hero-art">
           <Ground className="ground" />
           <div className="duo">
-            <HonkButton name="Honk">
+            <HonkButton name="Honk" lines={honkLines}>
               <Honk className="honk" />
             </HonkButton>
-            <HonkButton name="Chonk">
+            <HonkButton name="Chonk" lines={chonkLines}>
               <Chonk className="chonk" />
             </HonkButton>
           </div>
