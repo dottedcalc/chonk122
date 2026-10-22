@@ -96,8 +96,12 @@ a { color: var(--link); }
   text-underline-offset: 8px;
 }
 .course-name {
-  margin: 0; font-family: var(--font-hand), "Comic Sans MS", cursive;
-  font-size: clamp(1.7rem, 3.6vw, 2.4rem); font-weight: 700; line-height: 1.1; color: var(--link);
+  display: inline-block; margin: 0 0 18px; padding: 4px 14px; white-space: nowrap;
+  font-family: var(--font-hand), "Comic Sans MS", cursive; font-weight: 700; line-height: 1.2;
+  font-size: clamp(1rem, 4.6vw, 1.6rem); color: var(--link);
+  background: var(--card); border: 2.5px solid var(--edge);
+  border-radius: 255px 18px 225px 18px / 18px 225px 18px 255px;
+  box-shadow: 4px 5px 0 var(--green); transform: rotate(-1deg);
 }
 .footer {
   max-width: 1040px; margin: 0 auto; padding: 18px 16px 32px; text-align: center;
@@ -285,6 +289,9 @@ button.cm-dot.sel { box-shadow: 0 0 0 3px var(--beak); }
 @media (max-width: 480px) {
   .nav-links { gap: 12px; }
   .nav-link { font-size: 1.15rem; }
+  .logo { font-size: 1.45rem; }
+  .logo-honk { width: 34px; height: 41px; }
+  .nav .button.small { font-size: 1.05rem; padding: 5px 12px; }
 }
 @media (max-width: 720px) {
   .cm-cats { grid-template-columns: 1fr; }

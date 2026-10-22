@@ -21,10 +21,10 @@ export default function Home() {
 
       <section className="hero">
         <div className="hero-text">
+          <p className="course-name">Principles of Imperative Computation</p>
           <h1>
             CS122, but made <span className="squiggle">chonky.</span>
           </h1>
-          <p className="course-name">Principles of Imperative Computation</p>
         </div>
         <div className="hero-art">
           <Ground className="ground" />
