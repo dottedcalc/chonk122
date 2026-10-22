@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
-import { supabaseConfigured } from "@/lib/supabase/config";
+import { SiteHeader } from "@/components/SiteHeader";
 import { Honk } from "@/components/Honk";
 import { Chonk } from "@/components/Chonk";
 import { Ground } from "@/components/Ground";
@@ -15,34 +14,10 @@ const topics = [
   { title: "C0 → C", blurb: "From safe training wheels to real systems code.", Doodle: EggDoodle },
 ];
 
-export default async function Home() {
-  let email: string | undefined;
-  if (supabaseConfigured) {
-    const supabase = await createClient();
-    const { data } = await supabase.auth.getUser();
-    email = data.user?.email;
-  }
-
+export default function Home() {
   return (
     <main className="container">
-      <header className="nav">
-        <Link href="/" className="logo">
-          <Honk className="logo-honk" decorative />
-          chonk122
-        </Link>
-        {email ? (
-          <form action="/auth/signout" method="post" className="who">
-            <span className="muted">{email}</span>
-            <button type="submit" className="link">
-              Sign out
-            </button>
-          </form>
-        ) : (
-          <Link href="/login" className="button small">
-            Sign in
-          </Link>
-        )}
-      </header>
+      <SiteHeader />
 
       <section className="hero">
         <div className="hero-text">
@@ -81,6 +56,11 @@ export default async function Home() {
             </div>
           ))}
         </div>
+        <p className="more">
+          <Link href="/concepts" className="button small">
+            See how all 26 lectures connect →
+          </Link>
+        </p>
       </section>
 
       <section className="meet">
