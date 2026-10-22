@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { supabaseConfigured } from "@/lib/supabase/config";
+import { Chonk } from "@/components/Chonk";
 
 const errors: Record<string, string> = {
   domain: "Please sign in with your CMU account (@andrew.cmu.edu).",
@@ -48,10 +49,14 @@ export default function LoginPage() {
       <Link href="/" className="back">
         ← chonk122
       </Link>
-      <h1>Sign in</h1>
-      <Suspense>
-        <LoginForm />
-      </Suspense>
+      <div className="login-card">
+        <Chonk className="login-chonk" />
+        <h1>Sign in</h1>
+        <p className="muted">Chonk needs to see your Andrew ID before letting you in.</p>
+        <Suspense>
+          <LoginForm />
+        </Suspense>
+      </div>
     </main>
   );
 }
