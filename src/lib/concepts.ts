@@ -3,7 +3,7 @@
 
 export type IdeaId = "con" | "inv" | "safe" | "cost" | "ord" | "dc" | "rand" | "trade" | "rep" | "mem" | "abs" | "run";
 
-export type Idea = { id: IdeaId; name: string; detail: string };
+export type Idea = { id: IdeaId; name: string };
 
 export type Category = { id: 1 | 2 | 3; name: string; question: string; ideas: Idea[] };
 
@@ -17,9 +17,9 @@ export const categories: Category[] = [
     name: "Reasoning & safety",
     question: "Is the code right, and is it safe to run?",
     ideas: [
-      { id: "con", name: "Contracts", detail: "requires, ensures, spec vs. code" },
-      { id: "inv", name: "Invariants", detail: "loop, data structure, restoring" },
-      { id: "safe", name: "Safety & undefined behavior", detail: "bounds, NULL, leaks, UB" },
+      { id: "con", name: "Contracts" },
+      { id: "inv", name: "Invariants" },
+      { id: "safe", name: "Safety & undefined behavior" },
     ],
   },
   {
@@ -27,22 +27,22 @@ export const categories: Category[] = [
     name: "Algorithms & trade-offs",
     question: "How fast is it, and what does it cost?",
     ideas: [
-      { id: "cost", name: "Complexity", detail: "big-O, worst, average, amortized" },
-      { id: "ord", name: "Order", detail: "sorted data makes things faster" },
-      { id: "dc", name: "Divide & conquer", detail: "halve, recurse, combine" },
-      { id: "rand", name: "Randomness", detail: "random pivots, hashing, average case" },
-      { id: "trade", name: "Design trade-offs", detail: "pick the right implementation" },
+      { id: "cost", name: "Complexity" },
+      { id: "ord", name: "Order" },
+      { id: "dc", name: "Divide & conquer" },
+      { id: "rand", name: "Randomness" },
+      { id: "trade", name: "Design trade-offs" },
     ],
   },
   {
     id: 3,
     name: "Systems thinking",
-    question: "How are data and code stored and run? These ideas prepare students for 15-213.",
+    question: "How are data and code stored and run?",
     ideas: [
-      { id: "rep", name: "Data representation", detail: "bits, two's complement, types" },
-      { id: "mem", name: "Memory", detail: "heap, addresses, pointers, aliasing" },
-      { id: "abs", name: "Abstraction & modularity", detail: "interfaces, libraries, generics" },
-      { id: "run", name: "Running programs", detail: "compilers, interpreters, VMs" },
+      { id: "rep", name: "Data representation" },
+      { id: "mem", name: "Memory" },
+      { id: "abs", name: "Abstraction & modularity" },
+      { id: "run", name: "Running programs" },
     ],
   },
 ];
