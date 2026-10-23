@@ -13,7 +13,7 @@ export type Row = {
 };
 
 // A run of small choices that share one set of options: blame a caller, sort a fact, justify a proof step.
-// A wrong pick can be retried, and the reason appears once the row is right.
+// A wrong pick can be retried, and the reason appears once the row is right, in space kept for it.
 export function Rows({ options, rows, numbered = false }: { options: string[]; rows: Row[]; numbered?: boolean }) {
   const [picks, setPicks] = useState<(number | null)[]>(() => rows.map((r) => (r.given ? r.answer : null)));
   const asked = rows.filter((r) => !r.given).length;
@@ -52,8 +52,16 @@ export function Rows({ options, rows, numbered = false }: { options: string[]; r
                   ))}
                 </div>
               )}
-              <div className="row-why" aria-live="polite">
-                {right ? r.why && <span>✓ {r.why}</span> : p !== null && <span>✗ Not quite. Try another.</span>}
+              {/* The hidden copy of the reason holds its space, so rows below never move when it appears. */}
+              <div className="row-why">
+                {r.why && !r.given && (
+                  <span className="row-why-space" aria-hidden="true">
+                    ✓ {r.why}
+                  </span>
+                )}
+                <span aria-live="polite">
+                  {right ? r.why && <>✓ {r.why}</> : p !== null && <>✗ Not quite. Try another.</>}
+                </span>
               </div>
             </div>
           </Fragment>

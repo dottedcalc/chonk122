@@ -369,15 +369,15 @@ button.cm-dot.sel { box-shadow: 0 0 0 3px var(--beak); }
 .lp-nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 20px; }
 .lp-nav button:disabled { cursor: default; opacity: 0.4; }
 
+/* A thick marker stroke, with no border or shadow, so it never reads as a button or link. */
 .big {
-  display: inline-block; padding: 0 7px; margin: 0 1px; font-weight: 800; color: var(--card); line-height: 1.35;
-  border: 2px solid var(--edge); border-radius: 10px 4px 9px 5px / 5px 9px 4px 10px;
-  box-shadow: 2px 2px 0 var(--edge); transform: rotate(-1.5deg);
+  padding: 0 5px; margin: 0 1px; font-weight: 800; color: inherit;
+  border-radius: 10px 4px 9px 5px / 5px 9px 4px 10px;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
 }
-.big.c1 { background: var(--c1); }
-.big.c2 { background: var(--c2); }
-.big.c3 { background: var(--c3); }
-@media (prefers-color-scheme: dark) { .big { color: #13201a; } }
+.big.c1 { background: color-mix(in srgb, var(--c1) 45%, transparent); }
+.big.c2 { background: color-mix(in srgb, var(--c2) 45%, transparent); }
+.big.c3 { background: color-mix(in srgb, var(--c3) 45%, transparent); }
 mark.hi { color: inherit; padding: 0 3px; border-radius: 4px; font-weight: 700; }
 mark.hi.c1 { background: var(--c1-soft); }
 mark.hi.c2 { background: var(--c2-soft); }
@@ -459,7 +459,9 @@ button.opt:disabled:not(.right):not(.wrong) { opacity: 0.55; }
 .row-prompt { display: flex; gap: 6px; align-items: baseline; flex-wrap: wrap; }
 .row-n { font-weight: 800; color: var(--muted); }
 .row-opts { display: flex; flex-wrap: wrap; gap: 6px; }
-.row-why { font-size: 0.92rem; min-height: 0; }
+.row-why { font-size: 0.92rem; display: grid; }
+.row-why > * { grid-area: 1 / 1; }
+.row-why-space { visibility: hidden; font-weight: 700; }
 .row.right .row-why { color: var(--c1); font-weight: 700; }
 .given-tag { font-size: 0.95rem; font-weight: 700; }
 .rows-done { margin: 4px 0 0; font-size: 0.88rem; }

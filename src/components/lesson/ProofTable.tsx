@@ -161,10 +161,13 @@ export function SpotStep({
   rows,
   answer,
   explain,
+  wrong = [],
 }: {
   rows: { claim: React.ReactNode; by: React.ReactNode }[];
   answer: number;
   explain: React.ReactNode;
+  // Why each wrong step is not the answer, indexed by step.
+  wrong?: React.ReactNode[];
 }) {
   const [picked, setPicked] = useState<number | null>(null);
   const right = picked === answer;
@@ -213,7 +216,7 @@ export function SpotStep({
               </>
             ) : (
               <>
-                <b>Not quite.</b> That step is fine. Try another.
+                <b>Not quite.</b> {wrong[picked] ?? "That step is fine."} Try another.
               </>
             )}
           </p>

@@ -77,6 +77,7 @@ export const ints: Lesson = {
             }
             options={["2147483648", "An error", "-2147483648"]}
             answer={2}
+            wrong={["2147483648 is bigger than int_max(), so it can't be an int.", "C0 does not stop when + overflows."]}
             explain={
               <>
                 The first line prints 2147483647 and the second prints −2147483648. One more goose made the count
@@ -189,6 +190,7 @@ export const ints: Lesson = {
             question="What does C0 do when + or * overflows?"
             options={["It stops with an error", "It drops the extra bits and keeps going"]}
             answer={1}
+            wrong={["That is only what the runs above supposed."]}
             explain={
               <>
                 C0 keeps going. With errors, the two runs show associativity failing, so moving parentheses could break a
@@ -304,6 +306,7 @@ export const ints: Lesson = {
             question="Which cut meets every goal?"
             options={["Cut A", "Cut B", "Cut C"]}
             answer={2}
+            wrong={["Cut A has no negative numbers at all.", "Cut B makes 12 of the 16 numbers negative."]}
             explain={
               <>
                 Cut C reads −8 to 7, and its one jump is from 7 to −8. This choice is{" "}
@@ -418,11 +421,15 @@ export const ints: Lesson = {
               <code key="c">honk &gt; int_max() - chonk</code>,
             ]}
             answer={1}
+            wrong={[
+              "No int is less than int_min(), so this test is always false.",
+              "",
+              "That test is for chonk > 0. Adding a negative can never go above int_max().",
+            ]}
             explain={
               <>
-                Adding a negative can only go below <code>int_min()</code>. No int is less than <code>int_min()</code>,
-                so the first test is always false. With <code>chonk &lt; 0</code>, <code>int_min() - chonk</code> is
-                in range.
+                Adding a negative can only go below <code>int_min()</code>, and with <code>chonk &lt; 0</code>,{" "}
+                <code>int_min() - chonk</code> is in range, so the test cannot overflow itself.
               </>
             }
           />
@@ -757,10 +764,10 @@ export const ints: Lesson = {
               <code key="b">return (goose &gt;&gt; 24) &amp; 0xFF;</code>,
             ]}
             answer={1}
+            wrong={["The shift still copies the sign bit, so this returns −16."]}
             explain={
               <>
-                The first one still copies the sign bit and returns −16. <Hi c={2}>Mask after shifting</Hi> to clear the
-                copied bits.
+                <Hi c={2}>Mask after shifting</Hi> to clear the bits that the shift copied.
                 <Code src={topByteFixed} label="honk_top_byte, fixed" />
                 <RunTable
                   runs={[{ call: <code>honk_top_byte(0xF0000000)</code>, out: "returns 240, which is 0xF0", ok: true }]}

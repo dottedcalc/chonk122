@@ -110,11 +110,24 @@ Lecture 1 comes first.
 ## Setup after each migration
 
 Run new files in `supabase/migrations` in order (Supabase SQL editor or `supabase db push`).
-Optionally, after PR 1, set CMU's tenant id to make CMU status stricter:
+Then set CMU's tenant id. Without it, any Microsoft tenant can sign someone in with an
+`andrew.cmu.edu` address it made up, and only Supabase's email check stands in the way. First check
+that your own Andrew sign-in carries CMU's issuer:
 
 ```sql
-insert into private.settings values ('cmu_tenant_id', '<tenant id>');
+select identity_data ->> 'iss' from auth.identities
+where provider = 'azure' and identity_data ->> 'email' ilike '%@andrew.cmu.edu';
+```
+
+Each row should read `https://login.microsoftonline.com/e36ee38f-91b8-4dca-9b13-caa5360c9714/v2.0`.
+Then turn the check on:
+
+```sql
+insert into private.settings values ('cmu_tenant_id', 'e36ee38f-91b8-4dca-9b13-caa5360c9714');
 ```
 
 The tenant id is the GUID inside `issuer` at
 https://login.microsoftonline.com/cmu.edu/v2.0/.well-known/openid-configuration.
+
+`supabase/tests/access_tiers.sql` tests the tiers against real, outside and lookalike CMU emails,
+with and without the tenant id. Run it on a throwaway local Postgres, never on the Supabase project.

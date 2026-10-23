@@ -112,7 +112,7 @@ Declined, with reasons:
 
 A second subagent walked all 18 pages and confirmed every answer with gcc, with no sideways page scroll and no copy-rule breaks. Fixes applied:
 
-- A wrong pick now shows only "Not quite" and Try again, so it no longer reveals the answer (this also changes Lecture 1).
+- (Superseded when main changed `Pick` in another thread. A pick is now one try, and a wrong pick says why that option is wrong before the explanation. Lecture 2 gives a reason for each wrong option.)
 - The cut page has no live checks, its goals are stated in full, and the cuts are named A, B and C.
 - Hints that answered later questions were removed (bubbles on pages 5, 8 and 15, the permissions target that matched page 14, the left shift preset). Page 17 is retitled "Taking the top byte".
 - Page 4 scopes wrapping to + and *, and page 12 contrasts division with them. Page 14 uses distractors with the same operator so the masks are tested, and the bit widget says it is an 8-bit example. Page 10 step 2 cites "Line 3 and step 1". Version tabs keep revealed runs.

@@ -2,17 +2,20 @@
 
 import { useState } from "react";
 
-// Predict, then reveal: the reader picks one option, and the answer and why appear once the pick is right.
+// Predict, then reveal: the reader picks one option and sees the answer and why.
+// A wrong pick also says what is wrong with that option, when the lesson gives a reason.
 export function Pick({
   question,
   options,
   answer,
   explain,
+  wrong = [],
 }: {
   question: React.ReactNode;
   options: React.ReactNode[];
   answer: number;
   explain: React.ReactNode;
+  wrong?: React.ReactNode[];
 }) {
   const [picked, setPicked] = useState<number | null>(null);
 
@@ -22,7 +25,8 @@ export function Pick({
       <div className="pick-opts">
         {options.map((o, i) => {
           let cls = "opt";
-          if (picked === i) cls += i === answer ? " right" : " wrong";
+          if (picked !== null && i === answer) cls += " right";
+          else if (picked === i) cls += " wrong";
           return (
             <button
               key={i}
@@ -41,17 +45,13 @@ export function Pick({
         {picked !== null && (
           <div className="pick-why">
             {picked === answer ? (
-              <>
-                <b>Yes!</b> {explain}
-              </>
+              <b>Yes!</b>
             ) : (
               <>
-                <b>Not quite.</b>{" "}
-                <button type="button" className="link" onClick={() => setPicked(null)}>
-                  Try again
-                </button>
+                <b>Not quite.</b> {wrong[picked]}
               </>
-            )}
+            )}{" "}
+            {explain}
           </div>
         )}
       </div>
