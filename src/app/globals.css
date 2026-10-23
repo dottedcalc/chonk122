@@ -489,7 +489,9 @@ button.opt:disabled:not(.right):not(.wrong) { opacity: 0.55; }
 .lc-grid { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 @media (max-width: 900px) { .lc-grid { grid-template-columns: 1fr; } }
 .lc-card { display: flex; flex-direction: column; border-top: 8px solid var(--d); padding: 0 0 16px; overflow: hidden; }
-.lc-body { display: grid; gap: 6px; align-content: start; padding: 0 18px; }
+.lc-body { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 16px; align-content: start; padding: 0 18px; }
+.lc-body > * { grid-column: 1; }
+.lc-body > .lc-actions, .lc-body > .lc-resets { grid-column: 1 / -1; }
 .lc-art {
   position: relative; display: flex; justify-content: center; align-items: flex-end; gap: 6px;
   height: 128px; margin-bottom: 12px; padding: 10px 16px 6px;
@@ -504,10 +506,9 @@ button.opt:disabled:not(.right):not(.wrong) { opacity: 0.55; }
 }
 .lc-closed { filter: grayscale(1); opacity: 0.7; }
 .lc-closed .lc-art { background: var(--paper-dot); }
-.lc-prof { display: flex; align-items: center; gap: 10px; }
-.lc-prof p { margin: 0; font-size: 0.95rem; display: grid; }
-.lc-prof .level { font-weight: 800; }
-.lc-prof b { font-size: 1.15rem; }
+.lc-prof { grid-column: 2; grid-row: 1 / span 4; align-self: center; margin: 12px 28px 0 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.lc-prof p { margin: 0; font-size: 1rem; font-weight: 700; }
+.lc-prof .ring circle { stroke-width: 4.6; }
 .lc-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 8px; }
 .lc-actions .button { font-size: 1.05rem; padding: 5px 12px; }
 .lc-ex-btn { background: var(--card); color: var(--link); border: 2.5px solid var(--green); }
@@ -621,6 +622,7 @@ button.ex-grade[aria-pressed="true"]:disabled { opacity: 1; }
 .ring circle { fill: none; stroke-width: 3.6; }
 .ring-track { stroke: color-mix(in srgb, var(--muted) 22%, transparent); }
 .ring-fill { stroke: var(--k, var(--accent)); stroke-linecap: round; }
+.ring-cap { transform: rotate(90deg); transform-origin: 18px 18px; text-anchor: middle; dominant-baseline: central; font-size: 4.4px; font-weight: 800; fill: var(--fg); }
 .ring-num { transform: rotate(90deg); transform-origin: 18px 18px; text-anchor: middle; dominant-baseline: central; font-size: 11px; font-weight: 800; fill: var(--fg); }
 .cm-cat-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
 .cm-prof { display: grid; justify-items: center; gap: 2px; }

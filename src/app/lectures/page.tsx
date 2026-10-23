@@ -60,11 +60,13 @@ function Proficiency({ n, score }: { n: number; score?: LectureScore }) {
   if (!score) return null;
   return (
     <div className="lc-prof">
-      <Ring score={score.score} label={`Lecture ${n} proficiency, ${score.score} of 100`} size={52} />
-      <p>
-        Proficiency
-        <span className="level">{levelOf(score.score)}</span>
-      </p>
+      <Ring
+        score={score.score}
+        label={`Lecture ${n} proficiency, ${score.score} of 100, ${levelOf(score.score)}`}
+        caption={levelOf(score.score)}
+        size={92}
+      />
+      <p>Proficiency</p>
     </div>
   );
 }
