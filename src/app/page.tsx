@@ -39,23 +39,27 @@ export default function Home() {
           </h1>
           <div className="cta">
             <Link href="/lectures" className="button go">
-              Wooo Let&apos;s get started!
-            </Link>
-            <Link href="/concepts" className="button alt">
-              Course Map
+              Wooo! Let&apos;s get started!
             </Link>
           </div>
         </div>
         <div className="hero-art">
-          <Ground className="ground" />
-          <div className="duo">
-            <HonkButton name="Honk!" lines={honkLines}>
-              <Honk className="honk" />
-            </HonkButton>
-            <HonkButton name="Chonk" lines={chonkLines}>
-              <Chonk className="chonk" />
-            </HonkButton>
+          <div className="stage">
+            <Ground className="ground" />
+            <div className="duo">
+              <HonkButton name="Honk!" lines={honkLines}>
+                <Honk className="honk" />
+              </HonkButton>
+              <HonkButton name="Chonk" lines={chonkLines}>
+                <Chonk className="chonk" />
+              </HonkButton>
+            </div>
           </div>
+          <p className="cta-map">
+            <Link href="/concepts" className="button alt">
+              Course Map
+            </Link>
+          </p>
         </div>
       </section>
 
