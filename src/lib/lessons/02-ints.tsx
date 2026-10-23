@@ -441,9 +441,15 @@ export const ints: Lesson = {
           </p>
           <Comic panels={[{ who: "honk", outfit: "pumpkin", size: "s", pose: "think", say: "Prove it, don't just test it." }]} />
           <Code src={add} label="honk_add" />
-          <p className="task">Justify each step.</p>
+          <p className="task">Fill in each blank.</p>
           <ProofTable
             options={["Line 2", "Line 3 and step 1", "Steps 2 and 3"]}
+            claims={[
+              <code key="a">honk + chonk &lt;= int_max()</code>,
+              <code key="b">honk + chonk &lt; int_max()</code>,
+              <code key="c">honk + chonk &gt; int_min()</code>,
+              <code key="d">honk + chonk &gt;= 0</code>,
+            ]}
             rows={[
               {
                 claim: <><code>int_max() - chonk</code> on line 3 does not overflow</>,
@@ -451,13 +457,15 @@ export const ints: Lesson = {
                 why: "chonk > 0, so the result is between 0 and int_max().",
               },
               {
-                claim: <><code>honk + chonk &lt;= int_max()</code></>,
+                claim: <code>honk + chonk &lt;= int_max()</code>,
                 answer: 1,
-                why: "Add chonk to both sides of line 3, which holds as math because of step 1.",
+                claimAnswer: 0,
+                why: "Adding chonk to both sides of line 3 keeps the <=, and step 1 makes line 3 hold as math.",
               },
               {
-                claim: <><code>honk + chonk &gt; int_min()</code></>,
+                claim: <code>honk + chonk &gt; int_min()</code>,
                 answer: 0,
+                claimAnswer: 2,
                 why: "Every int is at least int_min(), and chonk > 0 makes the sum bigger.",
               },
               {

@@ -542,24 +542,35 @@ export const contracts: Lesson = {
             time. Only lines 1 to 7 have run at that point.
           </p>
           <Code src={share} hi={[6, 7, 9, 10]} />
-          <p className="task">Justify each step.</p>
+          <p className="task">Fill in each blank.</p>
           <ProofTable
             options={["line 2", "line 6", "line 7", "math on earlier steps"]}
+            claims={[
+              <code key="a">chonk_left == chonk</code>,
+              <code key="b">chonk_left &gt;= 0</code>,
+              <code key="c">chonk_left == 0</code>,
+              <code key="d">goose_share == chonk</code>,
+            ]}
             rows={[
               {
                 group: "Line 9 holds.",
                 claim: <code>chonk_left == chonk</code>,
                 answer: 2,
+                claimAnswer: 0,
                 why: "This is the assignment on line 7.",
               },
               { claim: <code>chonk &gt;= 0</code>, answer: 0, why: "This is the precondition on line 2." },
-              { claim: <code>chonk_left &gt;= 0</code>, answer: 3, why: "This follows from steps 1 and 2." },
+              {
+                claim: <code>chonk_left &gt;= 0</code>,
+                answer: 3,
+                claimAnswer: 1,
+                why: "This follows from steps 1 and 2.",
+              },
               {
                 group: "Line 10 holds.",
                 claim: <code>goose_share == 0</code>,
                 answer: 1,
                 given: true,
-                why: "This is the assignment on line 6.",
               },
               {
                 claim: <code>goose_share * geese + chonk_left == 0 * geese + chonk == chonk</code>,
@@ -583,7 +594,7 @@ export const contracts: Lesson = {
             in <code>chonk_left&apos;</code>.
           </p>
           <Peek />
-          <p className="task">Justify each step.</p>
+          <p className="task">Fill in each blank.</p>
           <Comic
             panels={[
               { who: "honk", outfit: "diva", size: "l", pose: "point", say: "chonk_left' >= geese, by line 8!" },
@@ -598,17 +609,23 @@ export const contracts: Lesson = {
           />
           <ProofTable
             options={["line 8", "line 10", "line 12", "line 13", "math on earlier steps"]}
+            claims={[
+              <code key="a">chonk_left&apos; == chonk_left - geese</code>,
+              <code key="b">chonk_left&apos; &gt;= geese</code>,
+              <code key="c">goose_share&apos; == goose_share + 1</code>,
+              <code key="d">goose_share&apos; == goose_share</code>,
+            ]}
             rows={[
               {
                 group: "Line 9 still holds.",
                 claim: <code>chonk_left &gt;= geese</code>,
                 answer: 0,
                 given: true,
-                why: "The loop guard is true inside the body.",
               },
               {
                 claim: <code>chonk_left&apos; == chonk_left - geese</code>,
                 answer: 2,
+                claimAnswer: 0,
                 why: "This is the assignment on line 12.",
               },
               { claim: <code>chonk_left&apos; &gt;= 0</code>, answer: 4, why: "This follows from steps 1 and 2." },
@@ -617,11 +634,11 @@ export const contracts: Lesson = {
                 claim: <code>goose_share * geese + chonk_left == chonk</code>,
                 answer: 1,
                 given: true,
-                why: "The invariant holds at the start of the iteration.",
               },
               {
                 claim: <code>goose_share&apos; == goose_share + 1</code>,
                 answer: 3,
+                claimAnswer: 2,
                 why: "This is the assignment on line 13.",
               },
               {
@@ -645,21 +662,32 @@ export const contracts: Lesson = {
             <code>goose_share</code>, so <code>\result</code> equals <code>goose_share</code>.
           </p>
           <Peek />
-          <p className="task">Justify each step.</p>
+          <p className="task">Fill in each blank.</p>
           <ProofTable
             options={["line 8, negated", "line 9", "line 10", "math on earlier steps"]}
+            claims={[
+              <code key="a">chonk_left &lt; geese</code>,
+              <code key="b">chonk_left &lt;= geese</code>,
+              <code key="c">0 &lt;= chonk - goose_share * geese</code>,
+              <code key="d">chonk_left == 0</code>,
+            ]}
             rows={[
-              { claim: <code>chonk_left &lt; geese</code>, answer: 0, why: "The loop guard is false after the loop." },
+              {
+                claim: <code>chonk_left &lt; geese</code>,
+                answer: 0,
+                claimAnswer: 0,
+                why: "The loop guard chonk_left >= geese is false after the loop.",
+              },
               { claim: <code>chonk_left &gt;= 0</code>, answer: 1, why: "This is a loop invariant." },
               {
                 claim: <code>goose_share * geese + chonk_left == chonk</code>,
                 answer: 2,
                 given: true,
-                why: "This is a loop invariant.",
               },
               {
                 claim: <code>0 &lt;= chonk - goose_share * geese</code>,
                 answer: 3,
+                claimAnswer: 2,
                 why: "This follows from steps 2 and 3, and it proves line 3.",
               },
               {

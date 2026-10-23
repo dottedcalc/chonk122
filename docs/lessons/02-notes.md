@@ -120,4 +120,4 @@ A second subagent walked all 18 pages and confirmed every answer with gcc, with 
 
 ## Proof tables
 
-The user made it a rule that point-to proofs are real tables. Page 10's proof is a `ProofTable` (step, statement, justification), where the reader drags a justification into each cell or taps a justification and then a cell. Lecture 1's INIT, PRES and EXIT proofs use the same table, and its "spot the bad step" page is a `SpotStep` table with a Flag button per step.
+The user made it a rule that point-to proofs are real tables. Page 10's proof is a `ProofTable` (step, statement, justification), where the reader drags a card into each blank or taps a card and then a blank. About half the blanks in each proof ask for the statement (from a bank with plausible wrong statements, such as `chonk_left' >= geese` in PRES) and the rest ask for the justification. Lecture 1's INIT, PRES and EXIT proofs use the same table, and its "spot the bad step" page is a `SpotStep` table with a Flag button per step.

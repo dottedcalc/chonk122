@@ -495,6 +495,9 @@ button.proof-chip {
   border-radius: 14px 6px 12px 8px / 8px 12px 6px 14px;
 }
 button.proof-chip:hover { background: var(--c2-soft); }
+button.proof-chip.claim { background: var(--c3-soft); font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.85rem; }
+.proof-bank-name { flex-basis: 100%; font-weight: 800; }
+.proof-chip code, .proof-slot code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.86em; }
 button.proof-chip[aria-pressed="true"] { background: var(--c2-soft); border-color: var(--c2); box-shadow: 2px 3px 0 var(--c2); }
 .proof-table { width: 100%; border-collapse: collapse; }
 .proof-table th, .proof-table td { text-align: left; vertical-align: top; padding: 8px 8px 8px 0; border-bottom: 2px dashed var(--paper-dot); }

@@ -7,50 +7,111 @@ export type ProofRow = {
   // The index of the right justification in options.
   answer: number;
   why?: React.ReactNode;
-  // Shown already justified, so a long proof can ask about only some of its steps.
+  // Shown already filled in, so a long proof can ask about only some of its steps.
   given?: boolean;
+  // When set, the statement is the blank and this is the index of the right statement in claims.
+  // The justification is then shown filled in.
+  claimAnswer?: number;
   // Starts a new labelled part of the proof, such as the steps for one loop invariant.
   group?: string;
 };
 
-// A point-to proof as a table of steps, statements and justifications.
-// The reader drags a justification into each empty cell, or taps one and then taps the cell.
-// A wrong choice can be replaced, and the reason appears once the step is right.
-export function ProofTable({ options, rows }: { options: string[]; rows: ProofRow[] }) {
-  const [placed, setPlaced] = useState<(number | null)[]>(() => rows.map((r) => (r.given ? r.answer : null)));
-  const [held, setHeld] = useState<number | null>(null);
-  const [over, setOver] = useState<number | null>(null);
-  const asked = rows.filter((r) => !r.given).length;
-  const done = rows.filter((r, i) => !r.given && placed[i] === r.answer).length;
+type Chip = { kind: "claim" | "why"; j: number };
 
-  function place(i: number, j: number) {
-    if (placed[i] === rows[i].answer) return;
-    setPlaced(placed.map((x, k) => (k === i ? j : x)));
+// A point-to proof as a table of steps, statements and justifications. Some rows leave the statement
+// blank and some leave the justification blank. The reader drags a card from the bank into each blank,
+// or taps a card and then taps the blank. A wrong card can be replaced, and the reason appears once
+// the step is right.
+export function ProofTable({
+  options,
+  claims = [],
+  rows,
+}: {
+  options: string[];
+  claims?: React.ReactNode[];
+  rows: ProofRow[];
+}) {
+  const kindOf = (r: ProofRow) => (r.claimAnswer !== undefined ? "claim" : "why");
+  const rightOf = (r: ProofRow) => (r.claimAnswer !== undefined ? r.claimAnswer : r.answer);
+  const [placed, setPlaced] = useState<(Chip | null)[]>(() => rows.map(() => null));
+  const [held, setHeld] = useState<Chip | null>(null);
+  const [over, setOver] = useState<number | null>(null);
+  const isRight = (i: number) => {
+    const c = placed[i];
+    return c !== null && c.kind === kindOf(rows[i]) && c.j === rightOf(rows[i]);
+  };
+  const asked = rows.filter((r) => !r.given).length;
+  const done = rows.filter((r, i) => !r.given && isRight(i)).length;
+  const label = (c: Chip) => (c.kind === "claim" ? claims[c.j] : options[c.j]);
+  const text = (c: Chip) => (c.kind === "claim" ? `statement ${c.j + 1}` : options[c.j]);
+
+  function place(i: number, c: Chip) {
+    if (isRight(i)) return;
+    setPlaced(placed.map((x, k) => (k === i ? c : x)));
     setHeld(null);
+  }
+
+  function chips(kind: "claim" | "why", items: React.ReactNode[], name: string) {
+    return (
+      <div className="proof-bank" role="group" aria-label={name}>
+        <span className="proof-bank-name">{name}</span>
+        {items.map((o, j) => {
+          const on = held?.kind === kind && held.j === j;
+          return (
+            <button
+              key={j}
+              type="button"
+              draggable
+              className={`proof-chip${kind === "claim" ? " claim" : ""}`}
+              aria-pressed={on}
+              onClick={() => setHeld(on ? null : { kind, j })}
+              onDragStart={(e) => {
+                e.dataTransfer.setData("text/plain", `${kind}:${j}`);
+                e.dataTransfer.effectAllowed = "copy";
+                setHeld({ kind, j });
+              }}
+              onDragEnd={() => setOver(null)}
+            >
+              {o}
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
+
+  function slot(i: number) {
+    const c = placed[i];
+    const right = isRight(i);
+    return (
+      <button
+        type="button"
+        className={`proof-slot${over === i ? " over" : ""}${right ? " right" : c !== null ? " wrong" : ""}`}
+        aria-label={`${kindOf(rows[i]) === "claim" ? "Statement" : "Justification"} for step ${i + 1}${c !== null ? `, now ${text(c)}` : ", empty"}`}
+        disabled={right}
+        onClick={() => held !== null && place(i, held)}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setOver(i);
+        }}
+        onDragLeave={() => setOver(null)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setOver(null);
+          const [kind, j] = e.dataTransfer.getData("text/plain").split(":");
+          if ((kind === "claim" || kind === "why") && j !== undefined) place(i, { kind, j: Number(j) });
+        }}
+      >
+        {c !== null ? label(c) : "\u00a0"}
+        {right ? " ✓" : c !== null ? " ✗" : ""}
+      </button>
+    );
   }
 
   return (
     <div className="proof">
-      <div className="proof-bank" role="group" aria-label="Justifications">
-        {options.map((o, j) => (
-          <button
-            key={j}
-            type="button"
-            draggable
-            className="proof-chip"
-            aria-pressed={held === j}
-            onClick={() => setHeld(held === j ? null : j)}
-            onDragStart={(e) => {
-              e.dataTransfer.setData("text/plain", String(j));
-              e.dataTransfer.effectAllowed = "copy";
-              setHeld(j);
-            }}
-            onDragEnd={() => setOver(null)}
-          >
-            {o}
-          </button>
-        ))}
-      </div>
+      {claims.length > 0 && chips("claim", claims, "Statements")}
+      {chips("why", options, "Justifications")}
       <table className="proof-table">
         <thead>
           <tr>
@@ -61,8 +122,9 @@ export function ProofTable({ options, rows }: { options: string[]; rows: ProofRo
         </thead>
         <tbody>
           {rows.map((r, i) => {
-            const p = placed[i];
-            const right = p === r.answer;
+            const blankClaim = !r.given && kindOf(r) === "claim";
+            const blankWhy = !r.given && kindOf(r) === "why";
+            const right = isRight(i);
             return (
               <Fragment key={i}>
                 {r.group && (
@@ -72,38 +134,14 @@ export function ProofTable({ options, rows }: { options: string[]; rows: ProofRo
                     </th>
                   </tr>
                 )}
-                <tr className={right ? "right" : p !== null ? "wrong" : ""}>
+                <tr className={right ? "right" : ""}>
                   <td className="proof-n">{i + 1}</td>
                   <td className="proof-claim">
-                    {r.claim}
+                    {blankClaim ? slot(i) : r.claim}
                     {!r.given && right && r.why && <span className="proof-why">✓ {r.why}</span>}
                   </td>
                   <td className="proof-j">
-                    {r.given ? (
-                      <span className="proof-given">{options[r.answer]}</span>
-                    ) : (
-                      <button
-                        type="button"
-                        className={`proof-slot${over === i ? " over" : ""}${right ? " right" : p !== null ? " wrong" : ""}`}
-                        aria-label={`Justification for step ${i + 1}${p !== null ? `, now ${options[p]}` : ", empty"}`}
-                        disabled={right}
-                        onClick={() => held !== null && place(i, held)}
-                        onDragOver={(e) => {
-                          e.preventDefault();
-                          setOver(i);
-                        }}
-                        onDragLeave={() => setOver(null)}
-                        onDrop={(e) => {
-                          e.preventDefault();
-                          setOver(null);
-                          const j = Number(e.dataTransfer.getData("text/plain"));
-                          if (!Number.isNaN(j)) place(i, j);
-                        }}
-                      >
-                        {p !== null ? options[p] : " "}
-                        {right ? " ✓" : p !== null ? " ✗" : ""}
-                      </button>
-                    )}
+                    {blankWhy ? slot(i) : <span className="proof-given">{options[r.answer]}</span>}
                   </td>
                 </tr>
               </Fragment>
