@@ -38,7 +38,7 @@ export default function Home() {
             CS122, but made <span className="squiggle">chonky.</span>
           </h1>
           <div className="cta">
-            <Link href="/lectures" className="button">
+            <Link href="/lectures" className="button go">
               Wooo Let&apos;s get started!
             </Link>
             <Link href="/concepts" className="button alt">
