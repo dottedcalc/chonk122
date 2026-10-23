@@ -14,12 +14,14 @@ const head =
 export function Chonk({
   className,
   title = "Chonk",
+  decorative = false,
   pose = "stand",
   flip = false,
   outfit = "plain",
 }: {
   className?: string;
   title?: string;
+  decorative?: boolean;
   pose?: Pose;
   // Face right instead of left.
   flip?: boolean;
@@ -29,7 +31,11 @@ export function Chonk({
   const look: Look = chonkLooks[outfit];
   const tilt = `rotate(${a.head} 148 146)`;
   return (
-    <svg className={className} viewBox="12 6 260 422" role="img" aria-label={title}>
+    <svg
+      className={className}
+      viewBox="12 6 260 422"
+      {...(decorative ? { "aria-hidden": true } : { role: "img", "aria-label": title })}
+    >
       <defs>
         <Wobble id="chonk-wobble" />
         <clipPath id="chonk-body-clip">

@@ -2,16 +2,20 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { ResetButton } from "@/components/ResetButton";
+import { LectureArt } from "@/components/LectureArt";
 import { lectures, parts } from "@/lib/concepts";
 import { difficulty, difficultyName } from "@/lib/difficulty";
 import { lessonNumbers } from "@/lib/lessons/available";
 import { getTier, type Tier } from "@/lib/access";
+import { levelOf } from "@/lib/bigIdeas";
 import {
   getExerciseSummary,
   getLectureAccess,
+  getLectureScores,
   getLessonProgress,
   type ExerciseSummary,
   type LectureAccess,
+  type LectureScore,
   type LessonProgress,
 } from "@/lib/progress";
 
@@ -56,15 +60,40 @@ function Status({ n, access, progress }: { n: number; access?: LectureAccess; pr
   );
 }
 
-function Exercises({ n, summary }: { n: number; summary?: ExerciseSummary }) {
-  if (!summary) return null;
+// The lecture's proficiency score from 0 to 100, as on the progress page.
+function Proficiency({ n, score }: { n: number; score?: LectureScore }) {
+  if (!score) return null;
   return (
-    <p className="lc-ex">
-      <Link href={`/exercises/${n}`}>Exercises</Link>{" "}
-      <span className="muted">
-        {summary.finished ? "· all done" : `· ${summary.graded} of ${summary.pool} done`}
-      </span>
-    </p>
+    <div className="lc-prof">
+      <p>
+        Proficiency <b>{score.score}</b> <span className="muted">· {levelOf(score.score)}</span>
+      </p>
+      <div className="pg-bar" role="meter" aria-label={`Lecture ${n} proficiency`}
+        aria-valuemin={0} aria-valuemax={100} aria-valuenow={score.score}>
+        <span style={{ width: `${score.score}%` }} />
+      </div>
+    </div>
+  );
+}
+
+// Big buttons into the lesson and its exercises.
+function Actions({ n, open, progress, summary }: { n: number; open: boolean; progress?: LessonProgress; summary?: ExerciseSummary }) {
+  if (!open && !summary) return null;
+  const lesson = !progress ? "Start lesson" : progress.completed ? "Review lesson" : "Continue lesson";
+  return (
+    <div className="lc-actions">
+      {open && (
+        <Link href={`/lessons/${n}`} className="button small">
+          {lesson} →
+        </Link>
+      )}
+      {summary && (
+        <Link href={`/exercises/${n}`} className="button small lc-ex-btn">
+          Exercises{" "}
+          <span className="lc-ex-count">{summary.finished ? "· all done" : `· ${summary.graded}/${summary.pool}`}</span>
+        </Link>
+      )}
+    </div>
   );
 }
 
@@ -76,6 +105,10 @@ export default async function LecturesPage() {
     getLessonProgress(),
     getExerciseSummary(),
   ]);
+  const scores = await getLectureScores((n) => ({
+    lesson: lessonNumbers.includes(n) && Boolean(access.get(n)?.lesson),
+    pool: exercises.get(n)?.pool ?? 0,
+  }));
 
   return (
     <main className="container">
@@ -95,10 +128,12 @@ export default async function LecturesPage() {
               .filter((l) => l.n >= part.from && l.n <= part.to)
               .map((l) => {
                 const d = difficulty[l.n];
-                const open = lessonNumbers.includes(l.n) && access.get(l.n)?.lesson;
+                const open = lessonNumbers.includes(l.n) && Boolean(access.get(l.n)?.lesson);
                 const p = progress.get(l.n);
                 return (
                   <li key={l.n} className={`lc-card cm-box${open ? "" : " lc-closed"}`} style={{ "--d": `var(--d${d})` } as React.CSSProperties}>
+                    <LectureArt n={l.n} />
+                    <div className="lc-body">
                     <p className="lc-num">Lecture {l.n}</p>
                     <h3>{open ? <Link href={`/lessons/${l.n}`}>{l.title}</Link> : l.title}</h3>
                     <p className="lc-diff" aria-label={`Difficulty ${d} of 5, ${difficultyName[d]}`}>
@@ -110,10 +145,12 @@ export default async function LecturesPage() {
                       {difficultyName[d]}
                     </p>
                     <Status n={l.n} access={access.get(l.n)} progress={p} />
-                    <Exercises n={l.n} summary={exercises.get(l.n)} />
+                    <Proficiency n={l.n} score={scores.get(l.n)} />
+                    <Actions n={l.n} open={open} progress={p} summary={exercises.get(l.n)} />
                     <div className="lc-resets">
                       {(p || exercises.get(l.n)?.graded) && <ResetButton n={l.n} kind="lecture" />}
                       {exercises.get(l.n)?.graded ? <ResetButton n={l.n} kind="exercises" /> : null}
+                    </div>
                     </div>
                   </li>
                 );
