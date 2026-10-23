@@ -3,8 +3,9 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Honk } from "@/components/Honk";
 import { Chonk } from "@/components/Chonk";
 import { Ground } from "@/components/Ground";
+import { notFoundMetadata } from "@/lib/notFoundMetadata";
 
-export const metadata = { title: "Page not found · chonk122" };
+export const metadata = notFoundMetadata;
 
 const src = `//@requires 0 <= i && i < \\length(pages);
 page p = pages[404];`;

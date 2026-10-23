@@ -6,6 +6,7 @@ import { Locked } from "@/components/Locked";
 import { ExercisePlayer } from "@/components/ExercisePlayer";
 import { checkAccess } from "@/lib/access";
 import { lectures } from "@/lib/concepts";
+import { notFoundMetadata } from "@/lib/notFoundMetadata";
 
 type Params = Promise<{ n: string }>;
 
@@ -15,7 +16,7 @@ const getLecture = (n: number) => lectures.find((l) => l.n === n);
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const lecture = getLecture(Number((await params).n));
-  return lecture ? { title: `Lecture ${lecture.n} exercises · chonk122` } : {};
+  return lecture ? { title: `Lecture ${lecture.n} exercises · chonk122` } : notFoundMetadata;
 }
 
 export default async function ExercisesPage({ params }: { params: Params }) {
