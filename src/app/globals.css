@@ -507,9 +507,7 @@ button.opt:disabled:not(.right):not(.wrong) { opacity: 0.55; }
 .lc-pips { display: inline-flex; gap: 3px; }
 .lc-pips span { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--d); }
 .lc-pips span.on { background: var(--d); }
-.lc-status { margin: 4px 0 0; display: grid; gap: 4px; font-size: 0.95rem; }
-.lc-bar { height: 8px; border-radius: 4px; background: var(--paper-dot); overflow: hidden; }
-.lc-bar span { display: block; height: 100%; background: var(--accent); }
+.lc-status { margin: 4px 0 0; font-size: 0.95rem; }
 button.lc-reset { justify-self: start; font-size: 0.95rem; }
 .lc-confirm { margin: 4px 0 0; font-size: 0.95rem; }
 .lc-resets { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 14px; margin-top: 8px; }

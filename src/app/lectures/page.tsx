@@ -48,15 +48,9 @@ function Status({ n, access, progress }: { n: number; access?: LectureAccess; pr
   if (!progress) return <p className="lc-status">Not started</p>;
   if (progress.completed) return <p className="lc-status">✓ Lesson done</p>;
   return (
-    <div className="lc-status">
-      <div className="lc-bar" role="progressbar" aria-label={`Lecture ${n} lesson progress`}
-        aria-valuemin={0} aria-valuemax={progress.pageCount} aria-valuenow={progress.pagesRead}>
-        <span style={{ width: `${(progress.pagesRead / progress.pageCount) * 100}%` }} />
-      </div>
-      <span>
-        {progress.pagesRead} of {progress.pageCount} pages
-      </span>
-    </div>
+    <p className="lc-status">
+      <b>{progress.pagesRead}</b> of <b>{progress.pageCount}</b> pages
+    </p>
   );
 }
 
