@@ -29,3 +29,18 @@ export async function getLectureAccess(): Promise<Map<number, LectureAccess>> {
   }
   return out;
 }
+
+export type ExerciseSummary = { graded: number; pool: number; finished: boolean };
+
+// Questions graded and pool size per lecture the viewer may practise. Empty when signed out.
+export async function getExerciseSummary(): Promise<Map<number, ExerciseSummary>> {
+  const out = new Map<number, ExerciseSummary>();
+  if (!supabaseConfigured) return out;
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("exercise_summary");
+  if (error || !data) return out;
+  for (const r of data as { lecture: number; graded: number; pool: number; finished: boolean }[]) {
+    out.set(r.lecture, { graded: r.graded, pool: r.pool, finished: r.finished });
+  }
+  return out;
+}

@@ -6,7 +6,14 @@ import { lectures, parts } from "@/lib/concepts";
 import { difficulty, difficultyName } from "@/lib/difficulty";
 import { lessonNumbers } from "@/lib/lessons/available";
 import { getTier, type Tier } from "@/lib/access";
-import { getLectureAccess, getLessonProgress, type LectureAccess, type LessonProgress } from "@/lib/progress";
+import {
+  getExerciseSummary,
+  getLectureAccess,
+  getLessonProgress,
+  type ExerciseSummary,
+  type LectureAccess,
+  type LessonProgress,
+} from "@/lib/progress";
 
 export const metadata: Metadata = {
   title: "Lectures · chonk122",
@@ -49,9 +56,26 @@ function Status({ n, access, progress }: { n: number; access?: LectureAccess; pr
   );
 }
 
+function Exercises({ n, summary }: { n: number; summary?: ExerciseSummary }) {
+  if (!summary) return null;
+  return (
+    <p className="lc-ex">
+      <Link href={`/exercises/${n}`}>Exercises</Link>{" "}
+      <span className="muted">
+        {summary.finished ? "· all done" : `· ${summary.graded} of ${summary.pool} done`}
+      </span>
+    </p>
+  );
+}
+
 // The full list of lectures and where the student is in each. The course map stays a short summary.
 export default async function LecturesPage() {
-  const [tier, access, progress] = await Promise.all([getTier(), getLectureAccess(), getLessonProgress()]);
+  const [tier, access, progress, exercises] = await Promise.all([
+    getTier(),
+    getLectureAccess(),
+    getLessonProgress(),
+    getExerciseSummary(),
+  ]);
 
   return (
     <main className="container">
@@ -84,7 +108,11 @@ export default async function LecturesPage() {
                       {difficultyName[d]}
                     </p>
                     <Status n={l.n} access={access.get(l.n)} progress={p} />
-                    {p && <ResetButton n={l.n} />}
+                    <Exercises n={l.n} summary={exercises.get(l.n)} />
+                    <div className="lc-resets">
+                      {(p || exercises.get(l.n)?.graded) && <ResetButton n={l.n} kind="lecture" />}
+                      {exercises.get(l.n)?.graded ? <ResetButton n={l.n} kind="exercises" /> : null}
+                    </div>
                   </li>
                 );
               })}
