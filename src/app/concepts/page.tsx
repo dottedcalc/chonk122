@@ -16,8 +16,8 @@ export default function ConceptsPage() {
           How the ideas of <span className="nowrap">15-122</span> connect
         </h1>
         <p className="lede">
-          The course has three parts and builds on five big ideas. Each lecture below has a short
-          summary, and you can tap any idea to see where it appears.
+          The course builds on five big ideas. Each one below lists what you need to know, and you
+          can tap any idea to see which lectures teach it.
         </p>
       </header>
       <ConceptMap />

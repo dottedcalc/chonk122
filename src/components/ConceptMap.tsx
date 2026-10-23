@@ -36,7 +36,6 @@ export function ConceptMap() {
           {categories.map((cat) => (
             <div key={cat.id} className="cm-box cm-cat" style={tint(cat)}>
               <h3>{cat.name}</h3>
-              <p className="cm-q">{cat.question}</p>
               <div className="cm-subs">
                 {cat.ideas.map((idea) => (
                   <button
@@ -68,35 +67,17 @@ export function ConceptMap() {
       </section>
 
       <section className="cm-section">
-        <h2 className="section-title">The course in three parts</h2>
+        <h2 className="section-title">What you need to know</h2>
         <div className="cm-parts">
-          {parts.map((part) => (
-            <div key={part.name} className="cm-box cm-part">
-              <h3>{part.name}</h3>
-              <div className={`cm-lrows${filter ? " filtering" : ""}`}>
-                {lectures.slice(part.from - 1, part.to).map((l) => (
-                  <div key={l.n} id={`l${l.n}`} className={`cm-lrow${filter && l.ideas.includes(filter) ? " hit" : ""}`}>
-                    <span className="cm-n">{l.n}</span>
-                    <span className="cm-t">{l.title}</span>
-                    <span className="cm-s">
-                      <span dangerouslySetInnerHTML={{ __html: l.summary }} />
-                      {lessonNumbers.includes(l.n) && (
-                        <>
-                          {" "}
-                          <Link href={`/lessons/${l.n}`} className="cm-lesson">
-                            Open the lesson →
-                          </Link>
-                        </>
-                      )}
-                    </span>
-                    <span className="cm-tags">
-                      {l.ideas.map((id) => (
-                        <i key={id} title={ideas[id].name} style={tint(ideas[id].cat)} />
-                      ))}
-                    </span>
-                  </div>
+          {categories.map((cat) => (
+            <div key={cat.id} className="cm-box cm-part cm-know" style={tint(cat)}>
+              <h3>{cat.name}</h3>
+              <p className="cm-eu">{cat.question}</p>
+              <ol className="cm-specs">
+                {cat.specifics.map((html, i) => (
+                  <li key={i} dangerouslySetInnerHTML={{ __html: html }} />
                 ))}
-              </div>
+              </ol>
             </div>
           ))}
         </div>
@@ -154,11 +135,17 @@ export function ConceptMap() {
               <span style={{ ...tint(ideas[sel[0]].cat), color: "var(--k)", fontWeight: 800 }}>
                 {ideas[sel[0]].name}
               </span>
-              <br />
-              <span dangerouslySetInnerHTML={{ __html: lectures[sel[1] - 1].summary }} />
+              {lessonNumbers.includes(sel[1]) && (
+                <>
+                  <br />
+                  <Link href={`/lessons/${sel[1]}`} className="cm-lesson">
+                    Open the lesson →
+                  </Link>
+                </>
+              )}
             </>
           ) : (
-            <span className="muted">Tap a dot to read that lecture&apos;s summary.</span>
+            <span className="muted">Tap a dot to see which lecture it is.</span>
           )}
         </div>
       </section>

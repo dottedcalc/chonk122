@@ -254,6 +254,11 @@ button.cm-chip:hover { background: var(--card); }
 .cm-part:nth-child(2) { box-shadow: 5px 6px 0 var(--beak); }
 .cm-part:nth-child(3) { box-shadow: 5px 6px 0 var(--honk); }
 .cm-part h3 { font-size: 1.9rem; margin: 0 0 6px; line-height: 1; }
+.cm-part.cm-know { box-shadow: 5px 6px 0 var(--k); padding-bottom: 16px; }
+.cm-know h3 { color: var(--k); }
+.cm-eu { margin: 0 0 8px; font-weight: 700; font-size: 1.02rem; }
+.cm-specs { margin: 0; padding-left: 1.4rem; display: grid; gap: 8px; font-size: 0.95rem; line-height: 1.55; }
+.cm-specs code { font-size: 0.85rem; background: var(--ks); padding: 0 4px; border-radius: 4px; }
 .cm-lrow {
   display: grid; grid-template-columns: 2.6rem minmax(0, 10rem) minmax(0, 1fr) auto; gap: 12px; align-items: baseline;
   padding: 10px 4px; border-top: 2px dashed var(--paper-dot); transition: opacity 0.15s;
