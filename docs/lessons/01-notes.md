@@ -23,7 +23,7 @@ Source: Fall 2026 Lecture 1 notes, "Contracts" (Pfenning and Cervesato), plus yo
 | 4 | Postconditions: the function's promise, giving correctness. | Toggle a contract on and off and see which bad results it catches. | 1.5 min |
 | 5 | Contracts in C0 and checking them with `-d`. | Run with and without `-d` and compare outputs for a bad call. | 1.5 min |
 | 6 | Operational reasoning breaks down on loops. | Stepper on a large `y`. Predict how many iterations run. Honk loses track. | 2 min |
-| 7 | A loop invariant is a fact true at the start of every iteration. | Stepper showing `r * POW(b,e) == POW(x,y)` checked before each iteration. | 2 min |
+| 7 | A loop invariant is a fact true at the start of every iteration. | Stepper showing both invariants of `chonk_share` checked before each guard check. | 2 min |
 | 8 | Point-to reasoning: what you may and may not cite. | Sort cards into "can cite" and "can't cite". | 2 min |
 | 9 | INIT. | Build the proof by clicking the lines each step points to. | 1.5 min |
 | 10 | PRES: one arbitrary iteration, tracking changes with primes. (Your "common confusion".) | Justify each step for `chonk_left'` and `goose_share'` by citing lines. | 2 min |
