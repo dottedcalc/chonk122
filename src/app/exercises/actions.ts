@@ -10,7 +10,8 @@ import { supabaseConfigured } from "@/lib/supabase/config";
 
 export type Grade = "got" | "partly" | "missed";
 export type Item = { id: string; position: number; question: string; alt: string; answer: string | null; grade: Grade | null };
-export type Round = { round: number; finished: boolean; items: Item[] };
+export type Level = 1 | 2 | 3 | null; // null is Auto
+export type Round = { round: number; finished: boolean; items: Item[]; level: Level };
 
 const LINK_SECONDS = 15 * 60;
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -41,7 +42,9 @@ export async function startRound(n: number): Promise<Round | null> {
   if (error || !data) return null;
   const rows = (data as Row[]).filter((r) => r.attempt_id && r.question_path);
   const links = await sign(supabase, rows.flatMap((r) => [r.question_path!, ...(r.answer_path ? [r.answer_path] : [])]));
+  const { data: state } = await supabase.from("exercise_state").select("chosen_tier").eq("lecture", n).maybeSingle();
   return {
+    level: (state?.chosen_tier ?? null) as Level,
     round: (data as Row[])[0]?.round ?? 0,
     finished: (data as Row[])[0]?.finished ?? true,
     items: rows.map((r) => ({
@@ -53,6 +56,14 @@ export async function startRound(n: number): Promise<Round | null> {
       grade: r.grade,
     })),
   };
+}
+
+// Sets the student's level for lecture n: 1, 2 or 3, or null for Auto. Applies from the next round.
+export async function setLevel(n: number, level: Level): Promise<boolean> {
+  if (!supabaseConfigured || !okLecture(n) || ![1, 2, 3, null].includes(level)) return false;
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("set_exercise_level", { lecture: n, level });
+  return !error;
 }
 
 export async function revealAnswer(attemptId: string): Promise<string | null> {
