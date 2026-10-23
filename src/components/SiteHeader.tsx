@@ -25,6 +25,11 @@ export async function SiteHeader() {
         <Link href="/concepts" className="nav-link">
           Course map
         </Link>
+        {email && (
+          <Link href="/progress" className="nav-link">
+            Progress
+          </Link>
+        )}
         {email ? (
           <form action="/auth/signout" method="post" className="who">
             <span className="muted">{email}</span>
