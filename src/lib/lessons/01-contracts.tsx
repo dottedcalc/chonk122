@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Code } from "@/components/lesson/Code";
 import { Comic } from "@/components/lesson/Comic";
+import { Big } from "@/components/lesson/Big";
 import { Hi } from "@/components/lesson/Hi";
 import { Pick } from "@/components/lesson/Pick";
 import { Rows } from "@/components/lesson/Rows";
@@ -99,7 +100,7 @@ function trace(chonk: number, geese: number, guardOnly: boolean): Step[] {
     steps.push({
       line: 8,
       vars: vars(left, gs),
-      note: `Loop guard: ${left} >= ${geese} is ${go}.${go ? "" : " The loop stops."}`,
+      note: `The loop guard ${left} >= ${geese} is ${go}.${go ? "" : " The loop stops."}`,
       ...(guardOnly ? { checks: invariants() } : {}),
     });
     if (!go) break;
@@ -117,27 +118,26 @@ export const contracts: Lesson = {
   title: "Contracts",
   pages: [
     {
-      title: "A function with no instructions",
+      title: "A mystery function",
       minutes: 2,
       body: (
         <>
+          <p>
+            Every program relies on functions that someone else wrote. Before we use one, we want to know two things. Is
+            it <b>safe</b>, meaning it runs without errors? Is it <b>correct</b>, meaning it returns the right answer?
+          </p>
           <Comic
             panels={[
-              { who: "chonk", say: "I found this in my old files. I think it shares out crumbs?" },
-              { who: "honk", say: "Honk! Let's run it and find out." },
+              { who: "chonk", pose: "point", say: "This old function should share my crumbs among the geese." },
+              { who: "honk", pose: "think", say: "Can we trust it? Let's test it first." },
             ]}
           />
-          <p>
-            Here is the whole function. It has no comments and no <b>contracts</b>. Run it on a few inputs and look for
-            a pattern.
-          </p>
+          <p className="task">Run f on a few inputs and look for a pattern.</p>
           <Code src={mystery} label="The mystery function f" />
           <RunTable
             runs={[
               { call: <code>f(12, 3)</code>, out: "returns 4" },
               { call: <code>f(14, 3)</code>, out: "returns 4" },
-              { call: <code>f(2, 5)</code>, out: "returns 0" },
-              { call: <code>f(100, 7)</code>, out: "returns 14" },
               { call: <code>f(-7, 2)</code>, out: "returns 0" },
               { call: <code>f(10, 0)</code>, out: "never returns, because the loop runs forever" },
             ]}
@@ -152,8 +152,8 @@ export const contracts: Lesson = {
             answer={1}
             explain={
               <>
-                It matches integer division on most inputs. Two calls don&apos;t fit. In C0, <code>-7 / 2</code> is{" "}
-                <code>-3</code>, and <code>f(10, 0)</code> never returns.
+                It matches integer division on most inputs. In C0, <code>-7 / 2</code> is <code>-3</code>, and{" "}
+                <code>f(10, 0)</code> never returns.
               </>
             }
           />
@@ -161,13 +161,13 @@ export const contracts: Lesson = {
       ),
     },
     {
-      title: "Correct compared to what?",
+      title: "Writing a specification",
       minutes: 1.5,
       body: (
         <>
           <p>
-            Is <code>f(-7, 2)</code> returning 0 a bug? Without a <b>specification</b>,{" "}
-            <Hi>there is no standard for whether code is safe or correct</Hi>.
+            A <b>specification</b> says what a function must do.{" "}
+            <Hi>Without one, there is no standard for safe or correct.</Hi>
           </p>
           <Pick
             question={
@@ -177,33 +177,32 @@ export const contracts: Lesson = {
             }
             options={["Yes, f is broken", "No, 0 is fine", "We can't tell yet"]}
             answer={2}
-            explain="Whether 0 is wrong depends on what f promised, and so far it promises nothing."
+            explain="That depends on what f promises, and so far it promises nothing."
           />
           <p>
-            Chonk explains the plan. The function shares <code>chonk</code> crumbs among <code>geese</code> geese, and
-            each goose gets as many crumbs as possible. In C0 we write that plan as <b>contracts</b>.
+            Chonk wants each of the <code>geese</code> geese to get as many of the <code>chonk</code> crumbs as
+            possible. C0 states this plan as <Big>contracts</Big>, which are comments starting with <code>{"//@"}</code>{" "}
+            that describe what must be true.
           </p>
           <Code src={spec} label="The contracts for chonk_share" />
-          <ul>
-            <li>
-              <code>chonk - \result * geese</code> is the number of crumbs left over.
-            </li>
-            <li>The two ensures lines say the leftover is at least 0 and too small to give every goose one more.</li>
-          </ul>
+          <p>
+            The expression <code>chonk - \result * geese</code> counts the leftover crumbs. The ensures lines say at
+            least 0 are left, and too few to give every goose one more.
+          </p>
         </>
       ),
     },
     {
-      title: "Preconditions are the caller's job",
+      title: "Preconditions",
       minutes: 2,
       body: (
         <>
           <p>
-            A <b>precondition</b> (<code>{"//@requires"}</code>) says which inputs are allowed.{" "}
-            <Hi>The caller must make it true</Hi> before calling. In return the function can count on it, which keeps
-            the function <b>safe</b> to run. Here, <code>geese &gt; 0</code> is what lets the loop finish.
+            A <b>precondition</b> is a <Big>contract</Big> (<code>{"//@requires"}</code>) that states what must be true
+            when a function is called. <Hi>The caller must make it true.</Hi> The function can then rely on it, which
+            keeps the function safe.
           </p>
-          <p className="task">Whose fault is each of these?</p>
+          <p className="task">Who is at fault in each case?</p>
           <Rows
             options={["The caller", "chonk_share"]}
             rows={[
@@ -214,11 +213,7 @@ export const contracts: Lesson = {
                   </>
                 ),
                 answer: 0,
-                why: (
-                  <>
-                    <code>geese &gt; 0</code> is false, so the caller broke the precondition.
-                  </>
-                ),
+                why: "The call breaks the precondition geese > 0.",
               },
               {
                 prompt: (
@@ -227,11 +222,7 @@ export const contracts: Lesson = {
                   </>
                 ),
                 answer: 0,
-                why: (
-                  <>
-                    <code>chonk &gt;= 0</code> is false. The function owes nothing on this input.
-                  </>
-                ),
+                why: "The call breaks the precondition chonk >= 0.",
               },
               {
                 prompt: (
@@ -240,23 +231,27 @@ export const contracts: Lesson = {
                   </>
                 ),
                 answer: 1,
-                why: "Both preconditions hold, so the answer must be right. With 1 crumb each, 3 are left, enough to give every goose another.",
+                why: "The preconditions hold, so the function must be right. Three crumbs are left, enough for one more each.",
               },
             ]}
           />
+          <Comic panels={[{ who: "honk", pose: "oops", say: "So calling f(10, 0) was our mistake!" }]} />
         </>
       ),
     },
     {
-      title: "Postconditions are the function's promise",
+      title: "Postconditions",
       minutes: 1.5,
       body: (
         <>
           <p>
-            A <b>postcondition</b> (<code>{"//@ensures"}</code>) describes the result. Whenever the preconditions held,{" "}
-            <Hi>the function must make its postconditions true</Hi> when it returns. That is what <b>correct</b> means.
+            A <b>postcondition</b> is a <Big>contract</Big> (<code>{"//@ensures"}</code>) that states what must be true
+            when a function returns. If the preconditions held, <Hi>the function must make its postconditions true.</Hi>{" "}
+            That is what correct means.
           </p>
-          <p className="task">Try three versions of the loop guard. Each one passes one test.</p>
+          <p className="task">
+            Two of these loop guards are wrong, yet each passes one test. Run both tests on every version.
+          </p>
           <Versions
             label="Loop guard versions"
             tabs={[
@@ -267,8 +262,8 @@ export const contracts: Lesson = {
                     <Code src={loopWith("chonk_left >= geese")} start={8} hi={[8]} />
                     <RunTable
                       runs={[
-                        { call: <code>chonk_share(6, 3)</code>, out: "returns 2, ensures holds", ok: true },
-                        { call: <code>chonk_share(7, 3)</code>, out: "returns 2, ensures holds", ok: true },
+                        { call: <code>chonk_share(6, 3)</code>, out: "returns 2, and ensures holds", ok: true },
+                        { call: <code>chonk_share(7, 3)</code>, out: "returns 2, and ensures holds", ok: true },
                       ]}
                     />
                   </>
@@ -285,12 +280,12 @@ export const contracts: Lesson = {
                           call: <code>chonk_share(6, 3)</code>,
                           out: (
                             <>
-                              returns 1. 3 crumbs are left, and <code>3 &lt; 3</code> is false.
+                              returns 1. Three crumbs are left, and <code>3 &lt; 3</code> is false.
                             </>
                           ),
                           ok: false,
                         },
-                        { call: <code>chonk_share(7, 3)</code>, out: "returns 2, ensures holds", ok: true },
+                        { call: <code>chonk_share(7, 3)</code>, out: "returns 2, and ensures holds", ok: true },
                       ]}
                     />
                   </>
@@ -303,12 +298,13 @@ export const contracts: Lesson = {
                     <Code src={loopWith("chonk_left > 0")} start={8} hi={[8]} />
                     <RunTable
                       runs={[
-                        { call: <code>chonk_share(6, 3)</code>, out: "returns 2, ensures holds", ok: true },
+                        { call: <code>chonk_share(6, 3)</code>, out: "returns 2, and ensures holds", ok: true },
                         {
                           call: <code>chonk_share(7, 3)</code>,
                           out: (
                             <>
-                              returns 3. <code>7 - 3 * 3</code> is -2, and <code>0 &lt;= -2</code> is false.
+                              returns 3. The leftover <code>7 - 3 * 3</code> is -2, and <code>0 &lt;= -2</code> is
+                              false.
                             </>
                           ),
                           ok: false,
@@ -320,7 +316,11 @@ export const contracts: Lesson = {
               },
             ]}
           />
-          <p>A single passing test proved nothing about the two broken versions.</p>
+          <Comic
+            panels={[
+              { who: "chonk", pose: "think", say: "One passing test told us nothing about the broken versions." },
+            ]}
+          />
         </>
       ),
     },
@@ -330,37 +330,39 @@ export const contracts: Lesson = {
       body: (
         <>
           <p>
-            Contracts are comments that start with <code>{"//@"}</code>. Plain <code>cc0</code> ignores them. Compile
-            with <code>-d</code> and C0 checks each one as the code runs, stopping at the first that fails.
+            C0 ignores <Big>contracts</Big> unless you compile with the <code>-d</code> flag. With <code>-d</code>, it
+            checks each contract as the code runs and stops at the first one that fails.
           </p>
           <p className="task">
-            A test file calls <code>chonk_share(10, 0)</code>. Run it both ways.
+            A test calls <code>chonk_share(10, 0)</code>. Run it both ways.
           </p>
           <RunTable
             runs={[
-              { call: <code>cc0</code>, out: "Nothing is printed. The loop runs forever." },
+              { call: <code>cc0</code>, out: "Nothing is printed, because the loop runs forever." },
               {
                 call: <code>cc0 -d</code>,
-                out: "Stops at once. The @requires on line 2 fails, so the caller is to blame.",
+                out: "The run stops at once because the @requires on line 2 fails.",
               },
             ]}
           />
           <p>
             <Hi>
-              <code>-d</code> only checks the inputs you actually run.
+              The <code>-d</code> flag only checks the inputs you run.
             </Hi>{" "}
-            To know the code works on <b>every</b> allowed input, we need a proof.
+            To know the code works on every allowed input, we need a <b>proof</b>, which is an argument that covers all
+            of them.
           </p>
+          <Comic panels={[{ who: "honk", pose: "think", say: "So how do we prove it for every input?" }]} />
         </>
       ),
     },
     {
-      title: "Tracing every step gets out of hand",
+      title: "Operational reasoning",
       minutes: 2,
       body: (
         <>
           <p>
-            Following code line by line is <b>operational reasoning</b>. Step through one call.
+            Following code line by line to see what it does is <b>operational reasoning</b>. Step through one call.
           </p>
           <Stepper src={share} sets={[{ label: "chonk_share(23, 5)", steps: trace(23, 5, false) }]} />
           <Pick
@@ -371,25 +373,26 @@ export const contracts: Lesson = {
             }
             options={["7", "142", "143", "1000"]}
             answer={1}
-            explain="1000 is 142 * 7 + 6. Tracing it means 142 rounds, and it tells us nothing about any other input."
+            explain="The answer is 142 because 1000 is 142 * 7 + 6. Tracing that tells us nothing about other inputs."
           />
           <Comic
             panels={[
-              { who: "honk", say: "Round 97... chonk_left is 321... wait, which round was I on?" },
-              { who: "chonk", say: "We need a way to reason without counting rounds." },
+              { who: "honk", pose: "oops", say: "Round 97... which round was I on?" },
+              { who: "chonk", pose: "think", say: "We need a way to reason without counting rounds." },
             ]}
           />
         </>
       ),
     },
     {
-      title: "One fact that every round keeps",
+      title: "Loop invariants",
       minutes: 2,
       body: (
         <>
           <p>
-            A <b>loop invariant</b> is a fact that is <Hi>true just before every check of the loop guard</Hi>, including
-            the last check, when the loop stops. Watch both invariants of <code>chonk_share</code>.
+            A <Big>loop invariant</Big> is a fact that is <Hi>true just before every check of the loop guard</Hi>,
+            including the final check, when the loop stops. Watch both invariants of <code>chonk_share</code> as it
+            runs.
           </p>
           <Stepper
             src={share}
@@ -399,95 +402,91 @@ export const contracts: Lesson = {
               { label: "(2, 5)", steps: trace(2, 5, true) },
             ]}
           />
-          <p>
-            Each round changes <code>chonk_left</code> and <code>goose_share</code>, but crumbs handed out plus crumbs
-            left always add up to all the crumbs.
-          </p>
+          <Comic
+            panels={[
+              { who: "chonk", pose: "cheer", say: "Crumbs handed out plus crumbs left always make all the crumbs!" },
+            ]}
+          />
         </>
       ),
     },
     {
-      title: "Point-to reasoning: cite the line",
+      title: "Point-to reasoning",
       minutes: 2,
       body: (
         <>
           <p>
-            In <b>point-to reasoning</b>, every fact is justified by pointing to a specific line or to math.{" "}
-            <Hi>A line can be cited only while nothing has changed its fact</Hi>.
+            In <b>point-to reasoning</b>, we justify every fact by pointing to a line of code or to math.{" "}
+            <Hi>A line can be cited only while nothing has changed its fact.</Hi>
           </p>
           <Code src={share} hi={[12]} />
-          <p className="task">We are inside the loop body, just before line 12. Can we cite each fact?</p>
+          <p className="task">We are inside the loop body, just before line 12. Which facts can we cite?</p>
           <Rows
             options={["Can cite", "Can't cite"]}
             rows={[
               {
                 prompt: <code>chonk_left &gt;= geese</code>,
                 answer: 0,
-                why: "Line 8. Inside the loop body, the loop guard is true.",
-              },
-              {
-                prompt: <code>geese &gt; 0</code>,
-                answer: 0,
-                why: "Line 2, the precondition. Nothing changes geese.",
+                why: "Line 8 can be cited because the loop guard is true inside the body.",
               },
               {
                 prompt: <code>goose_share * geese + chonk_left == chonk</code>,
                 answer: 0,
-                why: "Line 10. Loop invariants hold at the start of the body.",
+                why: "Line 10 can be cited because invariants hold at the start of the body.",
               },
               {
                 prompt: <code>chonk_left == chonk</code>,
                 answer: 1,
-                why: "Line 7 set it, but earlier rounds may have changed chonk_left since.",
+                why: "Line 7 set this, but an earlier round may have changed chonk_left.",
               },
               {
                 prompt: (
                   <>
-                    <code>chonk_left</code> was 13 last round
+                    <code>chonk_left</code> was 13 in the previous round.
                   </>
                 ),
                 answer: 1,
                 why: "Facts about earlier rounds can be cited only through a loop invariant.",
               },
-              { prompt: <code>0 * geese == 0</code>, answer: 0, why: "Math." },
             ]}
           />
         </>
       ),
     },
     {
-      title: "INIT: true before the first check",
+      title: "Proving INIT",
       minutes: 1.5,
       body: (
         <>
           <p>
-            <b>INIT</b> shows that each loop invariant is true before the loop guard is checked for the first time. Only
-            lines 1 to 7 have run.
+            <b>INIT</b> shows that each <Big>loop invariant</Big> holds before the loop guard is checked for the first
+            time. Only lines 1 to 7 have run at that point.
           </p>
           <Code src={share} hi={[6, 7, 9, 10]} />
-          <p className="task">Pick the justification for each step.</p>
+          <p className="task">Choose the justification for each step.</p>
           <Rows
             numbered
             options={["line 2", "line 6", "line 7", "math on earlier steps"]}
             rows={[
               {
-                group: "Line 9: chonk_left >= 0",
+                group: "Line 9 holds.",
                 prompt: <code>chonk_left == chonk</code>,
                 answer: 2,
-                why: "The assignment on line 7.",
+                why: "This is the assignment on line 7.",
               },
-              { prompt: <code>chonk &gt;= 0</code>, answer: 0, why: "The precondition on line 2." },
-              { prompt: <code>chonk_left &gt;= 0</code>, answer: 3, why: "Math on steps 1 and 2." },
+              { prompt: <code>chonk &gt;= 0</code>, answer: 0, why: "This is the precondition on line 2." },
+              { prompt: <code>chonk_left &gt;= 0</code>, answer: 3, why: "This follows from steps 1 and 2." },
               {
-                group: "Line 10: goose_share * geese + chonk_left == chonk",
+                group: "Line 10 holds.",
                 prompt: <code>goose_share == 0</code>,
                 answer: 1,
-                why: "The assignment on line 6.",
+                given: true,
+                why: "This is the assignment on line 6.",
               },
               {
                 prompt: <code>goose_share * geese + chonk_left == 0 * geese + chonk == chonk</code>,
                 answer: 3,
-                why: "Math on steps 1 and 4.",
+                why: "This follows from steps 1 and 4.",
               },
             ]}
           />
@@ -495,20 +494,20 @@ export const contracts: Lesson = {
       ),
     },
     {
-      title: "PRES: one arbitrary round",
+      title: "Proving PRES",
       minutes: 2,
       body: (
         <>
           <p>
-            <b>PRES</b> shows that if the invariants hold at the start of a round, they hold again at its end. We never
-            say which round, so <Hi>one arbitrary round stands for all of them</Hi>. New values get a prime, as in{" "}
+            <b>PRES</b> shows that if the <Big>invariants</Big> hold at the start of a round, they hold again at its
+            end. <Hi>One arbitrary round stands for every round.</Hi> A prime marks a value after the round, as in{" "}
             <code>chonk_left&apos;</code>.
           </p>
           <Peek />
           <Comic
             panels={[
-              { who: "honk", say: "chonk_left' >= geese, by line 8!" },
-              { who: "chonk", say: "Line 8 is about chonk_left before line 12 shrank it." },
+              { who: "honk", pose: "point", say: "chonk_left' >= geese, by line 8!" },
+              { who: "chonk", pose: "think", say: "Line 8 is about chonk_left before line 12 shrank it." },
             ]}
           />
           <Rows
@@ -516,32 +515,34 @@ export const contracts: Lesson = {
             options={["line 8", "line 10", "line 12", "line 13", "math on earlier steps"]}
             rows={[
               {
-                group: "Line 9 again",
+                group: "Line 9 still holds.",
                 prompt: <code>chonk_left &gt;= geese</code>,
                 answer: 0,
+                given: true,
                 why: "The loop guard is true inside the body.",
               },
               {
                 prompt: <code>chonk_left&apos; == chonk_left - geese</code>,
                 answer: 2,
-                why: "The assignment on line 12.",
+                why: "This is the assignment on line 12.",
               },
-              { prompt: <code>chonk_left&apos; &gt;= 0</code>, answer: 4, why: "Math on steps 1 and 2." },
+              { prompt: <code>chonk_left&apos; &gt;= 0</code>, answer: 4, why: "This follows from steps 1 and 2." },
               {
-                group: "Line 10 again",
+                group: "Line 10 still holds.",
                 prompt: <code>goose_share * geese + chonk_left == chonk</code>,
                 answer: 1,
-                why: "The loop invariant holds at the start of the round.",
+                given: true,
+                why: "The invariant holds at the start of the round.",
               },
               {
                 prompt: <code>goose_share&apos; == goose_share + 1</code>,
                 answer: 3,
-                why: "The assignment on line 13.",
+                why: "This is the assignment on line 13.",
               },
               {
                 prompt: <code>goose_share&apos; * geese + chonk_left&apos; == chonk</code>,
                 answer: 4,
-                why: "(goose_share + 1) * geese + chonk_left - geese simplifies to the left side of step 4.",
+                why: "Substituting steps 2 and 5 gives the left side of step 4.",
               },
             ]}
           />
@@ -549,32 +550,37 @@ export const contracts: Lesson = {
       ),
     },
     {
-      title: "EXIT: invariants plus a false guard",
+      title: "Proving EXIT",
       minutes: 1.5,
       body: (
         <>
           <p>
-            When the loop stops, the loop guard is false and the invariants still hold. <b>EXIT</b> uses{" "}
-            <Hi>the invariants and the negated guard to prove the postconditions</Hi>. Line 15 returns{" "}
-            <code>goose_share</code>, so <code>\result</code> is <code>goose_share</code>.
+            When the loop stops, its guard is false and the <Big>invariants</Big> still hold. <b>EXIT</b> uses{" "}
+            <Hi>the invariants and the negated guard</Hi> to prove the postconditions. Line 15 returns{" "}
+            <code>goose_share</code>, so <code>\result</code> equals <code>goose_share</code>.
           </p>
           <Peek />
           <Rows
             numbered
             options={["line 8, negated", "line 9", "line 10", "math on earlier steps"]}
             rows={[
-              { prompt: <code>chonk_left &lt; geese</code>, answer: 0, why: "After the loop, the guard is false." },
-              { prompt: <code>chonk_left &gt;= 0</code>, answer: 1, why: "A loop invariant." },
-              { prompt: <code>goose_share * geese + chonk_left == chonk</code>, answer: 2, why: "A loop invariant." },
+              { prompt: <code>chonk_left &lt; geese</code>, answer: 0, why: "The loop guard is false after the loop." },
+              { prompt: <code>chonk_left &gt;= 0</code>, answer: 1, why: "This is a loop invariant." },
+              {
+                prompt: <code>goose_share * geese + chonk_left == chonk</code>,
+                answer: 2,
+                given: true,
+                why: "This is a loop invariant.",
+              },
               {
                 prompt: <code>0 &lt;= chonk - goose_share * geese</code>,
                 answer: 3,
-                why: "Math on steps 2 and 3. This proves line 3.",
+                why: "This follows from steps 2 and 3, and it proves line 3.",
               },
               {
                 prompt: <code>chonk - goose_share * geese &lt; geese</code>,
                 answer: 3,
-                why: "Math on steps 1 and 3. This proves line 4.",
+                why: "This follows from steps 1 and 3, and it proves line 4.",
               },
             ]}
           />
@@ -582,15 +588,16 @@ export const contracts: Lesson = {
       ),
     },
     {
-      title: "TERM: the loop must stop",
+      title: "Proving TERM",
       minutes: 1.5,
       body: (
         <>
           <p>
-            <b>TERM</b> argues that the loop runs only finitely many times. It is the one proof that may talk about
-            every round, so <Hi>it is informal and follows a template</Hi>. Fill in the blanks.
+            <b>TERM</b> shows that the loop runs only finitely many times. It is the one proof that may talk about every
+            round, so <Hi>it is informal and follows a template.</Hi>
           </p>
           <Peek />
+          <p className="task">Fill in the blanks.</p>
           <Rows
             options={["chonk_left", "goose_share", "0", "the loop guard"]}
             rows={[
@@ -599,33 +606,39 @@ export const contracts: Lesson = {
                 answer: 0,
                 why: "Line 12 subtracts geese, and geese > 0 by line 2.",
               },
-              { prompt: "It can never go below ___.", answer: 2, why: "The loop invariant on line 9." },
+              { prompt: "It can never go below ___.", answer: 2, why: "This is the loop invariant on line 9." },
               {
-                prompt: "So it can't decrease forever, and ___ eventually becomes false.",
+                prompt: "So it cannot decrease forever, and ___ eventually becomes false.",
                 answer: 3,
-                why: "Once chonk_left < geese, the loop stops.",
+                why: "The loop stops once chonk_left < geese.",
               },
             ]}
           />
           <p>
-            This is where <code>geese &gt; 0</code> matters. In <code>f(10, 0)</code>, <code>chonk_left</code> never
-            decreases, so the loop never stops.
+            This is why <code>geese &gt; 0</code> matters. In <code>f(10, 0)</code>, <code>chonk_left</code> never
+            decreases.
           </p>
         </>
       ),
     },
     {
-      title: "Spot the bad step",
+      title: "Spotting a bad proof step",
       minutes: 2,
       body: (
         <>
           <p>
-            Geese stand in a line, and goose number k honks k times. <code>total_honks</code> adds up every honk.
+            Geese stand in a line, and goose number k honks k times. The function <code>total_honks</code> counts all
+            the honks.
           </p>
           <Code src={honks} hi={[11, 12]} />
-          <p>Honk wrote this PRES proof for the invariant on line 9.</p>
+          <Comic
+            panels={[
+              { who: "honk", pose: "cheer", say: "I proved PRES for line 9!" },
+              { who: "chonk", pose: "think", say: "Let's check each step." },
+            ]}
+          />
           <Pick
-            question="Click the first step that is wrong."
+            question="Which step is the first one that is wrong?"
             options={[
               <span key="1">
                 1. <code>honks == goose * (goose + 1) / 2</code> by line 9
@@ -637,13 +650,13 @@ export const contracts: Lesson = {
                 3. <code>honks&apos; == honks + goose</code> by line 12
               </span>,
               <span key="4">
-                4. <code>honks&apos; == goose&apos; * (goose&apos; + 1) / 2</code> by math on 1, 2, 3
+                4. <code>honks&apos; == goose&apos; * (goose&apos; + 1) / 2</code> by math on 1, 2 and 3
               </span>,
             ]}
             answer={2}
             explain={
               <>
-                Line 12 runs after line 11, so it adds the new value. The right step is{" "}
+                Line 12 runs after line 11, so it adds the new value. The correct step is{" "}
                 <code>honks&apos; == honks + goose&apos;</code>, and then the math in step 4 works.
               </>
             }
@@ -652,14 +665,13 @@ export const contracts: Lesson = {
       ),
     },
     {
-      title: "Why prove things this way?",
+      title: "Why point-to proofs pay off",
       minutes: 1.5,
       body: (
         <>
           <p>
-            Point-to proofs feel like a lot for one short loop. They pay off as code grows, because{" "}
-            <Hi>each piece is checked on its own</Hi>. This is <b>modular</b> reasoning, and loop invariants also say
-            why a loop works.
+            Point-to proofs feel heavy for one short loop. They pay off as code grows, because{" "}
+            <Hi>each function is checked on its own.</Hi> This is called <b>modular</b> reasoning.
           </p>
           <Pick
             question={
@@ -670,25 +682,28 @@ export const contracts: Lesson = {
             }
             options={["The loop ran honk / 4 times", "Lines 3 and 4, the postconditions", "chonk_left ended below 4"]}
             answer={1}
-            explain="After a call, only the postconditions can be cited. The loop belongs to chonk_share."
+            explain="After a call, only the postconditions can be cited."
           />
-          <p>Invariants come back all semester.</p>
+          <p>
+            <Big>Invariants</Big> come back throughout the course.
+          </p>
           <ul>
             <li>
-              Loops over arrays in <Link href="/concepts#l4">Searching arrays</Link>,{" "}
+              Loops over arrays rely on them in <Link href="/concepts#l4">Searching arrays</Link>,{" "}
               <Link href="/concepts#l6">Binary search</Link> and <Link href="/concepts#l7">Quicksort</Link>.
             </li>
             <li>
-              <b>Data structure invariants</b> from <Link href="/concepts#l9">Stacks and queues</Link> onward.
+              Starting with <Link href="/concepts#l9">Stacks and queues</Link>, each data structure has invariants it
+              must always keep.
             </li>
             <li>
-              Putting them back after a change in <Link href="/concepts#l26">Restoring invariants</Link>.
+              <Link href="/concepts#l26">Restoring invariants</Link> shows how to repair them after a change.
             </li>
           </ul>
           <Comic
             panels={[
-              { who: "chonk", say: "So the crumbs always add up." },
-              { who: "honk", say: "And now we can prove it. Honk!" },
+              { who: "chonk", pose: "wave", say: "So the crumbs always add up." },
+              { who: "honk", pose: "cheer", say: "And now we can prove it!" },
             ]}
           />
         </>

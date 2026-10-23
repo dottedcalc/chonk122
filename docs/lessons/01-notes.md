@@ -66,3 +66,12 @@ The "aha" I'm aiming for (my reading of your notes): **a loop invariant lets you
 - `-7 / 2 == -3` in C0 (division truncates toward zero), by the C0 reference.
 - The `-d` page describes behaviour in words (the run stops at the failing `@requires`) instead of quoting `cc0`'s exact error text, which could not be run here.
 - The steppers compute their states in `trace()` in the lesson file, using the same code as above.
+
+## Revisions after the first review
+
+- Page 1 now opens with the motivation (can we trust code someone else wrote, and what do safe and correct mean) before the mystery function.
+- Pages have short titles and at most 100 words of prose, and every interactive asks at most 4 questions per page. Long proofs (INIT, PRES, EXIT) show some steps as given so the reader answers 4.
+- Honk and Chonk stand on the page in comic poses (wave, think, point, oops, cheer) with speech bubbles, facing each other, on most pages.
+- The big ideas of this lecture (Contracts, Invariants) get a strong highlight in their course map colour the first time they appear on a page.
+- All prose was proofread against the reword-exam-paper guidelines (no colons, semicolons or em dashes in sentences, complete sentences, questions asked directly).
+- Page 1 runs only four calls: (12, 3), (14, 3), (-7, 2) and (10, 0). The checked outputs above still apply.
