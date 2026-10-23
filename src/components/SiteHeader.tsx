@@ -23,7 +23,7 @@ export async function SiteHeader() {
           Lectures
         </Link>
         <Link href="/concepts" className="nav-link">
-          Five concepts
+          5 Big Ideas for 122
         </Link>
         {email ? (
           <form action="/auth/signout" method="post" className="who">

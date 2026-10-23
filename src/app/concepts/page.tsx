@@ -7,7 +7,7 @@ import { getTier } from "@/lib/access";
 import { getExerciseSummary, getLectureAccess, getLectureScores, type LectureScore } from "@/lib/progress";
 
 export const metadata: Metadata = {
-  title: "Five concepts to Ace CS122 · chonk122",
+  title: "5 Big Ideas for 122 · chonk122",
   description: "The five big ideas of 15-122, what you need to know for each, and your progress on them.",
 };
 
@@ -40,7 +40,7 @@ export default async function ConceptsPage() {
       <SiteHeader />
       <header className="cm-head">
         <h1>
-          Five concepts to Ace <span className="nowrap">CS122</span>
+          5 Big Ideas for <span className="nowrap">122</span>
         </h1>
       </header>
       <ConceptMap scores={ideaScores} />
