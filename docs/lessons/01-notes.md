@@ -60,7 +60,7 @@ The "aha" I'm aiming for (my reading of your notes): **a loop invariant lets you
 
 - `f`/`chonk_share` on (12, 3), (14, 3), (2, 5), (100, 7), (-7, 2), (23, 5), (1000, 7), (6, 3), (7, 3): returns 4, 4, 0, 14, 0, 4, 142, 2, 2. The loop body runs 142 times for (1000, 7).
 - `f(10, 0)` never stops (the program cut it off after 100000 iterations).
-- Guard `chonk_left > geese`: (6, 3) returns 1 and fails the second ensures, (7, 3) returns 2 and passes. Guard `chonk_left > 0`: (6, 3) returns 2 and passes, (7, 3) returns 3 and fails the first ensures.
+- Guard `chonk_left > geese`: (6, 3) returns 1 and fails the second ensures, (7, 3) returns 2 and passes. Guard `chonk_left > 0`: (6, 3) returns 2 and passes, (7, 3) returns 3 and fails the first ensures. Under `-d`, (7, 3) stops earlier, at the guard check where `chonk_left` is -2, because `//@loop_invariant chonk_left >= 0` fails before the function returns.
 - Both loop invariants of `chonk_share` were asserted at every guard check, and both postconditions at return, for all 0 <= chonk < 300 and 1 <= geese < 40. The result also equals `chonk / geese` there.
 - `total_honks` was asserted against its invariant and postcondition for every 0 <= geese <= 1000.
 - `-7 / 2 == -3` in C0 (division truncates toward zero), by the C0 reference.
