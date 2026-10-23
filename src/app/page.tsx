@@ -1,10 +1,12 @@
 import Link from "next/link";
+import { connection } from "next/server";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Honk } from "@/components/Honk";
 import { Chonk } from "@/components/Chonk";
 import { Ground } from "@/components/Ground";
 import { HonkButton } from "@/components/HonkButton";
 import { chonkLines, honkLines } from "@/components/mascotLines";
+import { chonkLooks, honkLooks, type ChonkOutfit, type HonkOutfit } from "@/components/outfits";
 import { ContractDoodle, EggDoodle, PointerDoodle, TreeDoodle } from "@/components/Doodles";
 
 const topics = [
@@ -13,6 +15,24 @@ const topics = [
   { title: "Data structures", blurb: "Stacks, queues, hash tables, BSTs and more.", Doodle: TreeDoodle },
   { title: "C0 → C", blurb: "From safe training wheels to real systems code.", Doodle: EggDoodle },
 ];
+
+function pick<T extends string>(looks: Record<T, unknown>): T {
+  const keys = Object.keys(looks) as T[];
+  return keys[Math.floor(Math.random() * keys.length)];
+}
+
+// Like the 15-122 staff page, Honk! (and now Chonk) wear a different costume on every visit.
+async function DressedHonk() {
+  await connection();
+  const outfit = pick<HonkOutfit>(honkLooks);
+  return <Honk className="meet-art" outfit={outfit} title={`Honk! dressed as: ${honkLooks[outfit].name}`} />;
+}
+
+async function DressedChonk() {
+  await connection();
+  const outfit = pick<ChonkOutfit>(chonkLooks);
+  return <Chonk className="meet-art" outfit={outfit} title={`Chonk dressed as: ${chonkLooks[outfit].name}`} />;
+}
 
 export default function Home() {
   return (
@@ -63,7 +83,7 @@ export default function Home() {
         <h2 className="section-title">Meet your guides</h2>
         <div className="meet-grid">
           <div className="meet-card">
-            <Honk className="meet-art" />
+            <DressedHonk />
             <div>
               <h3>Honk!</h3>
               <p className="tag">Mascot</p>
@@ -71,7 +91,7 @@ export default function Home() {
             </div>
           </div>
           <div className="meet-card">
-            <Chonk className="meet-art" />
+            <DressedChonk />
             <div>
               <h3>Chonk</h3>
               <p className="tag">Honk!&apos;s best friend</p>

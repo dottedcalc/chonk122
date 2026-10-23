@@ -387,6 +387,10 @@ mark.hi.c3 { background: var(--c3-soft); }
 .beat.honk.size-l .comic-art { height: 150px; }
 .beat.chonk.size-s .comic-art { height: 110px; }
 .beat.chonk.size-l .comic-art { height: 200px; }
+.beat.honk.size-xs .comic-art { height: 64px; }
+.beat.honk.size-xl .comic-art { height: 190px; }
+.beat.chonk.size-xs .comic-art { height: 92px; }
+.beat.chonk.size-xl .comic-art { height: 250px; }
 .comic-say {
   position: relative; padding: 6px 12px; background: var(--card); border: 2px solid var(--edge);
   border-radius: 24px 18px 22px 20px / 20px 22px 18px 24px; text-align: center;

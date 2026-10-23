@@ -1,12 +1,12 @@
 import { Wobble } from "./Wobble";
 import { PoseMark, poseAngles, type Pose } from "./poses";
+import { LookWords, chonkBody, chonkLooks, type ChonkOutfit, type Look } from "./outfits";
 
 // Big webbed plush foot, drawn from the ankle down so it fans out toward the viewer.
 const foot = "M-9 0C-20 10-32 22-34 34Q-26 41-17 36Q-8 44 0 37Q8 44 17 36Q26 41 34 34C32 22 20 10 9 0Z";
 
 // Puffy outlines: soft bumps so the edges read as a stuffed toy.
-const body =
-  "M140 142Q157.7 134.4 172.1 147.3Q191.3 145.8 201.1 162.6Q219.9 167.3 224.1 186.5Q240.7 196.9 238.9 216.6Q251.6 231.7 244 250Q251.6 268.3 238.9 283.3Q240.7 302.8 224.1 312.6Q219.9 330.2 201.1 332.9Q191.3 346.4 172.1 342.6Q157.7 352.4 140 345Q122.3 352.4 107.9 342.6Q88.7 346.4 78.9 332.9Q60.1 330.2 55.9 312.6Q39.3 302.8 41.1 283.3Q28.4 268.3 36 250Q28.4 231.7 41.1 216.6Q39.3 196.9 55.9 186.5Q60.1 167.3 78.9 162.6Q88.7 145.8 107.9 147.3Q122.3 134.4 140 142Z";
+const body = chonkBody;
 const head =
   "M150 28Q164.5 23.8 175 34.2Q189.6 37.2 193.3 51Q204.1 60.5 200 74Q204.1 87.5 193.3 97Q189.6 110.8 175 113.8Q164.5 124.2 150 120Q135.5 124.2 125 113.8Q110.4 110.8 106.7 97Q95.9 87.5 100 74Q95.9 60.5 106.7 51Q110.4 37.2 125 34.2Q135.5 23.8 150 28Z";
 
@@ -16,19 +16,25 @@ export function Chonk({
   title = "Chonk",
   pose = "stand",
   flip = false,
+  outfit = "plain",
 }: {
   className?: string;
   title?: string;
   pose?: Pose;
   // Face right instead of left.
   flip?: boolean;
+  outfit?: ChonkOutfit;
 }) {
   const a = poseAngles[pose];
+  const look: Look = chonkLooks[outfit];
   const tilt = `rotate(${a.head} 148 146)`;
   return (
     <svg className={className} viewBox="12 6 260 422" role="img" aria-label={title}>
       <defs>
         <Wobble id="chonk-wobble" />
+        <clipPath id="chonk-body-clip">
+          <path d={body} />
+        </clipPath>
       </defs>
       <g transform={flip ? "translate(284 0) scale(-1 1)" : undefined}>
         <g
@@ -38,6 +44,8 @@ export function Chonk({
           strokeLinecap="round"
           strokeLinejoin="round"
         >
+          {look.back}
+
           {/* short stuffed legs and big webbed feet, dangling */}
           <path d="M98 322C96 336 95 350 94 364L116 366C116 352 117 338 120 324Z" fill="var(--beak)" />
           <path d="M160 324C163 338 164 352 164 366L186 364C185 350 184 336 182 322Z" fill="var(--beak)" />
@@ -52,6 +60,7 @@ export function Chonk({
 
           {/* round stuffed body and stubby wings */}
           <path d={body} fill="var(--chonk)" />
+          {look.body}
           <path
             transform={`rotate(${a.front} 74 204)`}
             d="M58 176C34 186 22 222 26 256C28 280 40 294 52 290C62 268 70 226 68 190Z"
@@ -89,13 +98,31 @@ export function Chonk({
             />
             <path d="M64 87C80 85 98 81 115 75" fill="none" strokeWidth="2.2" />
           </g>
+          {look.collar}
+          <g transform={tilt}>{look.head}</g>
         </g>
         <g transform={tilt}>
-          <circle cx="138" cy="60" r="6" fill="var(--ink)" />
-          <circle cx="140" cy="58" r="2" fill="#fff" />
+          {!look.noEye && (
+            <>
+              <circle cx="138" cy="60" r="6" fill="var(--ink)" />
+              <circle cx="140" cy="58" r="2" fill="#fff" />
+            </>
+          )}
           <ellipse cx="156" cy="84" rx="9" ry="5" fill="var(--blush)" />
         </g>
+        {look.front && (
+          <g
+            filter="url(#chonk-wobble)"
+            stroke="var(--ink)"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            {look.front}
+          </g>
+        )}
       </g>
+      <LookWords look={look} flip={flip} width={284} />
       <PoseMark pose={pose} x={flip ? 60 : 224} y={34} size={1.8} />
     </svg>
   );
