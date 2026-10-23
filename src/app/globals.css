@@ -26,6 +26,10 @@
   --c2-soft: #fbe8d2;
   --c3: #2f6fb3;
   --c3-soft: #e0ebf7;
+  --c4: #7a4fb0;
+  --c4-soft: #ece3f7;
+  --c5: #b5404a;
+  --c5-soft: #f8e0e0;
   /* lecture difficulty, 1 blue to 5 red */
   --d1: #2f6fb3;
   --d2: #2a8f86;
@@ -49,6 +53,10 @@
     --c2-soft: #3a2a18;
     --c3: #82b4ea;
     --c3-soft: #1d2d40;
+    --c4: #c3a2ec;
+    --c4-soft: #2e2340;
+    --c5: #ef8a92;
+    --c5-soft: #3e2124;
     --d1: #82b4ea;
     --d2: #6cc9bf;
     --d3: #f0cd5a;

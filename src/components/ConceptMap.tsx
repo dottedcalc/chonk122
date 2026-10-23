@@ -31,7 +31,7 @@ export function ConceptMap() {
   return (
     <>
       <section className="cm-section">
-        <h2 className="section-title">Three big ideas</h2>
+        <h2 className="section-title">Five big ideas</h2>
         <div className="cm-cats">
           {categories.map((cat) => (
             <div key={cat.id} className="cm-box cm-cat" style={tint(cat)}>
