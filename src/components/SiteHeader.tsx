@@ -19,6 +19,9 @@ export async function SiteHeader() {
         CS122 Guide
       </Link>
       <nav className="nav-links">
+        <Link href="/lectures" className="nav-link">
+          Lectures
+        </Link>
         <Link href="/concepts" className="nav-link">
           Course map
         </Link>

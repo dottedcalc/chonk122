@@ -26,6 +26,12 @@
   --c2-soft: #fbe8d2;
   --c3: #2f6fb3;
   --c3-soft: #e0ebf7;
+  /* lecture difficulty, 1 blue to 5 red */
+  --d1: #2f6fb3;
+  --d2: #2a8f86;
+  --d3: #c99a06;
+  --d4: #dc7419;
+  --d5: #d23a33;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -43,6 +49,11 @@
     --c2-soft: #3a2a18;
     --c3: #82b4ea;
     --c3-soft: #1d2d40;
+    --d1: #82b4ea;
+    --d2: #6cc9bf;
+    --d3: #f0cd5a;
+    --d4: #f3a35c;
+    --d5: #f27d76;
   }
 }
 
@@ -287,8 +298,10 @@ button.cm-dot.sel { box-shadow: 0 0 0 3px var(--beak); }
 @media (max-width: 480px) {
   .nav-links { gap: 10px; flex-wrap: nowrap; }
   .nav-link { font-size: 1.05rem; white-space: nowrap; }
+  .nav-links .button.small { white-space: nowrap; font-size: 1rem; padding: 5px 12px; }
   .logo { font-size: 1.3rem; gap: 4px; }
-  .nav { gap: 8px; }
+  .nav { gap: 8px; flex-wrap: wrap; }
+  .nav-links { margin-left: auto; }
   .logo-honk { width: 34px; height: 41px; }
   .nav .button.small { font-size: 1.05rem; padding: 5px 12px; }
 }
@@ -459,3 +472,20 @@ button.opt:disabled:not(.right):not(.wrong) { opacity: 0.55; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* lectures dashboard */
+.lc-grid { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; }
+.lc-card { display: grid; gap: 6px; align-content: start; border-top: 8px solid var(--d); padding: 14px 16px 16px; }
+.lc-card h3 { font-size: 1.5rem; margin: 0; line-height: 1.1; }
+.lc-card h3 a { color: inherit; }
+.lc-closed h3 { color: var(--muted); }
+.lc-num { margin: 0; font-size: 0.85rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.lc-diff { margin: 0; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--d); font-weight: 700; }
+.lc-pips { display: inline-flex; gap: 3px; }
+.lc-pips span { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--d); }
+.lc-pips span.on { background: var(--d); }
+.lc-status { margin: 4px 0 0; display: grid; gap: 4px; font-size: 0.95rem; }
+.lc-bar { height: 8px; border-radius: 4px; background: var(--paper-dot); overflow: hidden; }
+.lc-bar span { display: block; height: 100%; background: var(--accent); }
+button.lc-reset { justify-self: start; font-size: 0.95rem; }
+.lc-confirm { margin: 4px 0 0; font-size: 0.95rem; }

@@ -2,12 +2,26 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { saveLessonPage } from "@/app/lectures/actions";
 
 export type PlayerPage = { title: string; minutes: number; body: React.ReactNode };
 
 // Shows one lesson page at a time, with Back/Next buttons, the arrow keys and a progress bar.
 // The page number lives in the URL hash so a reload or shared link opens the same page.
-export function LessonPlayer({ n, title, pages }: { n: number; title: string; pages: PlayerPage[] }) {
+// Signed-in students resume where they left off, and each page they reach is saved.
+export function LessonPlayer({
+  n,
+  title,
+  pages,
+  saving = false,
+  resumeAt = 1,
+}: {
+  n: number;
+  title: string;
+  pages: PlayerPage[];
+  saving?: boolean;
+  resumeAt?: number;
+}) {
   const [k, setK] = useState(0);
   const head = useRef<HTMLHeadingElement>(null);
   const moved = useRef(false);
@@ -16,7 +30,12 @@ export function LessonPlayer({ n, title, pages }: { n: number; title: string; pa
   useEffect(() => {
     const p = Number.parseInt(window.location.hash.slice(1), 10);
     if (p >= 1 && p <= pages.length) setK(p - 1);
-  }, [pages.length]);
+    else if (resumeAt > 1 && resumeAt <= pages.length) setK(resumeAt - 1);
+  }, [pages.length, resumeAt]);
+
+  useEffect(() => {
+    if (saving) saveLessonPage(n, k + 1).catch(() => {});
+  }, [saving, n, k]);
 
   const go = useCallback(
     (next: number) => {
@@ -88,8 +107,8 @@ export function LessonPlayer({ n, title, pages }: { n: number; title: string; pa
             Next →
           </button>
         ) : (
-          <Link href="/concepts" className="button">
-            Course map →
+          <Link href="/lectures" className="button">
+            All lectures →
           </Link>
         )}
       </nav>

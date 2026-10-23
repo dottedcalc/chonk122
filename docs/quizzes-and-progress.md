@@ -34,9 +34,11 @@ Built in small PRs. Each section says which PR adds it.
 
 ## 2. Lesson progress and the lectures dashboard (PR 2)
 
-- `lesson_progress(user_id, lecture, pages_seen, completed_at)`, own rows only, writes allowed
-  only where `can_access(lecture, 'lesson')`.
-- The lesson player saves the furthest page as you go when signed in.
+- `lesson_progress(user_id, lecture, pages_read, page_count, completed_at)`, own rows only,
+  writes allowed only where `can_access(lecture, 'lesson')`.
+- The lesson player saves the furthest page as you go when signed in (server action
+  `saveLessonPage`, which checks the page against the real lesson) and resumes there.
+- `lecture_access()` returns what the viewer may open in all 26 lectures in one call, for display.
 - `/lectures`: one card per lecture with your difficulty rating (1 blue to 5 red), lock state,
   lesson progress and proficiency. The course map stays a short summary and links here.
 - Reset a lecture clears its lesson progress and its exercises.

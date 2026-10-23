@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
 import { LessonPlayer } from "@/components/lesson/LessonPlayer";
 import { Locked } from "@/components/Locked";
-import { checkAccess } from "@/lib/access";
+import { checkAccess, getTier } from "@/lib/access";
+import { getLessonProgress } from "@/lib/progress";
 import { getLesson } from "@/lib/lessons";
 
 type Params = Promise<{ n: string }>;
@@ -25,13 +26,21 @@ export default async function LessonPage({ params }: { params: Params }) {
   if (!lesson) notFound();
 
   const lock = await checkAccess(lesson.n, "lesson");
+  const saving = !lock && (await getTier()) !== "audit";
+  const progress = saving ? (await getLessonProgress()).get(lesson.n) : undefined;
   return (
     <main className="container lesson">
       <SiteHeader />
       {lock ? (
         <Locked n={lesson.n} lock={lock} />
       ) : (
-        <LessonPlayer n={lesson.n} title={lesson.title} pages={lesson.pages} />
+        <LessonPlayer
+          n={lesson.n}
+          title={lesson.title}
+          pages={lesson.pages}
+          saving={saving}
+          resumeAt={progress && !progress.completed ? progress.pagesRead : 1}
+        />
       )}
     </main>
   );
