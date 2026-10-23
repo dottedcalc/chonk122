@@ -46,19 +46,25 @@ Built in small PRs. Each section says which PR adds it.
 ## 3. Exercises (PR 3)
 
 - Each lecture has a pool of 20 to 30 independent questions in tiers 1 to 3 (tiers are hidden).
-- Question and answer images live in a **private** Supabase Storage bucket. Storage policies let
-  a user create a short-lived signed link to a question only once it was served to them in a
-  round, and to its answer only after they revealed it.
-- `exercise_questions` (pool, not readable by users), `exercise_attempts` (own rows),
-  `exercise_state` (current tier per lecture).
-- `start_round(lecture)`: checks `can_access(lecture, 'exercises')`, then serves 4 questions the
-  user has never seen, at their current tier, filling from nearby tiers when one runs low. When
-  none are left the lecture's exercises are finished.
-- `reveal(attempt)` then `report(attempt, grade)` with grade got it / partly / missed; a report
-  is only accepted after the reveal.
-- Adaptive: after a round, 75% or better moves up a tier and under 50% moves down
-  (got it = 1, partly = 0.5).
-- Reset exercises clears a lecture's attempts and tier, so its pool can be served again.
+- `exercise_questions` (the pool) has no read policy at all. `exercise_attempts` and
+  `exercise_state` are readable by their owner only, and no client can write them directly.
+- Every step is a `security definer` function that checks `can_access(lecture, 'exercises')`:
+  - `start_round(lecture)` resumes an unfinished round, or serves up to 4 never-seen questions
+    nearest the student's tier (random within a tier). A lock stops two tabs serving twice.
+    When none are left, the lecture's exercises are finished.
+  - `reveal_answer(attempt)` marks the attempt revealed and returns its answer image.
+  - `grade_attempt(attempt, grade)` takes got it / partly / missed, only after the reveal and
+    only once. Finishing a round moves the tier up at 75% or better and down under 50%
+    (got it = 1, partly = 0.5).
+  - `reset_exercises(lecture)` clears the student's attempts so the pool can be served again.
+  - `exercise_summary()` gives graded counts and pool sizes for the dashboard.
+- Images live in the **private** `exercises` bucket (PNG or WebP, 2 MB max, random file names).
+  The storage policy lets a student sign a link to a question only once it was served to them,
+  and to its answer only after they revealed it. The server signs 15-minute links; the browser
+  never sees storage paths.
+- `/exercises/<n>` shows one question at a time with the round's four steps.
+- Resets: "Reset lecture" on /lectures clears the lesson and exercises, "Reset exercises"
+  clears only the exercises.
 
 ## 4. Proficiency and big ideas (PR 4)
 
@@ -81,8 +87,16 @@ one, and a big idea's score averages the lectures that teach it.
 
 ## 5. Question pools (PR 5 onwards)
 
-Pools are written with the 15-122 checkin skill, rendered to images, uploaded to the private
-bucket, and listed in `exercise_questions` by a migration. Lecture 1 comes first.
+Pools are written with the 15-122 checkin skill and rendered to PNG images. Each pool folder holds
+the images plus a `manifest.json` of `{ question, answer, tier, alt }` entries. Keep pools out of
+this repository, since anything committed is public. Upload one from your own machine with the
+service role key:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... node scripts/upload-pool.mjs 1 path/to/L01
+```
+
+Lecture 1 comes first.
 
 ## Setup after each migration
 

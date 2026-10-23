@@ -37,10 +37,11 @@ export async function saveLessonPage(n: number, page: number) {
   });
 }
 
-// Clears the student's progress in lecture n. The exercises PR adds its attempts here too.
+// Clears the student's lesson progress and exercises in lecture n.
 export async function resetLecture(n: number) {
   if (!supabaseConfigured || !Number.isInteger(n) || n < 1 || n > 26) return;
   const supabase = await createClient();
   await supabase.from("lesson_progress").delete().eq("lecture", n);
+  await supabase.rpc("reset_exercises", { lecture: n });
   revalidatePath("/lectures");
 }
