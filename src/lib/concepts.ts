@@ -65,6 +65,7 @@ export const categories: Category[] = [
       "<b>Order and randomness</b> both make algorithms faster. Sorted data lets binary search run in <b>O(log n)</b>. Random pivots make quicksort fast on average, and hash functions spread keys evenly across a table. (Lectures 4, 7 and 12)",
       "<b>Amortized analysis</b> averages the cost of operations over a long sequence. An unbounded array doubles its size when full, so even though one insertion can be expensive, each insertion costs <b>O(1)</b> on average. (Lecture 11)",
       "<b>Trees and graphs</b> organize data so that searching stays fast. Balanced trees such as AVL trees and heaps keep their height at <b>O(log n)</b>, and graph algorithms such as depth first search, breadth first search and Kruskal's algorithm find paths and spanning trees. (Lectures 15, 16 and 21 to 25)",
+      "Union find tracks the <b>equivalence classes</b> of connected vertices for Kruskal's algorithm. Each class has a <b>canonical representative</b>, two vertices are connected exactly when their representatives match, and <b>union by height</b> and <b>path compression</b> keep finding a representative fast. (Lectures 23 and 24)",
     ],
     ideas: [
       { id: "dc", name: "Divide and conquer" },
@@ -72,6 +73,7 @@ export const categories: Category[] = [
       { id: "cost", name: "Complexity and trade offs" },
       { id: "amort", name: "Amortized analysis" },
       { id: "tree", name: "Trees and graphs" },
+      { id: "eq", name: "Equivalence classes and representatives" },
     ],
   },
   {
@@ -104,13 +106,11 @@ export const categories: Category[] = [
       "C does not check <b>array bounds</b>, and <b>signed overflow</b> is undefined. The sizes of types depend on the implementation, so careful code uses <b>fixed size types and explicit casts</b>. (Lectures 18 and 19)",
       "A program can be compiled, interpreted or run on a <b>virtual machine</b>. The C0VM runs bytecode using an <b>operand stack, local variables and call frames</b>. (Lecture 20)",
       "Graphs are implemented in C with a choice of representation. An <b>adjacency matrix</b> uses O(v²) space and checks an edge in O(1), while an <b>adjacency list</b> keeps a linked list of neighbors for each vertex in O(v + e) space and suits <b>sparse graphs</b>. (Lecture 21)",
-      "Union find tracks the <b>equivalence classes</b> of connected vertices for Kruskal's algorithm. Each class has a <b>canonical representative</b>, two vertices are connected exactly when their representatives match, and <b>union by height</b> and <b>path compression</b> keep finding a representative fast. (Lectures 23 and 24)",
       "Heaps are rebuilt in C as <b>arrays</b>, with their invariants <b>temporarily broken and then restored</b> by sifting up or down. (Lectures 25 and 26)",
     ],
     ideas: [
       { id: "toc", name: "Transition to C" },
       { id: "impl", name: "Implementation strategies" },
-      { id: "eq", name: "Equivalence classes and representatives" },
     ],
   },
 ];
