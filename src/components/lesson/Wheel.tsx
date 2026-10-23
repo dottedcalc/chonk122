@@ -55,18 +55,31 @@ export function Wheel({
       <div className="wheel-body">
         <svg viewBox="0 0 300 300" className="wheel-svg" role="img" aria-label={`Circle of 4-bit patterns. The marker is on ${bits(at)}, read as ${num(read(at))}.`}>
           <circle cx="150" cy="150" r={R} className="wheel-ring" />
+          {/* A coloured arc from each spot halfway to its neighbours: orange for negatives, green for the rest. */}
+          {Array.from({ length: 16 }, (_, p) => {
+            const [ax, ay] = pos(p - 0.5, R);
+            const [bx, by] = pos(p + 0.5, R);
+            return (
+              <path
+                key={p}
+                d={`M${ax} ${ay} A ${R} ${R} 0 0 1 ${bx} ${by}`}
+                className={`wheel-arc${read(p) < 0 ? " neg" : ""}`}
+              />
+            );
+          })}
           {Array.from({ length: 16 }, (_, p) => {
             const [x, y] = pos(p, R);
             const [tx, ty] = pos(p, R - 40);
             const v = read(p);
             return (
-              <g key={p} className={`wheel-spot${p === at ? " at" : ""}${v < 0 ? " neg" : ""}`}>
+              <g key={p} className={`wheel-spot${p === at ? " at" : ""}${v < 0 ? " neg" : " pos"}`}>
                 <circle cx={x} cy={y} r="19" />
                 <text x={x} y={y + 1} className="wheel-val">
                   {num(v)}
                 </text>
                 <text x={tx} y={ty + 1} className="wheel-bits">
-                  {bits(p)}
+                  <tspan className="wheel-lead">{bits(p)[0]}</tspan>
+                  {bits(p).slice(1)}
                 </text>
               </g>
             );
@@ -86,6 +99,10 @@ export function Wheel({
           </text>
         </svg>
         <div className="wheel-side">
+          <p className="wheel-key">
+            <span className="wheel-sw neg" aria-hidden="true" /> Negative{" "}
+            <span className="wheel-sw pos" aria-hidden="true" /> Zero or positive
+          </p>
           <div className="step-ctrl">
             <button type="button" className="small-btn" onClick={() => step(-1)} disabled={!!goal && moved === 0}>
               − 1

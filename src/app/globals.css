@@ -516,9 +516,17 @@ button.dg.tiny { box-shadow: 1px 2px 0 var(--edge); }
 @media (max-width: 640px) { .wheel-body { grid-template-columns: 1fr; justify-items: center; } }
 .wheel-svg { width: 100%; max-width: 300px; height: auto; }
 .wheel-ring { fill: none; stroke: var(--paper-dot); stroke-width: 3; }
-.wheel-spot circle { fill: var(--card); stroke: var(--edge); stroke-width: 2; }
-.wheel-spot.neg circle { fill: var(--c2-soft); }
-.wheel-spot.at circle { fill: var(--c3); stroke-width: 3; }
+.wheel-arc { fill: none; stroke: var(--c1); stroke-width: 10; opacity: 0.55; }
+.wheel-arc.neg { stroke: var(--c2); }
+.wheel-spot circle { fill: var(--c1-soft); stroke: var(--c1); stroke-width: 2.5; }
+.wheel-spot.neg circle { fill: var(--c2-soft); stroke: var(--c2); }
+.wheel-spot.pos .wheel-lead { fill: var(--c1); font-weight: 800; }
+.wheel-spot.neg .wheel-lead { fill: var(--c2); font-weight: 800; }
+.wheel-key { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-weight: 700; }
+.wheel-sw { display: inline-block; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--c1); background: var(--c1-soft); }
+.wheel-sw.neg { border-color: var(--c2); background: var(--c2-soft); margin-left: 0; }
+.wheel-sw.pos { margin-left: 10px; }
+.wheel-spot.at circle { fill: var(--c3); stroke: var(--edge); stroke-width: 3; }
 .wheel-spot.at .wheel-val { fill: var(--card); }
 .wheel-val { font: 700 15px var(--font-body), system-ui, sans-serif; text-anchor: middle; dominant-baseline: central; fill: var(--fg); }
 .wheel-bits { font: 600 10px ui-monospace, Menlo, Consolas, monospace; text-anchor: middle; dominant-baseline: central; fill: var(--fg); }
