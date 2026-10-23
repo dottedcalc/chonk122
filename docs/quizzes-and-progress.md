@@ -21,12 +21,13 @@ Built in small PRs. Each section says which PR adds it.
 | --- | --- | --- |
 | audit | signed out | Lecture 1 lesson |
 | guest | any other Microsoft account | Lectures 1 to 3, lessons and exercises |
-| cmu | CMU's Microsoft tenant and an andrew.cmu.edu, cmu.edu or alumni.cmu.edu email | Lectures 1 to 26, after any unlock date |
+| cmu | a Microsoft sign-in with a confirmed andrew.cmu.edu, cmu.edu or alumni.cmu.edu email | Lectures 1 to 26, after any unlock date |
 
 - `public.access_tier()` and `public.can_access(lecture, part)` in
   `supabase/migrations/20261023000001_access_tiers.sql` hold the rules.
-- CMU status needs the token's issuer to be CMU's tenant. The Microsoft app accepts every tenant,
-  and any tenant can give an account an `@andrew.cmu.edu` email, so the email alone proves nothing.
+- CMU status checks the email domain on the Microsoft identity and that Supabase Auth confirmed
+  the email. Optionally, setting `cmu_tenant_id` in `private.settings` also requires CMU's own
+  tenant, which closes the gap of another tenant putting an unverified CMU address on an account.
 - `public.lecture_unlocks` holds optional per-lecture dates for CMU students.
 - `src/lib/access.ts` asks the database and returns why a lecture is locked;
   `src/components/Locked.tsx` shows that instead of the content.
@@ -84,7 +85,7 @@ bucket, and listed in `exercise_questions` by a migration. Lecture 1 comes first
 ## Setup after each migration
 
 Run new files in `supabase/migrations` in order (Supabase SQL editor or `supabase db push`).
-After PR 1, also set CMU's tenant id:
+Optionally, after PR 1, set CMU's tenant id to make CMU status stricter:
 
 ```sql
 insert into private.settings values ('cmu_tenant_id', '<tenant id>');
