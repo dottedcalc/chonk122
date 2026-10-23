@@ -228,16 +228,20 @@ button.link:hover { transform: none; box-shadow: none; }
   box-shadow: 5px 6px 0 var(--green);
 }
 
-.cm-cats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
-.cm-cat { padding: 14px 16px 16px; display: grid; gap: 10px; align-content: start; box-shadow: 5px 6px 0 var(--k); }
+.cm-cats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+/* On wide screens the row of five spills past the page column so each card has more room. */
+@media (min-width: 961px) {
+  .cm-cats { width: min(1280px, calc(100vw - 48px)); margin-left: calc(50% - min(640px, 50vw - 24px)); }
+}
+.cm-cat { padding: 12px 10px 14px; display: grid; gap: 10px; align-content: start; box-shadow: 5px 6px 0 var(--k); }
 .cm-cat:nth-child(odd) { transform: rotate(-0.6deg); }
 .cm-cat:nth-child(even) { transform: rotate(0.5deg); }
-.cm-cat h3 { color: var(--k); font-size: 1.75rem; margin: 0; line-height: 1.05; }
+.cm-cat h3 { color: var(--k); font-size: 1.3rem; margin: 0; line-height: 1.05; }
 .cm-q { margin: 0; font-size: 0.92rem; color: var(--muted); }
 .cm-subs { display: grid; gap: 7px; }
 button.cm-sub {
-  display: grid; gap: 1px; text-align: left; padding: 6px 12px;
-  font-family: var(--font-body), system-ui, sans-serif; font-size: 0.95rem; font-weight: 800; line-height: 1.35;
+  display: grid; gap: 1px; text-align: left; padding: 5px 9px;
+  font-family: var(--font-body), system-ui, sans-serif; font-size: 0.85rem; font-weight: 800; line-height: 1.35;
   color: var(--fg); background: var(--ks); border: 2px solid var(--k);
   border-radius: 14px 6px 12px 8px / 8px 12px 6px 14px; box-shadow: 2px 3px 0 var(--k);
 }
@@ -315,8 +319,12 @@ button.cm-dot.sel { box-shadow: 0 0 0 3px var(--beak); }
   .cta-map .button { font-size: 1.45rem; padding: 10px 22px; }
   .cta .button.go { font-size: 1.8rem; padding: 14px 24px; white-space: nowrap; }
 }
+@media (max-width: 960px) {
+  .cm-cats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+}
 @media (max-width: 720px) {
   .cm-cats { grid-template-columns: 1fr; }
+  .cm-cat h3 { font-size: 1.6rem; }
 }
 @media (max-width: 640px) {
   .cm-lrow { grid-template-columns: 2.2rem minmax(0, 1fr) auto; }
@@ -624,6 +632,9 @@ button.ex-grade[aria-pressed="true"]:disabled { opacity: 1; }
 .ring-fill { stroke: var(--k, var(--accent)); stroke-linecap: round; }
 .ring-cap { transform: rotate(90deg); transform-origin: 18px 18px; text-anchor: middle; dominant-baseline: central; font-size: 4.4px; font-weight: 800; fill: var(--fg); }
 .ring-num { transform: rotate(90deg); transform-origin: 18px 18px; text-anchor: middle; dominant-baseline: central; font-size: 11px; font-weight: 800; fill: var(--fg); }
-.cm-cat-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.cm-cat-head { display: flex; flex-direction: column-reverse; align-items: center; text-align: center; gap: 8px; }
 .cm-prof { display: grid; justify-items: center; gap: 2px; }
 .cm-prof .level { font-weight: 800; font-size: 0.85rem; color: var(--k); }
+@media (max-width: 720px) {
+  .cm-cat-head { flex-direction: row; justify-content: space-between; align-items: flex-start; text-align: left; }
+}
