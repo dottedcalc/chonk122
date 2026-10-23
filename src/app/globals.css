@@ -499,7 +499,7 @@ button.opt:disabled:not(.right):not(.wrong) { opacity: 0.55; }
 .lc-prof { display: grid; gap: 4px; }
 .lc-prof p { margin: 0; font-size: 0.95rem; }
 .lc-prof b { font-size: 1.15rem; }
-.lc-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.lc-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 8px; }
 .lc-actions .button { font-size: 1.05rem; padding: 5px 12px; }
 .lc-prof .pg-bar { width: 100%; }
 .lc-ex-btn { background: var(--card); color: var(--link); border: 2.5px solid var(--green); }
@@ -518,7 +518,7 @@ button.opt:disabled:not(.right):not(.wrong) { opacity: 0.55; }
 .lc-bar span { display: block; height: 100%; background: var(--accent); }
 button.lc-reset { justify-self: start; font-size: 0.95rem; }
 .lc-confirm { margin: 4px 0 0; font-size: 0.95rem; }
-.lc-resets { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.lc-resets { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 14px; margin-top: 8px; }
 .lc-resets:empty { display: none; }
 
 /* exercises */
