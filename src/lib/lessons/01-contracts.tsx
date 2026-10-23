@@ -167,6 +167,15 @@ export const contracts: Lesson = {
               <code key="c">chonk % geese</code>,
             ]}
             answer={1}
+            wrong={[
+              <span key="a">
+                <code>f(12, 3)</code> returned 4, but <code>12 - 3</code> is 9.
+              </span>,
+              null,
+              <span key="c">
+                <code>f(12, 3)</code> returned 4, but <code>12 % 3</code> is 0.
+              </span>,
+            ]}
             explain={
               <>
                 It matches integer division on most inputs. In C0, <code>-7 / 2</code> is <code>-3</code>, and{" "}
@@ -194,6 +203,7 @@ export const contracts: Lesson = {
             }
             options={["Yes, f is broken", "No, 0 is fine", "We can't tell yet"]}
             answer={2}
+            wrong={["Broken means f breaks a promise.", "Fine means f keeps a promise."]}
             explain="That depends on what f promises, and so far it promises nothing."
           />
           <p>
@@ -258,8 +268,8 @@ export const contracts: Lesson = {
                 who: "honk",
                 outfit: "clown",
                 size: "xl",
-                pose: "oops",
-                say: "So calling chonk_share(10, 0) was our mistake!",
+                pose: "think",
+                say: "A deal has two sides. Which side broke it each time?",
               },
             ]}
           />
@@ -346,8 +356,9 @@ export const contracts: Lesson = {
                           call: <code>chonk_share(7, 3)</code>,
                           out: (
                             <>
-                              It returns 3. The leftover <code>7 - 3 * 3</code> is -2, and <code>0 &lt;= -2</code> is
-                              false.
+                              <code>chonk_left</code> drops to -2, so the loop invariant <code>chonk_left &gt;= 0</code>{" "}
+                              fails first. Without it, the function would return 3, and <code>0 &lt;= 7 - 3 * 3</code>{" "}
+                              is false.
                             </>
                           ),
                           ok: false,
@@ -433,6 +444,12 @@ export const contracts: Lesson = {
             }
             options={["7", "142", "143", "1000"]}
             answer={1}
+            wrong={[
+              "Each iteration hands out 7 crumbs, so it runs many more than 7 times.",
+              null,
+              "After 142 iterations only 6 crumbs are left, and 6 >= 7 is false, so the loop stops there.",
+              "Each iteration hands out 7 crumbs, not 1.",
+            ]}
             explain="The answer is 142 because 1000 is 142 * 7 + 6. Tracing that tells us nothing about other inputs."
           />
           <Comic
@@ -742,6 +759,11 @@ export const contracts: Lesson = {
               </span>,
             ]}
             answer={2}
+            wrong={[
+              "Step 1 is fine because the loop invariant on line 9 holds at the start of the iteration.",
+              "Step 2 is fine because line 11 adds 1 to goose.",
+              "Step 4 doesn't follow, but only because an earlier step is wrong.",
+            ]}
             explain={
               <>
                 Line 12 runs after line 11, so it adds the new value. The correct step is{" "}
@@ -770,6 +792,11 @@ export const contracts: Lesson = {
             }
             options={["The loop ran honk / 4 times", "Only what the postconditions say", "chonk_left ended below 4"]}
             answer={1}
+            wrong={[
+              "That is true of this loop, but the caller can't see the loop.",
+              null,
+              "chonk_left is a variable inside chonk_share, so the caller can't see it.",
+            ]}
             explain="Only the postconditions tell the caller anything about the result. The loop and its variables belong to chonk_share."
           />
           <p>

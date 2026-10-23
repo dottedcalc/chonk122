@@ -12,6 +12,6 @@ export async function GET(request: Request) {
   if (error) return NextResponse.redirect(`${origin}/login?error=1`);
 
   // Any school account may sign in. What it unlocks is decided in the database by
-  // public.access_tier(), which checks the Microsoft tenant rather than the email.
+  // public.access_tier(), which checks the whole email and, once cmu_tenant_id is set, the Microsoft tenant.
   return NextResponse.redirect(`${origin}/`);
 }

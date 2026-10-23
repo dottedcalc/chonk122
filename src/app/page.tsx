@@ -57,7 +57,7 @@ export default function Home() {
           </div>
           <p className="cta-map">
             <Link href="/concepts" className="button alt">
-              Course Map
+              Five concepts
             </Link>
           </p>
         </div>
