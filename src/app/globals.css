@@ -490,7 +490,8 @@ button.opt:disabled:not(.right):not(.wrong) { opacity: 0.55; }
 .lc-closed { filter: grayscale(1); opacity: 0.7; }
 .lc-closed .lc-art { background: var(--paper-dot); }
 .lc-prof { display: grid; gap: 4px; }
-.lc-prof p { margin: 0; font-size: 0.95rem; }
+.lc-prof p { margin: 0; font-size: 0.95rem; display: flex; align-items: baseline; gap: 6px; }
+.lc-prof .level { margin-left: auto; }
 .lc-prof b { font-size: 1.15rem; }
 .lc-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 8px; }
 .lc-actions .button { font-size: 1.05rem; padding: 5px 12px; }

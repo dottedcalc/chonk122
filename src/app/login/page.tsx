@@ -29,7 +29,7 @@ function LoginForm() {
   }
 
   if (!supabaseConfigured) {
-    return <p className="muted">Sign-in isn&apos;t switched on yet. Check back soon!</p>;
+    return <p>Sign-in isn&apos;t switched on yet. Check back soon!</p>;
   }
 
   return (
@@ -50,10 +50,7 @@ export default function LoginPage() {
       </Link>
       <div className="login-card">
         <Chonk className="login-chonk" />
-        <h1>Sign in</h1>
-        <p>
-          Use your school&apos;s Microsoft account. CMU accounts open every lecture. Other schools get Lectures 1 to 3.
-        </p>
+        <h1>Login</h1>
         <Suspense>
           <LoginForm />
         </Suspense>

@@ -66,7 +66,8 @@ function Proficiency({ n, score }: { n: number; score?: LectureScore }) {
   return (
     <div className="lc-prof">
       <p>
-        Proficiency <b>{score.score}</b> <span className="level">{levelOf(score.score)}</span>
+        Proficiency <b>{score.score}</b>
+        <span className="level">{levelOf(score.score)}</span>
       </p>
       <div className="pg-bar" role="meter" aria-label={`Lecture ${n} proficiency`}
         aria-valuemin={0} aria-valuemax={100} aria-valuenow={score.score}>
