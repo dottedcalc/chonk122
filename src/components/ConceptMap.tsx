@@ -11,6 +11,8 @@ import {
   type IdeaId,
 } from "@/lib/concepts";
 import { lessonNumbers } from "@/lib/lessons/available";
+import { levelOf } from "@/lib/bigIdeas";
+import { Ring } from "@/components/Ring";
 
 const ideas: Record<IdeaId, Idea & { cat: Category }> = Object.fromEntries(
   categories.flatMap((cat) => cat.ideas.map((idea) => [idea.id, { ...idea, cat }])),
@@ -23,7 +25,8 @@ const tint = (cat: Category) =>
 const lname = (n: number) => `L${n} ${lectures[n - 1].title}`;
 
 // Tapping an idea fades every lecture without it; tapping a dot in the chart shows that lecture.
-export function ConceptMap() {
+// scores maps each big idea to its proficiency, or is null when nobody is signed in.
+export function ConceptMap({ scores }: { scores: Record<number, number | null> | null }) {
   const [filter, setFilter] = useState<IdeaId | null>(null);
   const [sel, setSel] = useState<[IdeaId, number] | null>(null);
   const hits = filter ? lectures.filter((l) => l.ideas.includes(filter)).length : 0;
@@ -35,7 +38,15 @@ export function ConceptMap() {
         <div className="cm-cats">
           {categories.map((cat) => (
             <div key={cat.id} className="cm-box cm-cat" style={tint(cat)}>
-              <h3>{cat.name}</h3>
+              <div className="cm-cat-head">
+                <h3>{cat.name}</h3>
+                {scores && (
+                  <div className="cm-prof">
+                    <Ring score={scores[cat.id] ?? 0} label={`${cat.name}, ${scores[cat.id] ?? 0} of 100`} size={56} />
+                    <span className="level">{scores[cat.id] === null ? "Not started" : levelOf(scores[cat.id]!)}</span>
+                  </div>
+                )}
+              </div>
               <div className="cm-subs">
                 {cat.ideas.map((idea) => (
                   <button

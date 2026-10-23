@@ -8,6 +8,7 @@ import { difficulty, difficultyName } from "@/lib/difficulty";
 import { lessonNumbers } from "@/lib/lessons/available";
 import { getTier, type Tier } from "@/lib/access";
 import { levelOf } from "@/lib/bigIdeas";
+import { Ring } from "@/components/Ring";
 import {
   getExerciseSummary,
   getLectureAccess,
@@ -59,14 +60,11 @@ function Proficiency({ n, score }: { n: number; score?: LectureScore }) {
   if (!score) return null;
   return (
     <div className="lc-prof">
+      <Ring score={score.score} label={`Lecture ${n} proficiency, ${score.score} of 100`} size={52} />
       <p>
-        Proficiency <b>{score.score}</b>
+        Proficiency
         <span className="level">{levelOf(score.score)}</span>
       </p>
-      <div className="pg-bar" role="meter" aria-label={`Lecture ${n} proficiency`}
-        aria-valuemin={0} aria-valuemax={100} aria-valuenow={score.score}>
-        <span style={{ width: `${score.score}%` }} />
-      </div>
     </div>
   );
 }
@@ -111,7 +109,7 @@ export default async function LecturesPage() {
       <header className="cm-head">
         <h1>Lectures</h1>
         <p className="lede">
-          {banner[tier]} {tier !== "audit" && <Link href="/progress">See your progress →</Link>}
+          {banner[tier]} {tier !== "audit" && <Link href="/concepts">See your progress →</Link>}
         </p>
       </header>
 
