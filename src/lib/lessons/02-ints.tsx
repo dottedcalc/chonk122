@@ -19,13 +19,6 @@ import type { Lesson } from "./types";
 
 const INT_MIN = -2147483648;
 
-const oneMore = `#use <util>
-
-int chonk = int_max();
-printint(chonk);
-println("");
-printint(chonk + 1);`;
-
 const add = `int honk_add(int honk, int chonk)
 //@requires chonk > 0;
 //@requires honk <= int_max() - chonk;
@@ -59,8 +52,8 @@ export const ints: Lesson = {
       body: (
         <>
           <p>
-            In math, adding 1 always gives a bigger number. Chonk counts geese in an <code>int</code>, and the count has
-            reached the biggest int there is, <code>int_max()</code> from the <code>&lt;util&gt;</code> library.
+            In math, adding 1 always gives a bigger number. Is that true on a computer? Chonk is counting geese in an{" "}
+            <code>int</code>, and the count has reached <code>int_max()</code>, the biggest int there is.
           </p>
           <Comic
             panels={[
@@ -68,20 +61,19 @@ export const ints: Lesson = {
               { who: "honk", outfit: "takeoff", size: "xs", pose: "oops", say: "Uh oh." },
             ]}
           />
-          <Code src={oneMore} label="Counting one more goose" />
           <Pick
             question={
               <>
-                What does the second <code>printint</code> print?
+                One more goose arrives, so Chonk adds 1. What does the count become?
               </>
             }
             options={["2147483648", "An error", "-2147483648"]}
             answer={2}
-            wrong={["2147483648 is bigger than int_max(), so it can't be an int.", "C0 does not stop when + overflows."]}
+            wrong={["2147483648 is bigger than int_max(), so it can't be an int.", "C0 keeps running when a sum gets too big."]}
             explain={
               <>
-                The first line prints 2147483647 and the second prints −2147483648. One more goose made the count
-                negative. This lesson shows what an int really is, so results like this make sense.
+                The count becomes −2147483648, so one more goose made it negative! To see why, we need to know what an
+                int really is, starting with how a computer writes numbers.
               </>
             }
           />
@@ -100,11 +92,11 @@ export const ints: Lesson = {
             ]}
           />
           <p>
-            In <b>place value</b>, each digit is multiplied by a power of the <b>base</b>, set by its position. Adding
-            then works position by position, with carries. Computers use base 2, or <b>binary</b>, because their chips
-            hold two voltage levels. A binary digit is a <b>bit</b>.
+            We write numbers with <b>place value</b>, where each digit is multiplied by a power of the <b>base</b>, set
+            by its position. Adding works position by position, with carries. Computers use base 2, or{" "}
+            <b>binary</b>, because their chips hold two voltage levels. A binary digit is a <b>bit</b>.
           </p>
-          <p className="task">Write each number.</p>
+          <p className="task">Try writing each number.</p>
           <Digits
             bases={[10, 2]}
             width={4}
@@ -123,8 +115,9 @@ export const ints: Lesson = {
       body: (
         <>
           <p>
-            <b>Hexadecimal</b>, or hex, is base 16, with digits 0 to 9 and A to F. One hex digit stands for exactly 4
-            bits, so hex is a short way to write long bit patterns. In C0, a hex number starts with <code>0x</code>.
+            Long rows of bits are hard to read, so we often write them in <b>hexadecimal</b>, or hex. It&apos;s base
+            16, with digits 0 to 9 and A to F, and one hex digit stands for exactly 4 bits. In C0, a hex number starts
+            with <code>0x</code>.
           </p>
           <Comic panels={[{ who: "chonk", outfit: "wizard", size: "s", pose: "point", say: "Read the bits four at a time." }]} />
           <p className="task">Flip bits to make each number.</p>
@@ -138,8 +131,8 @@ export const ints: Lesson = {
             ]}
           />
           <p>
-            C0 always prints in decimal. The function <code>int2hex</code> from <code>&lt;util&gt;</code> shows an int
-            in hex.
+            C0 always prints in decimal, but <code>int2hex</code> from <code>&lt;util&gt;</code> shows an int in
+            hex.
           </p>
           <RunTable
             runs={[
@@ -156,9 +149,8 @@ export const ints: Lesson = {
       body: (
         <>
           <p>
-            A <b>word</b> is the fixed number of bits a computer works on at once, and an int is one word, 32 bits in
-            C0. To keep examples small, picture a 4-bit computer, whose words can hold only 16 different patterns. <b>Overflow</b>{" "}
-            happens when a result needs more bits than a word has. It can happen to intermediate results too.
+            Back to Chonk&apos;s count. An int is one <b>word</b>, the fixed number of bits a computer works on at once,
+            and that&apos;s 32 bits in C0. Let&apos;s picture a tiny 4-bit computer with 16 patterns. <b>Overflow</b> happens when a result needs more bits than a word has, even partway through.
           </p>
           <Comic
             panels={[
@@ -177,7 +169,7 @@ export const ints: Lesson = {
             ]}
           />
           <p className="task">
-            Suppose overflow stopped the program with an error. With <code>honk</code> set to 12 on a 4-bit computer that reads its bits as 0 to 15,
+            Should overflow be an error? Suppose it were, with bits read as 0 to 15. Set <code>honk</code> to 12 and
             run both.
           </p>
           <RunTable
@@ -193,8 +185,8 @@ export const ints: Lesson = {
             wrong={["That is only what the runs above supposed."]}
             explain={
               <>
-                C0 keeps going. With errors, the two runs show associativity failing, so moving parentheses could break a
-                program.
+                C0 keeps going. With errors, these runs would break associativity, so just moving parentheses could
+                crash a program.
               </>
             }
           />
@@ -207,15 +199,16 @@ export const ints: Lesson = {
       body: (
         <>
           <p>
-            Dropping the fifth bit subtracts 16, so a 4-bit computer keeps the remainder mod 16. This is{" "}
-            <Big c={2}>modular arithmetic</Big>. Picture the 16 patterns on a circle, where adding 1 steps clockwise.
+            So C0 drops the extra bit. Dropping the fifth bit subtracts 16, so a 4-bit computer keeps the remainder
+            mod 16. This is <Big c={2}>modular arithmetic</Big>. Picture the 16 patterns on a circle, where adding 1
+            steps clockwise.
           </p>
           <p className="task">Add 12 + 9 by stepping around the circle.</p>
           <Wheel goal={{ from: 12, by: 9 }} />
           <p>
-            C0 works mod 2<sup>32</sup>. <Hi c={2}>The laws of <code>+</code> and <code>*</code> still hold</Hi>, such
-            as commutativity and distributivity, so we can reason about sums and products as in math. C0 has no floats,
-            because floating point numbers break some of these laws.
+            C0 works the same way, mod 2<sup>32</sup>. It&apos;s a good trade, because{" "}
+            <Hi c={2}>the laws of <code>+</code> and <code>*</code> still hold</Hi>, like commutativity and
+            distributivity. C0 has no floats, because floating point breaks some of these laws.
           </p>
           <Comic
             panels={[
@@ -237,8 +230,9 @@ export const ints: Lesson = {
       body: (
         <>
           <p>
-            In math, −x is the number that gives 0 when added to x. On the circle, the <b>additive inverse</b> of x is
-            the y where x + y lands on 0. Subtraction steps counterclockwise.
+            Our circle only shows 0 to 15 so far. In math, −x is the number that gives 0 when added to x. On the
+            circle, the <b>additive inverse</b> of x is the y where x + y lands on 0. Subtraction steps
+            counterclockwise.
           </p>
           <Comic
             panels={[
@@ -246,7 +240,7 @@ export const ints: Lesson = {
               { who: "chonk", outfit: "tidy", size: "l", pose: "point", say: "Count back from zero and see." },
             ]}
           />
-          <p className="task">Use the circle to answer each one.</p>
+          <p className="task">Use the circle to find each one.</p>
           <Wheel start={3} />
           <Rows
             options={["12", "13", "14", "15"]}
@@ -274,10 +268,9 @@ export const ints: Lesson = {
       body: (
         <>
           <p>
-            Each spot on the circle stands for many numbers. 1110 stands for 14, but also for −2, 30 and every other
-            number equal to 14 mod 16. To print an int or compare two, C0 must pick one meaning for each pattern. We want
-            the numbers to run in order around the circle with a single jump, 0 to be included, about half to be
-            negative, and the leftmost bit to tell the sign.
+            So every spot has many names. 1110 is 14, but also −2, 30 and anything else equal to 14 mod 16. To print or
+            compare ints, C0 has to pick one meaning per pattern. We want the numbers in order with a single jump, 0
+            included, about half negative, and the leftmost bit telling the sign.
           </p>
           <Comic
             panels={[
@@ -324,8 +317,8 @@ export const ints: Lesson = {
       body: (
         <>
           <p>
-            In <Big c={2}>two&apos;s complement</Big>, the sign bit of a k-bit word is worth −2<sup>k−1</sup>. So 1101 is
-            −8 + 4 + 1 = −3.
+            How do you read a pattern after that cut? In <Big c={2}>two&apos;s complement</Big>, the sign bit of a
+            k-bit word is worth −2<sup>k−1</sup>. So 1101 is −8 + 4 + 1 = −3.
           </p>
           <Digits bases={[2]} width={4} signed start={0b1101} />
           <ul>
@@ -379,14 +372,15 @@ export const ints: Lesson = {
       body: (
         <>
           <p>
-            An operation <b>overflows</b> when its mathematical result is outside <code>int_min()</code> to{" "}
-            <code>int_max()</code>. For addition,
+            Overflow is where ints and math disagree, so it pays to know exactly when it happens. An operation{" "}
+            <b>overflows</b> when its mathematical result is outside <code>int_min()</code> to <code>int_max()</code>.
+            For addition,
           </p>
           <ul>
             <li>adding numbers of opposite signs never overflows,</li>
             <li>
-              adding two positives overflows exactly when the result is negative, and adding two negatives overflows
-              exactly when the result is 0 or more,
+              two positives overflow exactly when the result is negative, and two negatives exactly when it&apos;s 0
+              or more,
             </li>
             <li>
               for <code>chonk &gt; 0</code>, <code>honk + chonk</code> overflows exactly when{" "}
@@ -399,7 +393,6 @@ export const ints: Lesson = {
             </Hi>
             , and comparisons need extra care.
           </p>
-          <Comic panels={[{ who: "honk", outfit: "umpire", size: "m", pose: "point", say: "Out of range means overflow!" }]} />
           <p className="task">Does each expression overflow?</p>
           <Rows
             options={["Overflows", "No overflow"]}
@@ -442,9 +435,9 @@ export const ints: Lesson = {
       body: (
         <>
           <p>
-            To prove that an expression never overflows, show that its mathematical result stays between{" "}
-            <code>int_min()</code> and <code>int_max()</code>. Each step cites a line or an earlier step, just like the{" "}
-            <Link href="/lessons/1">Lecture 1</Link> point-to proofs.
+            Knowing when overflow happens lets us prove that it never does. Show that the mathematical result stays
+            between <code>int_min()</code> and <code>int_max()</code>, citing a line or an earlier step each time, just
+            like the <Link href="/lessons/1">Lecture 1</Link> point-to proofs.
           </p>
           <Comic panels={[{ who: "honk", outfit: "pumpkin", size: "s", pose: "think", say: "Prove it, don't just test it." }]} />
           <Code src={add} label="honk_add" />
@@ -491,8 +484,8 @@ export const ints: Lesson = {
       body: (
         <>
           <p>
-            Integers don&apos;t always divide evenly, so C0 pairs <code>x / y</code> with the <b>modulus</b>{" "}
-            <code>x % y</code>. They follow two rules.
+            Division brings a new problem, because ints don&apos;t always divide evenly. So C0 pairs{" "}
+            <code>x / y</code> with the <b>modulus</b> <code>x % y</code>, and they follow two rules.
           </p>
           <ul>
             <li>
@@ -528,14 +521,14 @@ export const ints: Lesson = {
       body: (
         <>
           <p>
-            Like the functions in <Link href="/lessons/1">Lecture 1</Link>, division has preconditions, and{" "}
-            <code>x % y</code> has the same ones.
+            Division can also fail outright. Like the functions in <Link href="/lessons/1">Lecture 1</Link>, it has
+            preconditions, and <code>x % y</code> has the same ones.
           </p>
           <Code src={"//@requires y != 0;\n//@requires !(x == int_min() && y == -1);"} label="The preconditions of x / y" />
           <p>
             Dividing by 0 has no answer. The mathematical value of <code>int_min() / -1</code> is 2<sup>31</sup>, one
-            more than <code>int_max()</code>. <Hi>Unlike + and *, which wrap, this division stops the program with an error</Hi>, so this
-            division is unsafe.
+            more than <code>int_max()</code>. <Hi>Unlike + and *, which wrap, this division stops the program with an error</Hi>, so
+            it is unsafe.
           </p>
           <Comic
             panels={[
@@ -581,10 +574,10 @@ export const ints: Lesson = {
       body: (
         <>
           <p>
-            An int does not have to mean a number. Its 32 bits can hold any <b>bit pattern</b> that fits. Choosing how
-            bits stand for information is <Big c={2}>data representation</Big>. Unix systems store a file&apos;s
-            permissions in one int, with a bit each for whether the owner, the group and everyone else may read, write
-            or execute it.
+            So far we&apos;ve read ints as numbers, but an int is just 32 bits, and they can hold any{" "}
+            <b>bit pattern</b> you like. Choosing what bits stand for is <Big c={2}>data representation</Big>. Unix
+            stores a file&apos;s permissions in one int, a bit each for whether the owner, the group and everyone else
+            may read, write or execute it.
           </p>
           <Comic
             panels={[
@@ -601,7 +594,7 @@ export const ints: Lesson = {
             ]}
           />
           <p>
-            We write bit patterns in hex. Adding or multiplying two permission patterns means nothing, so{" "}
+            We write bit patterns in hex. Adding two permission patterns means nothing, so{" "}
             <Hi c={2}>we never mix arithmetic and bitwise operations</Hi> on the same value.
           </p>
         </>
@@ -613,8 +606,8 @@ export const ints: Lesson = {
       body: (
         <>
           <p>
-            The <b>bitwise operations</b> work on each bit position separately. A <b>mask</b> is a pattern that picks
-            out the bits to work on.
+            To use bits like these, we need <b>bitwise operations</b>, which act on each bit position separately. A{" "}
+            <b>mask</b> picks out the bits to work on.
           </p>
           <ul>
             <li>
@@ -657,13 +650,12 @@ export const ints: Lesson = {
       body: (
         <>
           <p>
-            <code>&amp;</code>, <code>|</code>, <code>^</code> and <code>~</code> can&apos;t move bits to new positions,
-            but <b>shifts</b> can. <code>x &lt;&lt; k</code> drops the k leftmost bits and fills k zeros on the right.
+            Those operations keep every bit in its place. To move bits, we need <b>shifts</b>. <code>x &lt;&lt; k</code> drops the k leftmost bits and fills k zeros on the right.
             Each step left doubles, so{" "}
             <Hi c={2}>
               <code>x &lt;&lt; k</code> is <code>x</code> times 2<sup>k</sup>
             </Hi>
-            , mod 2<sup>32</sup>. This is one of the few places where bitwise and arithmetic meet. The value k must
+            , mod 2<sup>32</sup>. That&apos;s one of the few places where bitwise and arithmetic meet. The value k must
             satisfy <code>0 &lt;= k &amp;&amp; k &lt; 32</code>.
           </p>
           <Shifter
@@ -707,8 +699,8 @@ export const ints: Lesson = {
       body: (
         <>
           <p>
-            Left shift doubles, so we want <code>x &gt;&gt; 1</code> to halve, for negative numbers too. Halving −6
-            should give −3. So <code>x &gt;&gt; k</code> <Hi c={2}>copies the sign bit into the k new bits</Hi>, the
+            If left shift doubles, you&apos;d hope <code>x &gt;&gt; 1</code> halves, even for negative numbers. Halving
+            −6 should give −3. So <code>x &gt;&gt; k</code> <Hi c={2}>copies the sign bit into the k new bits</Hi>, the
             same sign extension that keeps a value unchanged in a longer word.
           </p>
           <Comic
@@ -726,7 +718,7 @@ export const ints: Lesson = {
             ]}
           />
           <p>
-            When the halving is not exact, <code>&gt;&gt;</code> rounds toward −∞, unlike <code>/</code>.
+            When the halving isn&apos;t exact, <code>&gt;&gt;</code> rounds toward −∞, unlike <code>/</code>.
           </p>
           <p className="task">What does each expression evaluate to?</p>
           <Rows
@@ -747,7 +739,8 @@ export const ints: Lesson = {
       body: (
         <>
           <p>
-            <code>honk_top_byte</code> should return the top 8 bits of an int, as a number from 0 to 255.
+            Let&apos;s put shifts and masks together. <code>honk_top_byte</code> should return the top 8 bits of an
+            int, as a number from 0 to 255.
           </p>
           <Comic panels={[{ who: "honk", outfit: "irish", size: "m", pose: "think", say: "Will it work for every int?" }]} />
           <Code src={topByte} label="honk_top_byte" />
@@ -790,11 +783,12 @@ export const ints: Lesson = {
             ]}
           />
           <p>
-            Read as a number, an int stores a single value in binary. C0 has no floats, so all of its arithmetic uses ints. In Lecture 3,{" "}
-            <Link href="/lectures#l3">Arrays</Link> hold many values side by side, such as many ints.
+            Read as a number, an int stores one value in binary, and since C0 has no floats, all its arithmetic uses
+            ints. In Lecture 3, <Link href="/lectures#l3">Arrays</Link>, you&apos;ll store many values side by side.
           </p>
           <p className="task">
-            Compare two ways to find the middle of <code>lo</code> = 1 and <code>hi</code> = <code>int_max()</code>.
+            Overflow will keep showing up. Compare two ways to find the middle of <code>lo</code> = 1 and{" "}
+            <code>hi</code> = <code>int_max()</code>.
           </p>
           <Versions
             label="Two ways to find the middle"
@@ -824,8 +818,8 @@ export const ints: Lesson = {
               <Link href="/lectures#l19">Types in C</Link> shows that signed overflow is undefined in C.
             </li>
             <li>
-              <Link href="/lectures#l20">Virtual machines</Link> builds the C0VM, a program that runs C0 code, including
-              these int operations.
+              <Link href="/lectures#l20">Virtual machines</Link> builds the C0VM, which runs C0 code, int operations
+              included.
             </li>
           </ul>
         </>

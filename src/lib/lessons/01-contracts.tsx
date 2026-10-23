@@ -126,8 +126,8 @@ export const contracts: Lesson = {
       body: (
         <>
           <p>
-            Every program relies on functions that someone else wrote. Before we use one, we want to know two things. Is
-            it <b>safe</b>, meaning it runs without errors? Is it <b>correct</b>, meaning it returns the right answer?
+            You&apos;ll often call code that you didn&apos;t write. Before you trust a function, you want to know two
+            things. Is it <b>safe</b>, so it runs without errors? Is it <b>correct</b>, so it gives the right answer?
           </p>
           <Comic
             panels={[
@@ -148,8 +148,8 @@ export const contracts: Lesson = {
             ]}
           />
           <p className="task">
-            Run f on a few inputs and look for a pattern. Here <code>chonk</code> is the number of crumbs and{" "}
-            <code>geese</code> is the number of geese.
+            Let&apos;s test it the way most people would. Here <code>chonk</code> counts crumbs and{" "}
+            <code>geese</code> counts geese. Look for a pattern.
           </p>
           <Code src={mystery} label="The mystery function f" />
           <RunTable
@@ -179,8 +179,8 @@ export const contracts: Lesson = {
             ]}
             explain={
               <>
-                It matches integer division on most inputs. In C0, <code>-7 / 2</code> is <code>-3</code>, and{" "}
-                <code>f(10, 0)</code> never returns.
+                It matches integer division on most inputs. But <code>-7 / 2</code> is <code>-3</code> in C0, and{" "}
+                <code>f(10, 0)</code> never returns. Are those bugs? Testing alone can&apos;t tell us.
               </>
             }
           />
@@ -193,7 +193,7 @@ export const contracts: Lesson = {
       body: (
         <>
           <p>
-            A <b>specification</b> says what a function must do.{" "}
+            To call something a bug, we first have to say what f is supposed to do. That is a <b>specification</b>.{" "}
             <Hi>Without one, there is no standard for safe or correct.</Hi>
           </p>
           <Pick
@@ -205,17 +205,17 @@ export const contracts: Lesson = {
             options={["Yes, f is broken", "No, 0 is fine", "We can't tell yet"]}
             answer={2}
             wrong={["Broken means f breaks a promise.", "Fine means f keeps a promise."]}
-            explain="That depends on what f promises, and so far it promises nothing."
+            explain="It depends on what f promises, and so far it promises nothing."
           />
           <p>
-            Chonk wants every goose to get as many crumbs as possible. We rename f to <code>chonk_share</code> and state
-            this plan as <Big>contracts</Big>, which are comments starting with <code>{"//@"}</code> that describe what
-            must be true.
+            Chonk wants every goose to get as many crumbs as possible. Let&apos;s rename f to <code>chonk_share</code>{" "}
+            and write that plan as <Big>contracts</Big>, comments starting with <code>{"//@"}</code> that say what must
+            be true.
           </p>
           <Code src={spec} label="The contracts for chonk_share" />
           <p>
-            The expression <code>chonk - \result * geese</code> counts the leftover crumbs. The last two lines say that
-            0 or more crumbs are left over, but too few to give every goose one more.
+            The last two lines say that the leftover crumbs, <code>chonk - \result * geese</code>, are 0 or more but too
+            few to give every goose one more.
           </p>
         </>
       ),
@@ -226,11 +226,11 @@ export const contracts: Lesson = {
       body: (
         <>
           <p>
-            A <b>precondition</b> is a <Big>contract</Big> (<code>{"//@requires"}</code>) that states what must be true
-            when a function is called. <Hi>The caller must make it true.</Hi> The function can then rely on it, which
-            keeps the function safe.
+            A call has two sides, so our <Big>contracts</Big> come in two kinds. A{" "}
+            <b>precondition</b> (<code>{"//@requires"}</code>) states what must be true when a function is called.{" "}
+            <Hi>The caller must make it true.</Hi> In return, the function can rely on it, and that keeps it safe.
           </p>
-          <p className="task">Who is at fault in each case?</p>
+          <p className="task">When something goes wrong, who is to blame?</p>
           <Rows
             options={["The caller", "chonk_share"]}
             rows={[
@@ -270,7 +270,7 @@ export const contracts: Lesson = {
                 outfit: "clown",
                 size: "xl",
                 pose: "think",
-                say: "A deal has two sides. Which side broke it each time?",
+                say: "So who broke the deal each time?",
               },
             ]}
           />
@@ -283,12 +283,13 @@ export const contracts: Lesson = {
       body: (
         <>
           <p>
-            A <b>postcondition</b> is a <Big>contract</Big> (<code>{"//@ensures"}</code>) that states what must be true
-            when a function returns. If the preconditions held, <Hi>the function must make its postconditions true.</Hi>{" "}
-            That is what correct means.
+            Preconditions are the caller&apos;s half of the deal. A <b>postcondition</b> (<code>{"//@ensures"}</code>)
+            is the function&apos;s half, and states what must be true when it returns. If the preconditions held,{" "}
+            <Hi>the function must make its postconditions true.</Hi> That is what correct means.
           </p>
           <p className="task">
-            Two of these loop guards are wrong, yet each passes one test. Run both tests on every version.
+            Two of these loop guards are wrong, yet each passes one test. Run both tests on every version to find
+            them.
           </p>
           <Versions
             label="Loop guard versions"
@@ -378,7 +379,7 @@ export const contracts: Lesson = {
                 outfit: "detective",
                 size: "s",
                 pose: "think",
-                say: "One passing test was not enough to catch the bug.",
+                say: "So one passing test proves very little.",
               },
             ]}
           />
@@ -391,11 +392,11 @@ export const contracts: Lesson = {
       body: (
         <>
           <p>
-            C0 ignores <Big>contracts</Big> unless you compile with the <code>-d</code> flag. With <code>-d</code>, it
-            checks each contract as the code runs and stops at the first one that fails.
+            <Big>Contracts</Big> only help if something checks them. C0 ignores them unless you compile with the{" "}
+            <code>-d</code> flag. Then it checks each contract as the code runs and stops at the first one that fails.
           </p>
           <p className="task">
-            A test calls <code>chonk_share(10, 0)</code>. Run it both ways.
+            Say a test calls <code>chonk_share(10, 0)</code>. Try it both ways.
           </p>
           <RunTable
             runs={[
@@ -408,10 +409,10 @@ export const contracts: Lesson = {
           />
           <p>
             <Hi>
-              The <code>-d</code> flag only checks the inputs you run.
+              But <code>-d</code> only checks the inputs you actually run.
             </Hi>{" "}
-            To know the code works on every allowed input, we need a <b>proof</b>, which is an argument that covers all
-            of them.
+            To know the code works on every allowed input, we need a <b>proof</b>, an argument that covers all of
+            them.
           </p>
           <Comic
             panels={[
@@ -433,8 +434,9 @@ export const contracts: Lesson = {
       body: (
         <>
           <p>
-            Following code line by line to see what it does is <b>operational reasoning</b>. Each run of the loop body
-            is an <b>iteration</b>. Step through one call.
+            The most natural way to argue about code is to follow it line by line. That is{" "}
+            <b>operational reasoning</b>. Each run of the loop body is an <b>iteration</b>. Step through one call
+            yourself.
           </p>
           <Stepper src={share} sets={[{ label: "chonk_share(23, 5)", steps: trace(23, 5, false) }]} />
           <Pick
@@ -451,7 +453,7 @@ export const contracts: Lesson = {
               "After 142 iterations only 6 crumbs are left, and 6 >= 7 is false, so the loop stops there.",
               "Each iteration hands out 7 crumbs, not 1.",
             ]}
-            explain="The answer is 142 because 1000 is 142 * 7 + 6. Tracing that tells us nothing about other inputs."
+            explain="It's 142, because 1000 is 142 * 7 + 6. But tracing one input tells us nothing about the others."
           />
           <Comic
             panels={[
@@ -480,9 +482,9 @@ export const contracts: Lesson = {
       body: (
         <>
           <p>
-            A <Big>loop invariant</Big> is a fact that is <Hi>true just before every check of the loop guard</Hi>,
-            including the final check, when the loop stops. Watch both invariants of <code>chonk_share</code> as it
-            runs.
+            So instead of tracking every iteration, we look for what never changes. A <Big>loop invariant</Big> is a
+            fact that is <Hi>true just before every check of the loop guard</Hi>, including the last check, when the
+            loop stops. Watch both invariants of <code>chonk_share</code> as you step.
           </p>
           <Stepper
             src={share}
@@ -512,11 +514,12 @@ export const contracts: Lesson = {
       body: (
         <>
           <p>
-            In <b>point-to reasoning</b>, we justify every fact by pointing to a line of code or to math.{" "}
-            <Hi>We can cite a line only if nothing has since changed a variable it mentions.</Hi>
+            To prove that an invariant always holds, we need rules for which facts we may use. In{" "}
+            <b>point-to reasoning</b>, we justify every fact by pointing to a line of code or to math.{" "}
+            <Hi>You can cite a line only if nothing has since changed a variable it mentions.</Hi>
           </p>
           <Code src={share} hi={[12]} />
-          <p className="task">We are inside the loop body, just before line 12. Which facts can we cite?</p>
+          <p className="task">Say we&apos;re inside the loop body, just before line 12. Which facts can we cite?</p>
           <Rows
             options={["Can cite", "Can't cite"]}
             rows={[
@@ -555,8 +558,9 @@ export const contracts: Lesson = {
       body: (
         <>
           <p>
-            <b>INIT</b> shows that each <Big>loop invariant</Big> holds before the loop guard is checked for the first
-            time. Only lines 1 to 7 have run at that point.
+            Now we can prove the invariants, in four parts. First, <b>INIT</b> shows that each{" "}
+            <Big>loop invariant</Big> holds before the loop guard is checked for the first time. Only lines 1 to 7
+            have run at that point.
           </p>
           <Code src={share} hi={[6, 7, 9, 10]} />
           <p className="task">Fill in each blank.</p>
@@ -605,10 +609,10 @@ export const contracts: Lesson = {
       body: (
         <>
           <p>
-            <b>PRES</b> shows that if the <Big>invariants</Big> hold and the loop guard is true at the start of an
-            iteration, the invariants hold again at its end.{" "}
-            <Hi>One arbitrary iteration stands for every iteration.</Hi> A prime marks a value after the iteration, as
-            in <code>chonk_left&apos;</code>.
+            INIT gets the <Big>invariants</Big> started, and <b>PRES</b> shows they survive one iteration. If they
+            hold and the guard is true at the start, they hold again at the end.{" "}
+            <Hi>One arbitrary iteration stands for all of them.</Hi> A prime marks a value after the iteration, as in{" "}
+            <code>chonk_left&apos;</code>.
           </p>
           <Peek />
           <p className="task">Fill in each blank.</p>
@@ -674,8 +678,8 @@ export const contracts: Lesson = {
       body: (
         <>
           <p>
-            When the loop stops, its guard is false and the <Big>invariants</Big> still hold. <b>EXIT</b> uses{" "}
-            <Hi>the invariants and the negated guard</Hi> to prove the postconditions. Line 15 returns{" "}
+            Here is the payoff. When the loop stops, its guard is false and the <Big>invariants</Big> still hold.{" "}
+            <b>EXIT</b> uses <Hi>the invariants and the negated guard</Hi> to prove the postconditions. Line 15 returns{" "}
             <code>goose_share</code>, so <code>\result</code> equals <code>goose_share</code>.
           </p>
           <Peek />
@@ -723,9 +727,9 @@ export const contracts: Lesson = {
       body: (
         <>
           <p>
-            <b>TERM</b> shows that the loop runs only finitely many times.{" "}
-            <Hi>It is an informal argument that follows a template.</Hi> We name a quantity that strictly decreases on
-            every iteration and can never go below some bound.
+            EXIT only helps if the loop actually stops. <b>TERM</b> shows that it runs only finitely many times.{" "}
+            <Hi>It&apos;s an informal argument with a template.</Hi> Name a quantity that strictly decreases on every
+            iteration and can never go below some bound.
           </p>
           <Peek />
           <p className="task">Fill in the blanks.</p>
@@ -747,7 +751,7 @@ export const contracts: Lesson = {
           />
           <p>
             This is why <code>geese &gt; 0</code> matters. In <code>f(10, 0)</code>, <code>chonk_left</code> never
-            decreases.
+            decreases, so the loop runs forever.
           </p>
         </>
       ),
@@ -758,8 +762,9 @@ export const contracts: Lesson = {
       body: (
         <>
           <p>
-            Geese stand in a line, and goose number k honks k times. The function <code>total_honks</code> counts all
-            the honks. Honk tries to prove that the second <Big>loop invariant</Big> is preserved.
+            Proofs can have bugs too, so let&apos;s practice checking one. Goose number k in a line honks k times, and{" "}
+            <code>total_honks</code> counts all the honks. Honk tries to prove that the second{" "}
+            <Big>loop invariant</Big> is preserved.
           </p>
           <Code src={honks} hi={[11, 12]} />
           <Comic
@@ -799,31 +804,31 @@ export const contracts: Lesson = {
       body: (
         <>
           <p>
-            Point-to proofs pay off as code grows, because <Hi>each function is checked on its own.</Hi>{" "}
-            <b>Modular reasoning</b> means checking each function using only the contracts of the functions it calls.
+            Point-to proofs pay off as code grows, because <Hi>each function is checked on its own.</Hi> In{" "}
+            <b>modular reasoning</b>, you check a function using only the contracts of what it calls.
           </p>
           <Pick
             question={
               <>
-                Code that knows <code>honk &gt;= 0</code> calls <code>chonk_share(honk, 4)</code>, so the preconditions
-                hold. What does it know about the result?
+                Your code knows <code>honk &gt;= 0</code> and calls <code>chonk_share(honk, 4)</code>, so the
+                preconditions hold. What do you know about the result?
               </>
             }
             options={["The loop ran honk / 4 times", "Only what the postconditions say", "chonk_left ended below 4"]}
             answer={1}
             wrong={[
-              "That is true of this loop, but the caller can't see the loop.",
+              "That's true of this loop, but your code can't see the loop.",
               null,
-              "chonk_left is a variable inside chonk_share, so the caller can't see it.",
+              "chonk_left lives inside chonk_share, so your code can't see it.",
             ]}
-            explain="Only the postconditions tell the caller anything about the result. The loop and its variables belong to chonk_share."
+            explain="Only the postconditions tell you anything about the result. The loop and its variables belong to chonk_share."
           />
           <p>
-            <Big>Invariants</Big> come back throughout the course.
+            You&apos;ll meet <Big>invariants</Big> all through the course.
           </p>
           <ul>
             <li>
-              Loops over arrays rely on them in <Link href="/lectures#l4">Searching arrays</Link>,{" "}
+              Array loops use them in <Link href="/lectures#l4">Searching arrays</Link>,{" "}
               <Link href="/lectures#l6">Binary search</Link> and <Link href="/lectures#l7">Quicksort</Link>.
             </li>
             <li>
