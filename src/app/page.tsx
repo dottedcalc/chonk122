@@ -7,14 +7,6 @@ import { Ground } from "@/components/Ground";
 import { HonkButton } from "@/components/HonkButton";
 import { chonkLines, honkLines } from "@/components/mascotLines";
 import { chonkLooks, honkLooks, type ChonkOutfit, type HonkOutfit } from "@/components/outfits";
-import { ContractDoodle, EggDoodle, PointerDoodle, TreeDoodle } from "@/components/Doodles";
-
-const topics = [
-  { title: "Contracts", blurb: "Prove your loops do what you think they do.", Doodle: ContractDoodle },
-  { title: "Pointers & memory", blurb: "Watch the heap change as code runs.", Doodle: PointerDoodle },
-  { title: "Data structures", blurb: "Stacks, queues, hash tables, BSTs and more.", Doodle: TreeDoodle },
-  { title: "C0 → C", blurb: "From safe training wheels to real systems code.", Doodle: EggDoodle },
-];
 
 function pick<T extends string>(looks: Record<T, unknown>): T {
   const keys = Object.keys(looks) as T[];
@@ -45,6 +37,14 @@ export default function Home() {
           <h1>
             CS122, but made <span className="squiggle">chonky.</span>
           </h1>
+          <div className="cta">
+            <Link href="/lectures" className="button">
+              Wooo Let&apos;s get started!
+            </Link>
+            <Link href="/concepts" className="button alt">
+              Course Map
+            </Link>
+          </div>
         </div>
         <div className="hero-art">
           <Ground className="ground" />
@@ -57,26 +57,6 @@ export default function Home() {
             </HonkButton>
           </div>
         </div>
-      </section>
-
-      <section>
-        <h2 className="section-title">What you&apos;ll poke at</h2>
-        <div className="grid">
-          {topics.map(({ title, blurb, Doodle }) => (
-            <div key={title} className="card">
-              <div className="doodle">
-                <Doodle />
-              </div>
-              <h3>{title}</h3>
-              <p>{blurb}</p>
-            </div>
-          ))}
-        </div>
-        <p className="more">
-          <Link href="/concepts" className="button small">
-            See how all 26 lectures connect →
-          </Link>
-        </p>
       </section>
 
       <section className="meet">
