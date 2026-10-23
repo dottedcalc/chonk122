@@ -52,19 +52,23 @@ export function LessonPlayer({ n, title, pages }: { n: number; title: string; pa
         <p className="lp-kicker">
           Lecture {n} · {title}
         </p>
-        <div
-          className="lp-bar"
-          role="progressbar"
-          aria-label="Lesson progress"
-          aria-valuemin={1}
-          aria-valuemax={pages.length}
-          aria-valuenow={k + 1}
-        >
-          <span style={{ width: `${((k + 1) / pages.length) * 100}%` }} />
+        <div className="lp-progress">
+          <div
+            className="lp-bar"
+            role="progressbar"
+            aria-label="Lesson progress"
+            aria-valuemin={1}
+            aria-valuemax={pages.length}
+            aria-valuenow={k + 1}
+          >
+            <span style={{ width: `${((k + 1) / pages.length) * 100}%` }} />
+          </div>
+          {/* A circle split in half: this page on top, the number of pages below. */}
+          <div className="lp-dial" role="img" aria-label={`Page ${k + 1} of ${pages.length}`}>
+            <span className="lp-dial-top">{k + 1}</span>
+            <span className="lp-dial-bottom">{pages.length}</span>
+          </div>
         </div>
-        <p className="lp-count">
-          Page {k + 1} of {pages.length} · about {page.minutes} min
-        </p>
       </div>
 
       <article className="cm-box lp-page" key={k}>

@@ -72,6 +72,8 @@ function Peek() {
 
 // The loop of chonk_share with a different guard on line 8, for comparing versions.
 const loopWith = (guard: string) => `  while (${guard})
+  //@loop_invariant chonk_left >= 0;
+  //@loop_invariant goose_share * geese + chonk_left == chonk;
   {
     chonk_left = chonk_left - geese;
     goose_share = goose_share + 1;
@@ -128,11 +130,19 @@ export const contracts: Lesson = {
           </p>
           <Comic
             panels={[
-              { who: "chonk", pose: "point", say: "This old function should share my crumbs among the geese." },
-              { who: "honk", pose: "think", say: "Can we trust it? Let's test it first." },
+              {
+                who: "chonk",
+                size: "l",
+                pose: "point",
+                say: "This old function should share my crumbs among the geese.",
+              },
+              { who: "honk", size: "s", pose: "think", say: "Can we trust it? Let's test it first." },
             ]}
           />
-          <p className="task">Run f on a few inputs and look for a pattern.</p>
+          <p className="task">
+            Run f on a few inputs and look for a pattern. Here <code>chonk</code> is the number of crumbs and{" "}
+            <code>geese</code> is the number of geese.
+          </p>
           <Code src={mystery} label="The mystery function f" />
           <RunTable
             runs={[
@@ -180,14 +190,14 @@ export const contracts: Lesson = {
             explain="That depends on what f promises, and so far it promises nothing."
           />
           <p>
-            Chonk wants each of the <code>geese</code> geese to get as many of the <code>chonk</code> crumbs as
-            possible. C0 states this plan as <Big>contracts</Big>, which are comments starting with <code>{"//@"}</code>{" "}
-            that describe what must be true.
+            Chonk wants every goose to get as many crumbs as possible. We rename f to <code>chonk_share</code> and state
+            this plan as <Big>contracts</Big>, which are comments starting with <code>{"//@"}</code> that describe what
+            must be true.
           </p>
           <Code src={spec} label="The contracts for chonk_share" />
           <p>
-            The expression <code>chonk - \result * geese</code> counts the leftover crumbs. The ensures lines say at
-            least 0 are left, and too few to give every goose one more.
+            The expression <code>chonk - \result * geese</code> counts the leftover crumbs. The last two lines say that
+            0 or more crumbs are left over, but too few to give every goose one more.
           </p>
         </>
       ),
@@ -227,7 +237,7 @@ export const contracts: Lesson = {
               {
                 prompt: (
                   <>
-                    <code>chonk_share(6, 3)</code> returns 1.
+                    A buggy version of <code>chonk_share(6, 3)</code> returns 1.
                   </>
                 ),
                 answer: 1,
@@ -235,7 +245,9 @@ export const contracts: Lesson = {
               },
             ]}
           />
-          <Comic panels={[{ who: "honk", pose: "oops", say: "So calling f(10, 0) was our mistake!" }]} />
+          <Comic
+            panels={[{ who: "honk", size: "l", pose: "oops", say: "So calling chonk_share(10, 0) was our mistake!" }]}
+          />
         </>
       ),
     },
@@ -262,8 +274,16 @@ export const contracts: Lesson = {
                     <Code src={loopWith("chonk_left >= geese")} start={8} hi={[8]} />
                     <RunTable
                       runs={[
-                        { call: <code>chonk_share(6, 3)</code>, out: "returns 2, and ensures holds", ok: true },
-                        { call: <code>chonk_share(7, 3)</code>, out: "returns 2, and ensures holds", ok: true },
+                        {
+                          call: <code>chonk_share(6, 3)</code>,
+                          out: "It returns 2, and the postconditions hold.",
+                          ok: true,
+                        },
+                        {
+                          call: <code>chonk_share(7, 3)</code>,
+                          out: "It returns 2, and the postconditions hold.",
+                          ok: true,
+                        },
                       ]}
                     />
                   </>
@@ -280,12 +300,16 @@ export const contracts: Lesson = {
                           call: <code>chonk_share(6, 3)</code>,
                           out: (
                             <>
-                              returns 1. Three crumbs are left, and <code>3 &lt; 3</code> is false.
+                              It returns 1. Three crumbs are left, and <code>3 &lt; 3</code> is false.
                             </>
                           ),
                           ok: false,
                         },
-                        { call: <code>chonk_share(7, 3)</code>, out: "returns 2, and ensures holds", ok: true },
+                        {
+                          call: <code>chonk_share(7, 3)</code>,
+                          out: "It returns 2, and the postconditions hold.",
+                          ok: true,
+                        },
                       ]}
                     />
                   </>
@@ -298,12 +322,16 @@ export const contracts: Lesson = {
                     <Code src={loopWith("chonk_left > 0")} start={8} hi={[8]} />
                     <RunTable
                       runs={[
-                        { call: <code>chonk_share(6, 3)</code>, out: "returns 2, and ensures holds", ok: true },
+                        {
+                          call: <code>chonk_share(6, 3)</code>,
+                          out: "It returns 2, and the postconditions hold.",
+                          ok: true,
+                        },
                         {
                           call: <code>chonk_share(7, 3)</code>,
                           out: (
                             <>
-                              returns 3. The leftover <code>7 - 3 * 3</code> is -2, and <code>0 &lt;= -2</code> is
+                              It returns 3. The leftover <code>7 - 3 * 3</code> is -2, and <code>0 &lt;= -2</code> is
                               false.
                             </>
                           ),
@@ -316,11 +344,7 @@ export const contracts: Lesson = {
               },
             ]}
           />
-          <Comic
-            panels={[
-              { who: "chonk", pose: "think", say: "One passing test told us nothing about the broken versions." },
-            ]}
-          />
+          <Comic panels={[{ who: "chonk", pose: "think", say: "One passing test was not enough to catch the bug." }]} />
         </>
       ),
     },
@@ -338,9 +362,9 @@ export const contracts: Lesson = {
           </p>
           <RunTable
             runs={[
-              { call: <code>cc0</code>, out: "Nothing is printed, because the loop runs forever." },
+              { call: <code>cc0 test.c0 && ./a.out</code>, out: "Nothing is printed, because the loop runs forever." },
               {
-                call: <code>cc0 -d</code>,
+                call: <code>cc0 -d test.c0 && ./a.out</code>,
                 out: "The run stops at once because the @requires on line 2 fails.",
               },
             ]}
@@ -362,7 +386,8 @@ export const contracts: Lesson = {
       body: (
         <>
           <p>
-            Following code line by line to see what it does is <b>operational reasoning</b>. Step through one call.
+            Following code line by line to see what it does is <b>operational reasoning</b>. Each run of the loop body
+            is an <b>iteration</b>. Step through one call.
           </p>
           <Stepper src={share} sets={[{ label: "chonk_share(23, 5)", steps: trace(23, 5, false) }]} />
           <Pick
@@ -377,8 +402,8 @@ export const contracts: Lesson = {
           />
           <Comic
             panels={[
-              { who: "honk", pose: "oops", say: "Round 97... which round was I on?" },
-              { who: "chonk", pose: "think", say: "We need a way to reason without counting rounds." },
+              { who: "honk", size: "s", pose: "oops", say: "Iteration 97... which iteration was I on?" },
+              { who: "chonk", size: "l", pose: "think", say: "We need a way to reason without counting iterations." },
             ]}
           />
         </>
@@ -404,7 +429,12 @@ export const contracts: Lesson = {
           />
           <Comic
             panels={[
-              { who: "chonk", pose: "cheer", say: "Crumbs handed out plus crumbs left always make all the crumbs!" },
+              {
+                who: "chonk",
+                size: "l",
+                pose: "cheer",
+                say: "Crumbs handed out plus crumbs left always make all the crumbs!",
+              },
             ]}
           />
         </>
@@ -417,7 +447,7 @@ export const contracts: Lesson = {
         <>
           <p>
             In <b>point-to reasoning</b>, we justify every fact by pointing to a line of code or to math.{" "}
-            <Hi>A line can be cited only while nothing has changed its fact.</Hi>
+            <Hi>We can cite a line only if nothing has since changed a variable it mentions.</Hi>
           </p>
           <Code src={share} hi={[12]} />
           <p className="task">We are inside the loop body, just before line 12. Which facts can we cite?</p>
@@ -432,21 +462,21 @@ export const contracts: Lesson = {
               {
                 prompt: <code>goose_share * geese + chonk_left == chonk</code>,
                 answer: 0,
-                why: "Line 10 can be cited because invariants hold at the start of the body.",
+                why: "Line 10 can be cited because loop invariants hold at the start of the body.",
               },
               {
                 prompt: <code>chonk_left == chonk</code>,
                 answer: 1,
-                why: "Line 7 set this, but an earlier round may have changed chonk_left.",
+                why: "Line 7 set this, but an earlier iteration may have changed chonk_left.",
               },
               {
                 prompt: (
                   <>
-                    <code>chonk_left</code> was 13 in the previous round.
+                    <code>chonk_left</code> was 13 in the previous iteration.
                   </>
                 ),
                 answer: 1,
-                why: "Facts about earlier rounds can be cited only through a loop invariant.",
+                why: "Facts about earlier iterations can be cited only through a loop invariant.",
               },
             ]}
           />
@@ -499,15 +529,17 @@ export const contracts: Lesson = {
       body: (
         <>
           <p>
-            <b>PRES</b> shows that if the <Big>invariants</Big> hold at the start of a round, they hold again at its
-            end. <Hi>One arbitrary round stands for every round.</Hi> A prime marks a value after the round, as in{" "}
-            <code>chonk_left&apos;</code>.
+            <b>PRES</b> shows that if the <Big>invariants</Big> hold and the loop guard is true at the start of an
+            iteration, the invariants hold again at its end.{" "}
+            <Hi>One arbitrary iteration stands for every iteration.</Hi> A prime marks a value after the iteration, as
+            in <code>chonk_left&apos;</code>.
           </p>
           <Peek />
+          <p className="task">Choose the justification for each step.</p>
           <Comic
             panels={[
-              { who: "honk", pose: "point", say: "chonk_left' >= geese, by line 8!" },
-              { who: "chonk", pose: "think", say: "Line 8 is about chonk_left before line 12 shrank it." },
+              { who: "honk", size: "l", pose: "point", say: "chonk_left' >= geese, by line 8!" },
+              { who: "chonk", size: "s", pose: "think", say: "Line 8 is about chonk_left before line 12 shrank it." },
             ]}
           />
           <Rows
@@ -532,7 +564,7 @@ export const contracts: Lesson = {
                 prompt: <code>goose_share * geese + chonk_left == chonk</code>,
                 answer: 1,
                 given: true,
-                why: "The invariant holds at the start of the round.",
+                why: "The invariant holds at the start of the iteration.",
               },
               {
                 prompt: <code>goose_share&apos; == goose_share + 1</code>,
@@ -542,7 +574,7 @@ export const contracts: Lesson = {
               {
                 prompt: <code>goose_share&apos; * geese + chonk_left&apos; == chonk</code>,
                 answer: 4,
-                why: "Substituting steps 2 and 5 gives the left side of step 4.",
+                why: "This follows from steps 2, 4 and 5, because (goose_share + 1) * geese + chonk_left - geese simplifies to the left side of step 4.",
               },
             ]}
           />
@@ -560,6 +592,7 @@ export const contracts: Lesson = {
             <code>goose_share</code>, so <code>\result</code> equals <code>goose_share</code>.
           </p>
           <Peek />
+          <p className="task">Choose the justification for each step.</p>
           <Rows
             numbered
             options={["line 8, negated", "line 9", "line 10", "math on earlier steps"]}
@@ -593,23 +626,24 @@ export const contracts: Lesson = {
       body: (
         <>
           <p>
-            <b>TERM</b> shows that the loop runs only finitely many times. It is the one proof that may talk about every
-            round, so <Hi>it is informal and follows a template.</Hi>
+            <b>TERM</b> shows that the loop runs only finitely many times.{" "}
+            <Hi>It is an informal argument that follows a template.</Hi> We name a quantity that strictly decreases on
+            every iteration and can never go below some bound.
           </p>
           <Peek />
           <p className="task">Fill in the blanks.</p>
           <Rows
-            options={["chonk_left", "goose_share", "0", "the loop guard"]}
+            options={["chonk_left", "goose_share", "0", "geese", "the loop guard"]}
             rows={[
               {
-                prompt: "On every round, ___ strictly decreases.",
+                prompt: "On every iteration, ___ strictly decreases.",
                 answer: 0,
                 why: "Line 12 subtracts geese, and geese > 0 by line 2.",
               },
               { prompt: "It can never go below ___.", answer: 2, why: "This is the loop invariant on line 9." },
               {
                 prompt: "So it cannot decrease forever, and ___ eventually becomes false.",
-                answer: 3,
+                answer: 4,
                 why: "The loop stops once chonk_left < geese.",
               },
             ]}
@@ -628,13 +662,13 @@ export const contracts: Lesson = {
         <>
           <p>
             Geese stand in a line, and goose number k honks k times. The function <code>total_honks</code> counts all
-            the honks.
+            the honks. Honk tries to prove that the second <Big>loop invariant</Big> is preserved.
           </p>
           <Code src={honks} hi={[11, 12]} />
           <Comic
             panels={[
-              { who: "honk", pose: "cheer", say: "I proved PRES for line 9!" },
-              { who: "chonk", pose: "think", say: "Let's check each step." },
+              { who: "honk", size: "l", pose: "cheer", say: "I proved PRES for line 9!" },
+              { who: "chonk", size: "s", pose: "think", say: "Let's check each step." },
             ]}
           />
           <Pick
@@ -670,19 +704,19 @@ export const contracts: Lesson = {
       body: (
         <>
           <p>
-            Point-to proofs feel heavy for one short loop. They pay off as code grows, because{" "}
-            <Hi>each function is checked on its own.</Hi> This is called <b>modular</b> reasoning.
+            Point-to proofs pay off as code grows, because <Hi>each function is checked on its own.</Hi>{" "}
+            <b>Modular reasoning</b> means checking each function using only the contracts of the functions it calls.
           </p>
           <Pick
             question={
               <>
-                Some code knows <code>honk &gt;= 0</code> and calls <code>chonk_share(honk, 4)</code>. What can it cite
-                about the result?
+                Code that knows <code>honk &gt;= 0</code> calls <code>chonk_share(honk, 4)</code>, so the preconditions
+                hold. What does it know about the result?
               </>
             }
-            options={["The loop ran honk / 4 times", "Lines 3 and 4, the postconditions", "chonk_left ended below 4"]}
+            options={["The loop ran honk / 4 times", "Only what the postconditions say", "chonk_left ended below 4"]}
             answer={1}
-            explain="After a call, only the postconditions can be cited."
+            explain="Only the postconditions tell the caller anything about the result. The loop and its variables belong to chonk_share."
           />
           <p>
             <Big>Invariants</Big> come back throughout the course.
@@ -693,17 +727,16 @@ export const contracts: Lesson = {
               <Link href="/concepts#l6">Binary search</Link> and <Link href="/concepts#l7">Quicksort</Link>.
             </li>
             <li>
-              Starting with <Link href="/concepts#l9">Stacks and queues</Link>, each data structure has invariants it
-              must always keep.
+              Starting with <Link href="/concepts#l9">Stacks and queues</Link>, every data structure has invariants.
             </li>
             <li>
-              <Link href="/concepts#l26">Restoring invariants</Link> shows how to repair them after a change.
+              <Link href="/concepts#l26">Restoring invariants</Link> shows how to repair them.
             </li>
           </ul>
           <Comic
             panels={[
-              { who: "chonk", pose: "wave", say: "So the crumbs always add up." },
-              { who: "honk", pose: "cheer", say: "And now we can prove it!" },
+              { who: "chonk", size: "s", pose: "wave", say: "So the crumbs always add up." },
+              { who: "honk", size: "l", pose: "cheer", say: "And now we can prove it!" },
             ]}
           />
         </>

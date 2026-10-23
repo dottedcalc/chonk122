@@ -75,3 +75,16 @@ The "aha" I'm aiming for (my reading of your notes): **a loop invariant lets you
 - The big ideas of this lecture (Contracts, Invariants) get a strong highlight in their course map colour the first time they appear on a page.
 - All prose was proofread against the reword-exam-paper guidelines (no colons, semicolons or em dashes in sentences, complete sentences, questions asked directly).
 - Page 1 runs only four calls: (12, 3), (14, 3), (-7, 2) and (10, 0). The checked outputs above still apply.
+
+## Student walkthrough (subagent) and fixes
+
+A subagent walked through all 14 pages as a student and checked the wording rules. It confirmed every output and answer key. The fixes applied were these.
+
+- Page 1 says what the `chonk` and `geese` parameters mean. Page 2 says that f is renamed to `chonk_share`, and its leftover sentence no longer uses "ensures" before page 4 defines it.
+- Page 3's comic blames the caller of `chonk_share(10, 0)` (f has no precondition), and the third row is about a buggy version.
+- Page 4's loop listings keep the invariant lines, so they are numbered 8 to 14 like the full listing. Run outputs are full sentences.
+- Page 5 runs `cc0 test.c0 && ./a.out` with and without `-d`, since `cc0` only compiles.
+- "Iteration" (the course term) is defined on page 6 and replaces "round" everywhere.
+- PRES now assumes that the loop guard is true, and step 6 cites steps 2, 4 and 5. TERM gets a plain definition and an extra distractor option. Page 13 names the loop invariant. Page 14 defines modular reasoning, and its explanation no longer claims that only postconditions can be cited.
+- The page counter is a split circle (current page over total) to the right of the progress bar.
+- Mascots are drawn at three sizes across the comic beats.

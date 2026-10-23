@@ -2,7 +2,8 @@ import { Honk } from "@/components/Honk";
 import { Chonk } from "@/components/Chonk";
 import type { Pose } from "@/components/poses";
 
-export type Panel = { who: "honk" | "chonk"; say: React.ReactNode; pose?: Pose };
+// size draws a mascot closer (l) or farther away (s), like panels in a comic.
+export type Panel = { who: "honk" | "chonk"; say: React.ReactNode; pose?: Pose; size?: "s" | "m" | "l" };
 
 // Honk and Chonk standing on the page with speech bubbles, like a comic strip.
 // Two mascots face each other. One mascot faces its bubble.
@@ -19,7 +20,7 @@ export function Comic({ panels }: { panels: Panel[] }) {
             <Chonk className="comic-art" pose={p.pose} flip={flip} />
           );
         return (
-          <figure key={i} className={`beat ${p.who}`}>
+          <figure key={i} className={`beat ${p.who} size-${p.size ?? "m"}`}>
             {art}
             <figcaption className="comic-say">{p.say}</figcaption>
           </figure>
