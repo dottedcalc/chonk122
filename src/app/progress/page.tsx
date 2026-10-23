@@ -33,7 +33,7 @@ export default async function ProgressPage() {
         <SiteHeader />
         <header className="cm-head">
           <h1>Your progress</h1>
-          <p className="lede muted">
+          <p className="lede">
             <Link href="/login">Sign in</Link> to save your lessons and exercises and see how you&apos;re doing across the
             five big ideas.
           </p>
@@ -53,9 +53,9 @@ export default async function ProgressPage() {
       <SiteHeader />
       <header className="cm-head">
         <h1>Your progress</h1>
-        <p className="lede muted">
-          Each lecture scores 0 to 100: a quarter for reading its lesson and three quarters for its exercises, where
-          harder and more recent questions count more. A big idea averages the open lectures that teach it.
+        <p className="lede">
+          Each lecture scores 0 to 100. Reading its lesson counts for a quarter and its exercises for three quarters,
+          with harder and newer questions worth more. A big idea averages the open lectures that teach it.
         </p>
       </header>
 
@@ -73,20 +73,15 @@ export default async function ProgressPage() {
                   <h3>{b.name}</h3>
                   {score !== null && (
                     <p className="pg-score">
-                      <b>{score}</b> <span className="muted">· {levelOf(score)}</span>
+                      <b>{score}</b> <span className="level">{levelOf(score)}</span>
                     </p>
                   )}
                 </div>
-                <p className="muted pg-blurb">{b.blurb}</p>
+                <p className="pg-blurb">{b.blurb}</p>
                 {score === null ? (
-                  <p className="muted">No open lectures teach this yet.</p>
+                  <p>No open lectures teach this yet.</p>
                 ) : (
-                  <>
-                    <Bar score={score} label={`${b.name}: ${score} of 100`} />
-                    <p className="pg-from muted">
-                      From {open.map((n) => `L${n}`).join(", ")}
-                    </p>
-                  </>
+                  <Bar score={score} label={`${b.name}, ${score} of 100`} />
                 )}
               </li>
             );
@@ -97,7 +92,7 @@ export default async function ProgressPage() {
       <section className="cm-section">
         <h2 className="section-title">By lecture</h2>
         {scores.size === 0 ? (
-          <p className="muted">Open a lesson to get started.</p>
+          <p>Open a lesson to get started.</p>
         ) : (
           <table className="pg-table">
             <thead>
@@ -117,7 +112,7 @@ export default async function ProgressPage() {
                   <td>{s.lesson === null ? <span className="muted">none yet</span> : pct(s.lesson)}</td>
                   <td>{s.exercises === null ? <span className="muted">none yet</span> : pct(s.exercises)}</td>
                   <td className="pg-cell">
-                    <Bar score={s.score} label={`Lecture ${n}: ${s.score} of 100`} />
+                    <Bar score={s.score} label={`Lecture ${n}, ${s.score} of 100`} />
                     <b>{s.score}</b>
                   </td>
                 </tr>

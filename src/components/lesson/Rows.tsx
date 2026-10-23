@@ -59,7 +59,7 @@ export function Rows({ options, rows, numbered = false }: { options: string[]; r
           </Fragment>
         );
       })}
-      <p className="rows-done muted">
+      <p className="rows-done">
         {done} of {asked} done{done === asked ? ". Nice!" : ""}
       </p>
     </div>

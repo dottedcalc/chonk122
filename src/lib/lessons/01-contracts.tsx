@@ -94,7 +94,7 @@ function trace(chonk: number, geese: number, guardOnly: boolean): Step[] {
     },
   ];
   if (!guardOnly) {
-    steps.push({ line: 6, vars: vars("–", 0) });
+    steps.push({ line: 6, vars: vars("?", 0) });
     steps.push({ line: 7, vars: vars(left, gs) });
   }
   for (;;) {

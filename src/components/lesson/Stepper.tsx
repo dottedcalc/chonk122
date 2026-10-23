@@ -40,7 +40,7 @@ export function Stepper({ src, sets }: { src: string; sets: { label: string; ste
       <div className="step-grid">
         <Code src={src} hi={[step.line]} />
         <div className="step-state" aria-live="polite">
-          <p className="step-count muted">
+          <p className="step-count">
             Step {k + 1} of {steps.length} · line {step.line}
           </p>
           <table className="vars">
