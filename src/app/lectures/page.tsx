@@ -128,7 +128,7 @@ export default async function LecturesPage() {
                 // Gray and locked until it has a lesson or exercises the student can open.
                 const closed = !open && !exercises.get(l.n);
                 return (
-                  <li key={l.n} className={`lc-card cm-box${closed ? " lc-closed" : ""}`} style={{ "--d": `var(--d${d})` } as React.CSSProperties}>
+                  <li key={l.n} id={`l${l.n}`} className={`lc-card cm-box${closed ? " lc-closed" : ""}`} style={{ "--d": `var(--d${d})` } as React.CSSProperties}>
                     <LectureArt n={l.n} locked={closed} />
                     <div className="lc-body">
                     <p className="lc-num">Lecture {l.n}</p>

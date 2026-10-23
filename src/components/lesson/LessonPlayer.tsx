@@ -78,15 +78,13 @@ export function LessonPlayer({
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
-      if ((e.target as HTMLElement).closest("input, textarea, select, [contenteditable]")) return;
+      if ((e.target as HTMLElement).closest("input, textarea, select, [contenteditable], .lp-page button")) return;
       if (e.key === "ArrowRight") go(k + 1);
       else if (e.key === "ArrowLeft") go(k - 1);
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [k, go]);
-
-  const page = pages[k];
 
   return (
     <div className="lp">
@@ -113,12 +111,15 @@ export function LessonPlayer({
         </div>
       </div>
 
-      <article className="cm-box lp-page" key={k}>
-        <h1 ref={head} tabIndex={-1}>
-          {page.title}
-        </h1>
-        {page.body}
-      </article>
+      {/* Every page stays mounted, so answers survive a trip to another page and back. */}
+      {pages.map((pg, i) => (
+        <article key={i} className="cm-box lp-page" hidden={i !== k}>
+          <h1 ref={i === k ? head : undefined} tabIndex={-1}>
+            {pg.title}
+          </h1>
+          {pg.body}
+        </article>
+      ))}
 
       <nav className="lp-nav" aria-label="Lesson pages">
         <button type="button" onClick={() => go(k - 1)} disabled={k === 0}>
