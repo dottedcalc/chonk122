@@ -3,8 +3,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { ConceptMap } from "@/components/ConceptMap";
 
 export const metadata: Metadata = {
-  title: "How the ideas of 15-122 connect · chonk122",
-  description: "Lectures 1 to 26 in three parts, and where each big idea of 15-122 appears.",
+  title: "Five Big Ideas to Get an A in 15-122 · chonk122",
+  description: "The five big ideas of 15-122, what you need to know for each, and which lectures teach them.",
 };
 
 export default function ConceptsPage() {
@@ -13,12 +13,8 @@ export default function ConceptsPage() {
       <SiteHeader />
       <header className="cm-head">
         <h1>
-          How the ideas of <span className="nowrap">15-122</span> connect
+          Five Big Ideas to Get an A in <span className="nowrap">15-122</span>
         </h1>
-        <p className="lede">
-          The course builds on five big ideas. Each one below lists what you need to know, and you
-          can tap any idea to see which lectures teach it.
-        </p>
       </header>
       <ConceptMap />
     </main>
