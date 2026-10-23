@@ -47,7 +47,7 @@ export function ExercisePlayer({ n }: { n: number }) {
       </div>
     );
   }
-  if (!round) return <div className="cm-box ex-card muted">Loading questions…</div>;
+  if (!round) return <div className="cm-box ex-card">Loading questions…</div>;
 
   if (round.items.length === 0) {
     if (round.round === 0) return <div className="cm-box ex-card">No exercises for this lecture yet. Check back soon!</div>;
@@ -108,7 +108,7 @@ export function ExercisePlayer({ n }: { n: number }) {
             <h3>Answer</h3>
             {/* eslint-disable-next-line @next/next/no-img-element -- short-lived signed links, not static assets */}
             <img className="ex-img" src={item.answer} alt={`Answer to question ${k + 1}`} />
-            <p className="ex-ask">{item.grade ? "You said:" : "How did you do?"}</p>
+            <p className="ex-ask">{item.grade ? "Your grade" : "How did you do?"}</p>
             <div className="ex-grades">
               {grades.map(({ g, label }) => (
                 <button
@@ -130,7 +130,7 @@ export function ExercisePlayer({ n }: { n: number }) {
       {done && (
         <div className="cm-box ex-card ex-done">
           <p>
-            Round {round.round} done: <b>{score}</b> out of {round.items.length}.
+            Round {round.round} done! You got <b>{score}</b> out of {round.items.length}.
           </p>
           <button type="button" onClick={load} disabled={pending}>
             {pending ? "Loading…" : "Next round →"}

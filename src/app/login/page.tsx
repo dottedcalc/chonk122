@@ -51,8 +51,8 @@ export default function LoginPage() {
       <div className="login-card">
         <Chonk className="login-chonk" />
         <h1>Sign in</h1>
-        <p className="muted">
-          Use your school&apos;s Microsoft account. CMU accounts open every lecture; other schools get Lectures 1 to 3.
+        <p>
+          Use your school&apos;s Microsoft account. CMU accounts open every lecture. Other schools get Lectures 1 to 3.
         </p>
         <Suspense>
           <LoginForm />

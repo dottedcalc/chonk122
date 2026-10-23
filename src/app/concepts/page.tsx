@@ -4,7 +4,7 @@ import { ConceptMap } from "@/components/ConceptMap";
 
 export const metadata: Metadata = {
   title: "How the ideas of 15-122 connect · chonk122",
-  description: "Lectures 1–26 in three parts, and where each big idea of 15-122 appears.",
+  description: "Lectures 1 to 26 in three parts, and where each big idea of 15-122 appears.",
 };
 
 export default function ConceptsPage() {

@@ -17,13 +17,13 @@ function pick<T extends string>(looks: Record<T, unknown>): T {
 async function DressedHonk() {
   await connection();
   const outfit = pick<HonkOutfit>(honkLooks);
-  return <Honk className="meet-art" outfit={outfit} title={`Honk! dressed as: ${honkLooks[outfit].name}`} />;
+  return <Honk className="meet-art" outfit={outfit} title={`Honk! dressed as ${honkLooks[outfit].name}`} />;
 }
 
 async function DressedChonk() {
   await connection();
   const outfit = pick<ChonkOutfit>(chonkLooks);
-  return <Chonk className="meet-art" outfit={outfit} title={`Chonk dressed as: ${chonkLooks[outfit].name}`} />;
+  return <Chonk className="meet-art" outfit={outfit} title={`Chonk dressed as ${chonkLooks[outfit].name}`} />;
 }
 
 export default function Home() {

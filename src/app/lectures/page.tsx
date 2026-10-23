@@ -29,7 +29,7 @@ export const dynamic = "force-dynamic";
 const banner: Record<Tier, React.ReactNode> = {
   audit: (
     <>
-      You&apos;re auditing: Lecture 1 is open. <Link href="/login">Sign in</Link> to save your progress and unlock more.
+      You&apos;re auditing, so only Lecture 1 is open. <Link href="/login">Sign in</Link> to save your progress and unlock more.
     </>
   ),
   guest: <>Lectures 1 to 3 are open with your account. The rest are for CMU students.</>,
@@ -40,12 +40,12 @@ const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/New_York" });
 
 function Status({ n, access, progress }: { n: number; access?: LectureAccess; progress?: LessonProgress }) {
-  if (!lessonNumbers.includes(n)) return <p className="lc-status muted">🔒 Lesson coming soon</p>;
+  if (!lessonNumbers.includes(n)) return null;
   if (!access?.lesson) {
     const when = access?.cmuUnlockAt && new Date(access.cmuUnlockAt) > new Date() ? formatDate(access.cmuUnlockAt) : null;
-    return <p className="lc-status muted">🔒 {when ? `Opens ${when}` : "Locked"}</p>;
+    return when ? <p className="lc-status">Opens {when}</p> : null;
   }
-  if (!progress) return <p className="lc-status muted">Not started</p>;
+  if (!progress) return <p className="lc-status">Not started</p>;
   if (progress.completed) return <p className="lc-status">✓ Lesson done</p>;
   return (
     <div className="lc-status">
@@ -53,7 +53,7 @@ function Status({ n, access, progress }: { n: number; access?: LectureAccess; pr
         aria-valuemin={0} aria-valuemax={progress.pageCount} aria-valuenow={progress.pagesRead}>
         <span style={{ width: `${(progress.pagesRead / progress.pageCount) * 100}%` }} />
       </div>
-      <span className="muted">
+      <span>
         {progress.pagesRead} of {progress.pageCount} pages
       </span>
     </div>
@@ -66,7 +66,7 @@ function Proficiency({ n, score }: { n: number; score?: LectureScore }) {
   return (
     <div className="lc-prof">
       <p>
-        Proficiency <b>{score.score}</b> <span className="muted">· {levelOf(score.score)}</span>
+        Proficiency <b>{score.score}</b> <span className="level">{levelOf(score.score)}</span>
       </p>
       <div className="pg-bar" role="meter" aria-label={`Lecture ${n} proficiency`}
         aria-valuemin={0} aria-valuemax={100} aria-valuenow={score.score}>
@@ -115,7 +115,7 @@ export default async function LecturesPage() {
       <SiteHeader />
       <header className="cm-head">
         <h1>Lectures</h1>
-        <p className="lede muted">
+        <p className="lede">
           {banner[tier]} {tier !== "audit" && <Link href="/progress">See your progress →</Link>}
         </p>
       </header>

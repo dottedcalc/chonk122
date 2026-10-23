@@ -24,7 +24,7 @@ export const chonkLines = [
   "Certified huggable.",
   "I'm human-sized, actually.",
   "sizeof(chonk) > sizeof(honk)",
-  "malloc(sizeof(chonk)): out of memory",
+  "malloc(sizeof(chonk)) returned NULL",
   "Too squishy to segfault.",
   "100% stuffing, 0% segfaults.",
   "Stuffing is not a memory leak.",

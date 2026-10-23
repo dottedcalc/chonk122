@@ -101,7 +101,6 @@ export function LessonPlayer({
         <button type="button" onClick={() => go(k - 1)} disabled={k === 0}>
           ← Back
         </button>
-        <span className="lp-keys muted">or use the ← → keys</span>
         {k < last ? (
           <button type="button" onClick={() => go(k + 1)}>
             Next →
