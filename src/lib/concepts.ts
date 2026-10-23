@@ -100,14 +100,17 @@ export const categories: Category[] = [
     specifics: [
       "C uses a <b>preprocessor</b> for macros, header files and conditional compilation. Contracts become optional macros such as <code>REQUIRES</code> and <code>ENSURES</code> that only run in <b>debug mode</b>. (Lecture 17)",
       "C has no <b>garbage collector</b>. Every block of memory you allocate must be <b>freed exactly once</b>, and reading freed or uninitialized memory is <b>undefined behavior</b>. (Lectures 17 and 18)",
+      "Memory is allocated with <code>xmalloc</code>, which <b>stops the program</b> instead of returning NULL when memory runs out, or with <code>xcalloc</code>, which also <b>sets every byte to zero</b>. Only the <b>exact pointer</b> they return may be passed to <code>free</code>. (Lectures 17 and 18)",
       "C does not check <b>array bounds</b>, and <b>signed overflow</b> is undefined. The sizes of types depend on the implementation, so careful code uses <b>fixed size types and explicit casts</b>. (Lectures 18 and 19)",
       "A program can be compiled, interpreted or run on a <b>virtual machine</b>. The C0VM runs bytecode using an <b>operand stack, local variables and call frames</b>. (Lecture 20)",
-      "The data structures from earlier in the course are rebuilt in C. <b>Union find</b> groups vertices into <b>equivalence classes</b> for Kruskal's algorithm, and heaps are stored in arrays with their invariants <b>temporarily broken and then restored</b>. (Lectures 21 to 26)",
+      "Graphs are implemented in C with a choice of representation. An <b>adjacency matrix</b> uses O(v²) space and checks an edge in O(1), while an <b>adjacency list</b> keeps a linked list of neighbors for each vertex in O(v + e) space and suits <b>sparse graphs</b>. (Lecture 21)",
+      "Union find tracks the <b>equivalence classes</b> of connected vertices for Kruskal's algorithm. Each class has a <b>canonical representative</b>, two vertices are connected exactly when their representatives match, and <b>union by height</b> and <b>path compression</b> keep finding a representative fast. (Lectures 23 and 24)",
+      "Heaps are rebuilt in C as <b>arrays</b>, with their invariants <b>temporarily broken and then restored</b> by sifting up or down. (Lectures 25 and 26)",
     ],
     ideas: [
       { id: "toc", name: "Transition to C" },
-      { id: "impl", name: "Implementation techniques" },
-      { id: "eq", name: "Equivalence classes" },
+      { id: "impl", name: "Implementation strategies" },
+      { id: "eq", name: "Equivalence classes and representatives" },
     ],
   },
 ];
