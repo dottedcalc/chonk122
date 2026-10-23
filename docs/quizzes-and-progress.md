@@ -68,12 +68,21 @@ Built in small PRs. Each section says which PR adds it.
 
 ## 4. Proficiency and big ideas (PR 4)
 
-Lecture proficiency, 0 to 100: 25% lesson completion plus 75% exercise score, where tier 2 counts
-twice and tier 3 three times as much as tier 1, and later rounds count more than earlier ones.
+Lecture proficiency, 0 to 100 (`getLectureScores` in `src/lib/progress.ts`):
 
-The five big ideas come from the course syllabus's learning objectives (computational thinking,
-programming skills, algorithms and data structures). Each of the course map's 12 ideas maps to
-one, and a big idea's score averages the lectures that teach it.
+- 25% lesson pages read plus 75% exercise mastery.
+- Mastery (`exercise_scores()` in SQL, so tiers stay hidden): got = 1, partly = 0.5, missed = 0,
+  a tier-3 question weighs 3 times a tier-1 one, and each round counts 0.85 times the next.
+- Mastery earns full weight after 8 graded questions (or the whole pool, if smaller), so one
+  lucky round can't max it out.
+- A lecture with only a lesson is scored on the lesson; one with only exercises on the exercises.
+- Only open lectures with a lesson or a pool are scored.
+- Students can no longer read the `tier` column of their own attempts.
+
+The five big ideas (`src/lib/bigIdeas.ts`) come from the syllabus learning objectives
+(computational thinking, programming skills, algorithms and data structures). Each of the course
+map's 12 ideas belongs to one, and a big idea's score averages the scored lectures that teach it.
+Levels: Egg (0–19), Hatchling, Gosling, Goose, Chonk (80–100).
 
 | Big idea | Syllabus objectives | Course map ideas |
 | --- | --- | --- |
@@ -83,7 +92,7 @@ one, and a big idea's score averages the lectures that teach it.
 | Abstraction and interfaces | specification vs. implementation, interfaces, data structure invariants, generic data structures | Abstraction & modularity, Design trade-offs |
 | Programming in C0 and C | integers as bits, pointers, memory, undefined behavior, compiling and testing in Unix | Data representation, Memory, Safety & undefined behavior, Running programs |
 
-`/progress` shows the five scores and each lecture's share.
+`/progress` shows the five scores with the lectures behind each, then a per-lecture table.
 
 ## 5. Question pools (PR 5 onwards)
 

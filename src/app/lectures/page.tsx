@@ -82,7 +82,9 @@ export default async function LecturesPage() {
       <SiteHeader />
       <header className="cm-head">
         <h1>Lectures</h1>
-        <p className="lede muted">{banner[tier]}</p>
+        <p className="lede muted">
+          {banner[tier]} {tier !== "audit" && <Link href="/progress">See your progress →</Link>}
+        </p>
       </header>
 
       {parts.map((part) => (

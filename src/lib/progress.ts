@@ -44,3 +44,33 @@ export async function getExerciseSummary(): Promise<Map<number, ExerciseSummary>
   }
   return out;
 }
+
+// Lecture proficiency, 0 to 100: 25% lesson pages read and 75% exercise mastery. Mastery
+// earns full weight after 8 graded questions, so one lucky round can't max it out. A lecture
+// with no exercise pool yet is scored on its lesson alone. Null when there is nothing to score.
+export const EXERCISES_FOR_FULL_CREDIT = 8;
+
+export type LectureScore = { score: number; lesson: number | null; exercises: number | null };
+
+export async function getLectureScores(available: (n: number) => { lesson: boolean; pool: number }) {
+  const out = new Map<number, LectureScore>();
+  if (!supabaseConfigured) return out;
+  const supabase = await createClient();
+  const [lessons, { data }] = await Promise.all([getLessonProgress(), supabase.rpc("exercise_scores")]);
+  const ex = new Map(
+    ((data ?? []) as { lecture: number; graded: number; mastery: number }[]).map((r) => [r.lecture, r]),
+  );
+
+  for (let n = 1; n <= 26; n++) {
+    const { lesson: hasLesson, pool } = available(n);
+    if (!hasLesson && pool === 0) continue;
+    const p = lessons.get(n);
+    const lesson = p ? p.pagesRead / p.pageCount : 0;
+    const e = ex.get(n);
+    const exercises = e ? Number(e.mastery) * Math.min(1, e.graded / Math.min(pool || 1, EXERCISES_FOR_FULL_CREDIT)) : 0;
+
+    const score = !hasLesson ? exercises : pool === 0 ? lesson : 0.25 * lesson + 0.75 * exercises;
+    out.set(n, { score: Math.round(100 * score), lesson: hasLesson ? lesson : null, exercises: pool === 0 ? null : exercises });
+  }
+  return out;
+}
