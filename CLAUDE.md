@@ -11,6 +11,6 @@ descriptions, mascot lines and lesson prose.
 - No colons and no semicolons. Split the sentence or use a comma or "so". A label that needs a separator uses a
   comma or the middle dot (·).
 - Code shown as code is exempt. C0 listings, `<code>` snippets and contracts keep their real syntax.
-- Keep small gray text rare. Main messages, explanations and status lines use the normal text color. The
-  `muted` color and small font sizes are for truly secondary details, at most one such line per card, and never
-  for something the reader needs to act on. If a hint repeats what the page already shows, cut it.
+- Never add small gray helper text. No intros under titles, no "how this works" lines, no hints that explain a
+  control or repeat what the page already shows. Main messages and status lines use the normal text color, and
+  the `muted` color is only for truly secondary details such as the footer. When in doubt, leave the line out.

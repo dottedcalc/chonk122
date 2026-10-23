@@ -35,9 +35,6 @@ export default async function ExercisesPage({ params }: { params: Params }) {
               Lecture {lecture.n} · {lecture.title}
             </p>
             <h1>Exercises</h1>
-            <p>
-              Four questions a round. Work each one out, reveal the answer, then say how you did. Questions never repeat.
-            </p>
           </header>
           <ExercisePlayer n={lecture.n} />
           <p className="ex-back">

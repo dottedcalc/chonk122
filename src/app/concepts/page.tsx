@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { ConceptMap } from "@/components/ConceptMap";
 import { bigIdeas, lecturesFor } from "@/lib/bigIdeas";
@@ -46,16 +45,8 @@ export default async function ConceptsPage() {
         <h1>
           Five things you need to know to Ace <span className="nowrap">CS122</span>
         </h1>
-        {scores ? (
-          <p>Each ring averages your scores in the open lectures that teach that big idea.</p>
-        ) : (
-          <p>
-            <Link href="/login">Sign in</Link> to see your proficiency in each big idea.
-          </p>
-        )}
       </header>
       <ConceptMap scores={ideaScores} />
-
     </main>
   );
 }
