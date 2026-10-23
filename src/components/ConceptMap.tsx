@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Fragment, useState } from "react";
 import {
   categories,
@@ -9,6 +10,7 @@ import {
   type Idea,
   type IdeaId,
 } from "@/lib/concepts";
+import { lessonNumbers } from "@/lib/lessons/available";
 
 const ideas: Record<IdeaId, Idea & { cat: Category }> = Object.fromEntries(
   categories.flatMap((cat) => cat.ideas.map((idea) => [idea.id, { ...idea, cat }])),
@@ -73,10 +75,20 @@ export function ConceptMap() {
               <h3>{part.name}</h3>
               <div className={`cm-lrows${filter ? " filtering" : ""}`}>
                 {lectures.slice(part.from - 1, part.to).map((l) => (
-                  <div key={l.n} className={`cm-lrow${filter && l.ideas.includes(filter) ? " hit" : ""}`}>
+                  <div key={l.n} id={`l${l.n}`} className={`cm-lrow${filter && l.ideas.includes(filter) ? " hit" : ""}`}>
                     <span className="cm-n">{l.n}</span>
                     <span className="cm-t">{l.title}</span>
-                    <span className="cm-s" dangerouslySetInnerHTML={{ __html: l.summary }} />
+                    <span className="cm-s">
+                      <span dangerouslySetInnerHTML={{ __html: l.summary }} />
+                      {lessonNumbers.includes(l.n) && (
+                        <>
+                          {" "}
+                          <Link href={`/lessons/${l.n}`} className="cm-lesson">
+                            Open the lesson →
+                          </Link>
+                        </>
+                      )}
+                    </span>
                     <span className="cm-tags">
                       {l.ideas.map((id) => (
                         <i key={id} title={ideas[id].name} style={tint(ideas[id].cat)} />
