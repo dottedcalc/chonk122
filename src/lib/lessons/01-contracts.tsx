@@ -777,14 +777,14 @@ export const contracts: Lesson = {
           </p>
           <ul>
             <li>
-              Loops over arrays rely on them in <Link href="/concepts#l4">Searching arrays</Link>,{" "}
-              <Link href="/concepts#l6">Binary search</Link> and <Link href="/concepts#l7">Quicksort</Link>.
+              Loops over arrays rely on them in <Link href="/lectures#l4">Searching arrays</Link>,{" "}
+              <Link href="/lectures#l6">Binary search</Link> and <Link href="/lectures#l7">Quicksort</Link>.
             </li>
             <li>
-              Starting with <Link href="/concepts#l9">Stacks and queues</Link>, every data structure has invariants.
+              Starting with <Link href="/lectures#l9">Stacks and queues</Link>, every data structure has invariants.
             </li>
             <li>
-              <Link href="/concepts#l26">Restoring invariants</Link> shows how to repair them.
+              <Link href="/lectures#l26">Restoring invariants</Link> shows how to repair them.
             </li>
           </ul>
           <Comic

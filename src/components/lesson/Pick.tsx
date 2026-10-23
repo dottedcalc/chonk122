@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-// Predict, then reveal: the reader picks one option and sees the answer and why.
+// Predict, then reveal: the reader picks one option, and the answer and why appear once the pick is right.
 export function Pick({
   question,
   options,
@@ -22,8 +22,7 @@ export function Pick({
       <div className="pick-opts">
         {options.map((o, i) => {
           let cls = "opt";
-          if (picked !== null && i === answer) cls += " right";
-          else if (picked === i) cls += " wrong";
+          if (picked === i) cls += i === answer ? " right" : " wrong";
           return (
             <button
               key={i}
@@ -41,10 +40,18 @@ export function Pick({
       <div aria-live="polite">
         {picked !== null && (
           <div className="pick-why">
-            <b>{picked === answer ? "Yes!" : "Not quite."}</b> {explain}{" "}
-            <button type="button" className="link" onClick={() => setPicked(null)}>
-              Try again
-            </button>
+            {picked === answer ? (
+              <>
+                <b>Yes!</b> {explain}
+              </>
+            ) : (
+              <>
+                <b>Not quite.</b>{" "}
+                <button type="button" className="link" onClick={() => setPicked(null)}>
+                  Try again
+                </button>
+              </>
+            )}
           </div>
         )}
       </div>

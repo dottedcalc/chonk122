@@ -21,9 +21,11 @@ export function Versions({
           </button>
         ))}
       </div>
-      <div className="ver-body" key={k}>
-        {tabs[k].body}
-      </div>
+      {tabs.map((t, i) => (
+        <div key={i} className="ver-body" hidden={i !== k}>
+          {t.body}
+        </div>
+      ))}
     </div>
   );
 }
