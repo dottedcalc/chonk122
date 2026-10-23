@@ -9,6 +9,8 @@ import {
   type Grade,
   type Round,
 } from "@/app/exercises/actions";
+import { Chonk } from "./Chonk";
+import { Fetching } from "./Fetching";
 
 const grades: { g: Grade; label: string }[] = [
   { g: "got", label: "Got it" },
@@ -39,15 +41,17 @@ export function ExercisePlayer({ n }: { n: number }) {
 
   if (failed) {
     return (
-      <div className="cm-box ex-card">
-        <p>Chonk couldn&apos;t fetch your questions. Check your connection and try again.</p>
+      <div className="cm-box fetch">
+        <Chonk className="fetch-chonk" pose="oops" decorative />
+        <p className="fetch-line">Chonk dropped your questions in the pool</p>
+        <p>Check your connection and try again.</p>
         <button type="button" onClick={load} disabled={pending}>
-          Try again
+          {pending ? "Fishing…" : "Try again"}
         </button>
       </div>
     );
   }
-  if (!round) return <div className="cm-box ex-card">Loading questions…</div>;
+  if (!round) return <Fetching />;
 
   if (round.items.length === 0) {
     if (round.round === 0) return <div className="cm-box ex-card">No exercises for this lecture yet. Check back soon!</div>;
