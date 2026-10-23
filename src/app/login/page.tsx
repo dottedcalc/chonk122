@@ -8,7 +8,6 @@ import { supabaseConfigured } from "@/lib/supabase/config";
 import { Chonk } from "@/components/Chonk";
 
 const errors: Record<string, string> = {
-  domain: "Please sign in with your CMU account (@andrew.cmu.edu).",
   "1": "Sign-in didn't finish. Try again in a minute.",
 };
 
@@ -36,7 +35,7 @@ function LoginForm() {
   return (
     <div className="login">
       <button type="button" onClick={signInWithCmu} disabled={loading}>
-        {loading ? "Redirecting…" : "Sign in with CMU (Andrew ID)"}
+        {loading ? "Redirecting…" : "Sign in with Microsoft"}
       </button>
       {error && <p className="error">{errors[error] ?? errors["1"]}</p>}
     </div>
@@ -52,7 +51,9 @@ export default function LoginPage() {
       <div className="login-card">
         <Chonk className="login-chonk" />
         <h1>Sign in</h1>
-        <p className="muted">Chonk needs to see your Andrew ID before letting you in.</p>
+        <p className="muted">
+          Use your school&apos;s Microsoft account. CMU accounts open every lecture; other schools get Lectures 1 to 3.
+        </p>
         <Suspense>
           <LoginForm />
         </Suspense>

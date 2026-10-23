@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
 import { LessonPlayer } from "@/components/lesson/LessonPlayer";
-import { allLessons, getLesson } from "@/lib/lessons";
+import { Locked } from "@/components/Locked";
+import { checkAccess } from "@/lib/access";
+import { getLesson } from "@/lib/lessons";
 
 type Params = Promise<{ n: string }>;
 
-export function generateStaticParams() {
-  return allLessons.map((l) => ({ n: String(l.n) }));
-}
+// Rendered per request so gated lessons never exist as prebuilt HTML.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const lesson = getLesson(Number((await params).n));
@@ -23,10 +24,15 @@ export default async function LessonPage({ params }: { params: Params }) {
   const lesson = getLesson(Number((await params).n));
   if (!lesson) notFound();
 
+  const lock = await checkAccess(lesson.n, "lesson");
   return (
     <main className="container lesson">
       <SiteHeader />
-      <LessonPlayer n={lesson.n} title={lesson.title} pages={lesson.pages} />
+      {lock ? (
+        <Locked n={lesson.n} lock={lock} />
+      ) : (
+        <LessonPlayer n={lesson.n} title={lesson.title} pages={lesson.pages} />
+      )}
     </main>
   );
 }
