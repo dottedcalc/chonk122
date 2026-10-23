@@ -217,7 +217,7 @@ button.link:hover { transform: none; box-shadow: none; }
 
 /* course map */
 .cm-head { display: grid; gap: 10px; padding: 36px 0 12px; }
-.cm-head h1 { font-size: clamp(2.4rem, 6vw, 3.6rem); margin: 0; line-height: 1; }
+.cm-head h1 { font-size: clamp(2.4rem, 6vw, 3.6rem); margin: 0; line-height: 1; letter-spacing: -0.04em; word-spacing: -0.12em; }
 .cm-head .lede { max-width: 60ch; }
 .cm-section { margin-top: 40px; }
 .cm-section .section-title { margin-bottom: 14px; }
@@ -503,13 +503,12 @@ button.opt:disabled:not(.right):not(.wrong) { opacity: 0.55; }
 }
 .lc-closed { filter: grayscale(1); opacity: 0.7; }
 .lc-closed .lc-art { background: var(--paper-dot); }
-.lc-prof { display: grid; gap: 4px; }
-.lc-prof p { margin: 0; font-size: 0.95rem; display: flex; align-items: baseline; gap: 6px; }
-.lc-prof .level { margin-left: auto; }
+.lc-prof { display: flex; align-items: center; gap: 10px; }
+.lc-prof p { margin: 0; font-size: 0.95rem; display: grid; }
+.lc-prof .level { font-weight: 800; }
 .lc-prof b { font-size: 1.15rem; }
 .lc-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 8px; }
 .lc-actions .button { font-size: 1.05rem; padding: 5px 12px; }
-.lc-prof .pg-bar { width: 100%; }
 .lc-ex-btn { background: var(--card); color: var(--link); border: 2.5px solid var(--green); }
 .lc-ex-btn:hover { background: var(--c1-soft); color: var(--link); }
 .lc-ex-count { font-weight: 400; font-size: 0.95rem; }
@@ -615,3 +614,16 @@ button.ex-grade[aria-pressed="true"]:disabled { opacity: 1; }
 .nf .cta { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 16px; }
 .nf .cta .button { font-size: 1.45rem; padding: 10px 22px; }
 .nf .cta .button.alt { align-self: auto; }
+
+/* Circular proficiency meter */
+.ring { flex: none; transform: rotate(-90deg); }
+.ring circle { fill: none; stroke-width: 3.6; }
+.ring-track { stroke: color-mix(in srgb, var(--muted) 22%, transparent); }
+.ring-fill { stroke: var(--k, var(--accent)); stroke-linecap: round; }
+.ring-num { transform: rotate(90deg); transform-origin: 18px 18px; text-anchor: middle; dominant-baseline: central; font-size: 11px; font-weight: 800; fill: var(--fg); }
+.cm-cat-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.cm-prof { display: grid; justify-items: center; gap: 2px; }
+.cm-prof .level { font-weight: 800; font-size: 0.85rem; color: var(--k); }
+.pg-lectures { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.pg-lec { display: flex; align-items: center; gap: 12px; padding: 10px 14px; }
+.pg-lec p { margin: 2px 0 0; font-size: 0.92rem; }
