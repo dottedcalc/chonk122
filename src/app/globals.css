@@ -766,3 +766,14 @@ button.ex-grade[aria-pressed="true"]:disabled { opacity: 1; }
   .b32 { grid-template-columns: repeat(2, max-content); }
   .dg.tiny { width: 1.45rem; }
 }
+
+/* exercise level slider */
+.ex-level { padding: 14px 18px; display: grid; gap: 6px; }
+.ex-level-row { display: grid; gap: 4px; max-width: 420px; }
+.ex-level-row label { font-weight: 700; }
+.ex-level input[type="range"] { width: 100%; margin: 4px 0 0; accent-color: var(--accent); }
+.ex-level-ticks { display: flex; justify-content: space-between; max-width: 420px; font-size: 0.85rem; color: var(--muted); }
+.ex-level p { margin: 0; font-size: 0.95rem; }
+.ex-level p:empty { display: none; }
+.ex-how summary { cursor: pointer; font-weight: 700; color: var(--link); }
+.ex-how p { margin: 6px 0 0; }

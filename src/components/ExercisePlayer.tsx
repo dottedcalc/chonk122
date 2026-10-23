@@ -11,6 +11,7 @@ import {
 } from "@/app/exercises/actions";
 import { Chonk } from "./Chonk";
 import { Fetching } from "./Fetching";
+import { LevelSlider } from "./LevelSlider";
 
 const grades: { g: Grade; label: string }[] = [
   { g: "got", label: "Got it" },
@@ -82,6 +83,7 @@ export function ExercisePlayer({ n }: { n: number }) {
 
   return (
     <div className="ex">
+      <LevelSlider n={n} initial={round.level} />
       <div className="ex-steps" role="tablist" aria-label={`Round ${round.round} questions`}>
         {round.items.map((i, j) => (
           <button
