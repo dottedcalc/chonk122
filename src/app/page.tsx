@@ -75,7 +75,7 @@ export default function Home() {
             <div>
               <h3>Chonk</h3>
               <p className="tag">Honk!&apos;s best friend</p>
-              <p>A human-sized, extremely fluffy goose who is mostly legs. Allocates memory generously and always frees it.</p>
+              <p>A human-sized stuffed goose who is round, squishy and very huggable. Allocates memory generously and always frees it.</p>
             </div>
           </div>
         </div>
