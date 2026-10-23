@@ -35,7 +35,7 @@ function LoginForm() {
   return (
     <div className="login">
       <button type="button" onClick={signInWithCmu} disabled={loading}>
-        {loading ? "Redirecting…" : "Sign in with Azure (Andrew ID or other)"}
+        {loading ? "Redirecting…" : "Azure (Andrew ID or other)"}
       </button>
       {error && <p className="error">{errors[error] ?? errors["1"]}</p>}
     </div>
