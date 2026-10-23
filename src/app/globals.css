@@ -26,6 +26,10 @@
   --c2-soft: #fbe8d2;
   --c3: #2f6fb3;
   --c3-soft: #e0ebf7;
+  --c4: #7a4fb0;
+  --c4-soft: #ece3f7;
+  --c5: #b5404a;
+  --c5-soft: #f8e0e0;
   /* lecture difficulty, 1 blue to 5 red */
   --d1: #2f6fb3;
   --d2: #2a8f86;
@@ -49,6 +53,10 @@
     --c2-soft: #3a2a18;
     --c3: #82b4ea;
     --c3-soft: #1d2d40;
+    --c4: #c3a2ec;
+    --c4-soft: #2e2340;
+    --c5: #ef8a92;
+    --c5-soft: #3e2124;
     --d1: #82b4ea;
     --d2: #6cc9bf;
     --d3: #f0cd5a;
@@ -246,6 +254,12 @@ button.cm-chip:hover { background: var(--card); }
 .cm-part:nth-child(2) { box-shadow: 5px 6px 0 var(--beak); }
 .cm-part:nth-child(3) { box-shadow: 5px 6px 0 var(--honk); }
 .cm-part h3 { font-size: 1.9rem; margin: 0 0 6px; line-height: 1; }
+.cm-part.cm-know { box-shadow: 5px 6px 0 var(--k); padding-bottom: 16px; }
+.cm-know h3 { color: var(--k); }
+.cm-eu { margin: 0 0 8px; font-weight: 700; font-size: 1.02rem; }
+.cm-specs { margin: 0; padding-left: 1.4rem; display: grid; gap: 8px; font-size: 0.95rem; line-height: 1.55; }
+.cm-specs b { font-weight: 800; box-shadow: inset 0 -0.42em var(--ks); }
+.cm-specs code { font-size: 0.85rem; background: var(--ks); padding: 0 4px; border-radius: 4px; }
 .cm-lrow {
   display: grid; grid-template-columns: 2.6rem minmax(0, 10rem) minmax(0, 1fr) auto; gap: 12px; align-items: baseline;
   padding: 10px 4px; border-top: 2px dashed var(--paper-dot); transition: opacity 0.15s;
