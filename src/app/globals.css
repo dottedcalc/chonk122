@@ -387,6 +387,10 @@ mark.hi.c3 { background: var(--c3-soft); }
 .beat.honk.size-l .comic-art { height: 150px; }
 .beat.chonk.size-s .comic-art { height: 110px; }
 .beat.chonk.size-l .comic-art { height: 200px; }
+.beat.honk.size-xs .comic-art { height: 64px; }
+.beat.honk.size-xl .comic-art { height: 190px; }
+.beat.chonk.size-xs .comic-art { height: 92px; }
+.beat.chonk.size-xl .comic-art { height: 250px; }
 .comic-say {
   position: relative; padding: 6px 12px; background: var(--card); border: 2px solid var(--edge);
   border-radius: 24px 18px 22px 20px / 20px 22px 18px 24px; text-align: center;
@@ -474,8 +478,33 @@ button.opt:disabled:not(.right):not(.wrong) { opacity: 0.55; }
 }
 
 /* lectures dashboard */
-.lc-grid { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; }
-.lc-card { display: grid; gap: 6px; align-content: start; border-top: 8px solid var(--d); padding: 14px 16px 16px; }
+.lc-grid { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 900px) { .lc-grid { grid-template-columns: 1fr; } }
+.lc-card { display: flex; flex-direction: column; border-top: 8px solid var(--d); padding: 0 0 16px; overflow: hidden; }
+.lc-body { display: grid; gap: 6px; align-content: start; padding: 0 18px; }
+.lc-art {
+  position: relative; display: flex; justify-content: center; align-items: flex-end; gap: 6px;
+  height: 128px; margin-bottom: 12px; padding: 10px 16px 6px;
+  background: color-mix(in srgb, var(--d) 10%, var(--card)); border-bottom: 2px dashed var(--paper-dot);
+}
+.lc-doodle { width: 132px; height: auto; align-self: center; }
+.lc-mascot { height: 92px; width: auto; overflow: visible; }
+.lc-mascot.lc-chonk { height: 106px; }
+.lc-lock {
+  position: absolute; top: 10px; right: 12px; display: grid; place-items: center; width: 34px; height: 34px;
+  border-radius: 50%; background: var(--card); border: 2px solid var(--edge); font-size: 1rem;
+}
+.lc-closed { filter: grayscale(1); opacity: 0.7; }
+.lc-closed .lc-art { background: var(--paper-dot); }
+.lc-prof { display: grid; gap: 4px; }
+.lc-prof p { margin: 0; font-size: 0.95rem; }
+.lc-prof b { font-size: 1.15rem; }
+.lc-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 8px; }
+.lc-actions .button { font-size: 1.05rem; padding: 5px 12px; }
+.lc-prof .pg-bar { width: 100%; }
+.lc-ex-btn { background: var(--card); color: var(--link); border: 2.5px solid var(--green); }
+.lc-ex-btn:hover { background: var(--c1-soft); color: var(--link); }
+.lc-ex-count { font-weight: 400; font-size: 0.95rem; }
 .lc-card h3 { font-size: 1.5rem; margin: 0; line-height: 1.1; }
 .lc-card h3 a { color: inherit; }
 .lc-closed h3 { color: var(--muted); }
@@ -489,9 +518,7 @@ button.opt:disabled:not(.right):not(.wrong) { opacity: 0.55; }
 .lc-bar span { display: block; height: 100%; background: var(--accent); }
 button.lc-reset { justify-self: start; font-size: 0.95rem; }
 .lc-confirm { margin: 4px 0 0; font-size: 0.95rem; }
-.lc-ex { margin: 0; font-size: 0.95rem; }
-.lc-ex a { font-weight: 700; }
-.lc-resets { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.lc-resets { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 14px; margin-top: 8px; }
 .lc-resets:empty { display: none; }
 
 /* exercises */

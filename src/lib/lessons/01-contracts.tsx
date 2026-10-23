@@ -132,11 +132,18 @@ export const contracts: Lesson = {
             panels={[
               {
                 who: "chonk",
-                size: "l",
+                outfit: "chef",
+                size: "xl",
                 pose: "point",
                 say: "This old function should share my crumbs among the geese.",
               },
-              { who: "honk", size: "s", pose: "think", say: "Can we trust it? Let's test it first." },
+              {
+                who: "honk",
+                outfit: "umpire",
+                size: "xs",
+                pose: "shrug",
+                say: "Can we trust it? Let's test it first.",
+              },
             ]}
           />
           <p className="task">
@@ -246,7 +253,15 @@ export const contracts: Lesson = {
             ]}
           />
           <Comic
-            panels={[{ who: "honk", size: "l", pose: "oops", say: "So calling chonk_share(10, 0) was our mistake!" }]}
+            panels={[
+              {
+                who: "honk",
+                outfit: "clown",
+                size: "xl",
+                pose: "oops",
+                say: "So calling chonk_share(10, 0) was our mistake!",
+              },
+            ]}
           />
         </>
       ),
@@ -344,7 +359,17 @@ export const contracts: Lesson = {
               },
             ]}
           />
-          <Comic panels={[{ who: "chonk", pose: "think", say: "One passing test was not enough to catch the bug." }]} />
+          <Comic
+            panels={[
+              {
+                who: "chonk",
+                outfit: "detective",
+                size: "s",
+                pose: "think",
+                say: "One passing test was not enough to catch the bug.",
+              },
+            ]}
+          />
         </>
       ),
     },
@@ -376,7 +401,17 @@ export const contracts: Lesson = {
             To know the code works on every allowed input, we need a <b>proof</b>, which is an argument that covers all
             of them.
           </p>
-          <Comic panels={[{ who: "honk", pose: "think", say: "So how do we prove it for every input?" }]} />
+          <Comic
+            panels={[
+              {
+                who: "honk",
+                outfit: "inclass",
+                size: "l",
+                pose: "think",
+                say: "So how do we prove it for every input?",
+              },
+            ]}
+          />
         </>
       ),
     },
@@ -402,8 +437,20 @@ export const contracts: Lesson = {
           />
           <Comic
             panels={[
-              { who: "honk", size: "s", pose: "oops", say: "Iteration 97... which iteration was I on?" },
-              { who: "chonk", size: "l", pose: "think", say: "We need a way to reason without counting iterations." },
+              {
+                who: "honk",
+                outfit: "drink",
+                size: "xs",
+                pose: "oops",
+                say: "Iteration 97... which iteration was I on?",
+              },
+              {
+                who: "chonk",
+                outfit: "reader",
+                size: "l",
+                pose: "think",
+                say: "We need a way to reason without counting iterations.",
+              },
             ]}
           />
         </>
@@ -431,8 +478,9 @@ export const contracts: Lesson = {
             panels={[
               {
                 who: "chonk",
+                outfit: "party",
                 size: "l",
-                pose: "cheer",
+                pose: "dance",
                 say: "Crumbs handed out plus crumbs left always make all the crumbs!",
               },
             ]}
@@ -538,8 +586,14 @@ export const contracts: Lesson = {
           <p className="task">Choose the justification for each step.</p>
           <Comic
             panels={[
-              { who: "honk", size: "l", pose: "point", say: "chonk_left' >= geese, by line 8!" },
-              { who: "chonk", size: "s", pose: "think", say: "Line 8 is about chonk_left before line 12 shrank it." },
+              { who: "honk", outfit: "diva", size: "l", pose: "point", say: "chonk_left' >= geese, by line 8!" },
+              {
+                who: "chonk",
+                outfit: "cozy",
+                size: "s",
+                pose: "think",
+                say: "Line 8 is about chonk_left before line 12 shrank it.",
+              },
             ]}
           />
           <Rows
@@ -667,8 +721,8 @@ export const contracts: Lesson = {
           <Code src={honks} hi={[11, 12]} />
           <Comic
             panels={[
-              { who: "honk", size: "l", pose: "cheer", say: "I proved PRES for line 9!" },
-              { who: "chonk", size: "s", pose: "think", say: "Let's check each step." },
+              { who: "honk", outfit: "rockstar", size: "xl", pose: "dance", say: "I proved PRES for line 9!" },
+              { who: "chonk", outfit: "builder", size: "s", pose: "shrug", say: "Let's check each step." },
             ]}
           />
           <Pick
@@ -735,8 +789,8 @@ export const contracts: Lesson = {
           </ul>
           <Comic
             panels={[
-              { who: "chonk", size: "s", pose: "wave", say: "So the crumbs always add up." },
-              { who: "honk", size: "l", pose: "cheer", say: "And now we can prove it!" },
+              { who: "chonk", outfit: "grad", size: "m", pose: "love", say: "So the crumbs always add up." },
+              { who: "honk", outfit: "butterfly", size: "l", pose: "cheer", say: "And now we can prove it!" },
             ]}
           />
         </>

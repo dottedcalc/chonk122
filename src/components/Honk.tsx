@@ -1,5 +1,6 @@
 import { Wobble } from "./Wobble";
 import { PoseMark, poseAngles, type Pose } from "./poses";
+import { LookWords, honkLooks, honkShirt, type HonkOutfit, type Look } from "./outfits";
 
 // Honk: the grey goose plush in an "I ♥ 15-122" shirt.
 export function Honk({
@@ -8,6 +9,7 @@ export function Honk({
   decorative = false,
   pose = "stand",
   flip = false,
+  outfit = "love",
 }: {
   className?: string;
   title?: string;
@@ -15,8 +17,12 @@ export function Honk({
   pose?: Pose;
   // Face right instead of left. The shirt's lettering stays readable.
   flip?: boolean;
+  // A costume from the 15-122 staff page.
+  outfit?: HonkOutfit;
 }) {
   const a = poseAngles[pose];
+  const look: Look = honkLooks[outfit];
+  const lettered = !look.shirt && !look.bare;
   const tilt = `rotate(${a.head} 110 120)`;
   return (
     <svg
@@ -26,6 +32,9 @@ export function Honk({
     >
       <defs>
         <Wobble id="honk-wobble" />
+        <clipPath id="honk-shirt-clip">
+          <path d={honkShirt} />
+        </clipPath>
       </defs>
       <g transform={flip ? "translate(220 0) scale(-1 1)" : undefined}>
         <g
@@ -35,6 +44,8 @@ export function Honk({
           strokeLinecap="round"
           strokeLinejoin="round"
         >
+          {look.back}
+
           {/* wings poking out of the sleeves */}
           <g transform={`rotate(${a.front} 72 150)`}>
             <path d="M70 140C48 150 30 168 24 188C40 191 58 180 74 166Z" fill="var(--honk)" />
@@ -61,39 +72,59 @@ export function Honk({
             <path d="M100 26C104 18 110 14 118 16" fill="none" strokeWidth="2.5" />
           </g>
 
-          {/* shirt */}
-          <path
-            d="M72 122C87 113 136 113 150 124C162 132 168 146 171 160C159 165 152 161 149 156C154 180 158 206 156 224C130 233 94 233 66 224C64 206 68 180 72 156C68 160 60 165 49 160C54 146 60 132 72 122Z"
-            fill="var(--shirt)"
-          />
-          <path d="M93 120C102 130 117 131 128 120" fill="none" strokeWidth="3" />
+          {/* shirt, or a costume */}
+          <path d={honkShirt} fill={look.bare ? "var(--honk)" : (look.shirt ?? "var(--shirt)")} />
+          {!look.bare && <path d="M93 120C102 130 117 131 128 120" fill="none" strokeWidth="3" />}
+          {look.body}
+          {look.collar}
 
           {/* beak and face */}
           <g transform={tilt}>
             <path d="M88 52C74 50 58 55 51 62C59 69 77 71 90 64C93 60 92 55 88 52Z" fill="var(--beak)" />
             <path d="M55 62C66 63 78 62 89 59" fill="none" strokeWidth="2.5" />
+            {look.head}
           </g>
         </g>
         <g transform={tilt}>
-          <circle cx="105" cy="45" r="4.5" fill="var(--ink)" />
-          <circle cx="106.5" cy="43.5" r="1.5" fill="#fff" />
+          {!look.noEye && (
+            <>
+              <circle cx="105" cy="45" r="4.5" fill="var(--ink)" />
+              <circle cx="106.5" cy="43.5" r="1.5" fill="#fff" />
+            </>
+          )}
           <ellipse cx="116" cy="60" rx="6" ry="3.5" fill="var(--blush)" />
         </g>
+        {look.front && (
+          <g
+            filter="url(#honk-wobble)"
+            stroke="var(--ink)"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            {look.front}
+          </g>
+        )}
       </g>
-      <path
-        transform="translate(118 158) rotate(-6)"
-        d="M0 10C-14 0-12-12 0-6C12-12 14 0 0 10Z"
-        fill="var(--heart)"
-        stroke="var(--ink)"
-        strokeWidth="2.5"
-        strokeLinejoin="round"
-      />
-      <text x="96" y="167" className="svg-hand" fontSize="22" textAnchor="middle" fill="var(--ink)">
-        I
-      </text>
-      <text x="111" y="200" className="svg-hand" fontSize="20" textAnchor="middle" fill="var(--ink)">
-        15-122
-      </text>
+      {lettered && (
+        <>
+          <path
+            transform="translate(118 158) rotate(-6)"
+            d="M0 10C-14 0-12-12 0-6C12-12 14 0 0 10Z"
+            fill="var(--heart)"
+            stroke="var(--ink)"
+            strokeWidth="2.5"
+            strokeLinejoin="round"
+          />
+          <text x="96" y="167" className="svg-hand" fontSize="22" textAnchor="middle" fill="var(--ink)">
+            I
+          </text>
+          <text x="111" y="200" className="svg-hand" fontSize="20" textAnchor="middle" fill="var(--ink)">
+            15-122
+          </text>
+        </>
+      )}
+      <LookWords look={look} flip={flip} width={220} />
       <PoseMark pose={pose} x={flip ? 50 : 170} y={30} size={1.3} />
     </svg>
   );
