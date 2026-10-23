@@ -108,7 +108,7 @@ export default async function LecturesPage() {
       <SiteHeader />
       <header className="cm-head">
         <h1>Lectures</h1>
-        <p className="lede">
+        <p>
           {banner[tier]} {tier !== "audit" && <Link href="/concepts">See your progress →</Link>}
         </p>
       </header>

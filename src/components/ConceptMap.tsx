@@ -83,7 +83,9 @@ export function ConceptMap({ scores }: { scores: Record<number, number | null> |
           {categories.map((cat) => (
             <div key={cat.id} className="cm-box cm-part cm-know" style={tint(cat)}>
               <h3>{cat.name}</h3>
-              <p className="cm-eu">{cat.question}</p>
+              <p className="cm-eu">
+                <b>Enduring understanding.</b> {cat.question}
+              </p>
               <ol className="cm-specs">
                 {cat.specifics.map((html, i) => (
                   <li key={i} dangerouslySetInnerHTML={{ __html: html }} />
@@ -139,9 +141,9 @@ export function ConceptMap({ scores }: { scores: Record<number, number | null> |
             ))}
           </div>
         </div>
-        <div className="cm-box cm-detail" aria-live="polite">
-          {sel ? (
-            <>
+        <div aria-live="polite">
+          {sel && (
+            <div className="cm-box cm-detail">
               <b className="cm-h">{lname(sel[1])}</b> ·{" "}
               <span style={{ ...tint(ideas[sel[0]].cat), color: "var(--k)", fontWeight: 800 }}>
                 {ideas[sel[0]].name}
@@ -154,9 +156,7 @@ export function ConceptMap({ scores }: { scores: Record<number, number | null> |
                   </Link>
                 </>
               )}
-            </>
-          ) : (
-            <span className="muted">Tap a dot to see which lecture it is.</span>
+            </div>
           )}
         </div>
       </section>

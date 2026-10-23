@@ -218,7 +218,6 @@ button.link:hover { transform: none; box-shadow: none; }
 /* course map */
 .cm-head { display: grid; gap: 10px; padding: 36px 0 12px; }
 .cm-head h1 { font-size: clamp(2.4rem, 6vw, 3.6rem); margin: 0; line-height: 1; letter-spacing: -0.04em; word-spacing: -0.12em; }
-.cm-head h1 + p { margin: 10px 0 0; }
 .cm-head .lede { max-width: 60ch; }
 .cm-section { margin-top: 40px; }
 .cm-section .section-title { margin-bottom: 14px; }
@@ -257,7 +256,8 @@ button.cm-chip:hover { background: var(--card); }
 .cm-part h3 { font-size: 1.9rem; margin: 0 0 6px; line-height: 1; }
 .cm-part.cm-know { box-shadow: 5px 6px 0 var(--k); padding-bottom: 16px; }
 .cm-know h3 { color: var(--k); }
-.cm-eu { margin: 0 0 8px; font-weight: 700; font-size: 1.02rem; }
+.cm-eu { margin: 0 0 8px; font-size: 1.02rem; }
+.cm-eu b { font-weight: 800; color: var(--k); }
 .cm-specs { margin: 0; padding-left: 1.4rem; display: grid; gap: 8px; font-size: 0.95rem; line-height: 1.55; }
 .cm-specs b { font-weight: 800; box-shadow: inset 0 -0.42em var(--ks); }
 .cm-specs code { font-size: 0.85rem; background: var(--ks); padding: 0 4px; border-radius: 4px; }
