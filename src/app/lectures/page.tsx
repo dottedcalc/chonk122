@@ -40,7 +40,7 @@ const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/New_York" });
 
 function Status({ n, access, progress }: { n: number; access?: LectureAccess; progress?: LessonProgress }) {
-  if (!lessonNumbers.includes(n)) return <p className="lc-status muted">Lesson coming soon</p>;
+  if (!lessonNumbers.includes(n)) return <p className="lc-status muted">🔒 Lesson coming soon</p>;
   if (!access?.lesson) {
     const when = access?.cmuUnlockAt && new Date(access.cmuUnlockAt) > new Date() ? formatDate(access.cmuUnlockAt) : null;
     return <p className="lc-status muted">🔒 {when ? `Opens ${when}` : "Locked"}</p>;
@@ -130,9 +130,11 @@ export default async function LecturesPage() {
                 const d = difficulty[l.n];
                 const open = lessonNumbers.includes(l.n) && Boolean(access.get(l.n)?.lesson);
                 const p = progress.get(l.n);
+                // Gray and locked until it has a lesson or exercises the student can open.
+                const closed = !open && !exercises.get(l.n);
                 return (
-                  <li key={l.n} className={`lc-card cm-box${open ? "" : " lc-closed"}`} style={{ "--d": `var(--d${d})` } as React.CSSProperties}>
-                    <LectureArt n={l.n} />
+                  <li key={l.n} className={`lc-card cm-box${closed ? " lc-closed" : ""}`} style={{ "--d": `var(--d${d})` } as React.CSSProperties}>
+                    <LectureArt n={l.n} locked={closed} />
                     <div className="lc-body">
                     <p className="lc-num">Lecture {l.n}</p>
                     <h3>{open ? <Link href={`/lessons/${l.n}`}>{l.title}</Link> : l.title}</h3>

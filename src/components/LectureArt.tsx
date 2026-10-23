@@ -669,7 +669,7 @@ const scenes: Record<number, Scene> = {
   },
 };
 
-export function LectureArt({ n }: { n: number }) {
+export function LectureArt({ n, locked = false }: { n: number; locked?: boolean }) {
   const s = scenes[n];
   if (!s) return null;
   return (
@@ -680,6 +680,7 @@ export function LectureArt({ n }: { n: number }) {
         </defs>
         <g filter={`url(#lc-wobble-${n})`}>{s.doodle}</g>
       </svg>
+      {locked && <span className="lc-lock">🔒</span>}
       {s.who === "honk" ? (
         <Honk className="lc-mascot" decorative outfit={s.outfit} pose={s.pose} flip />
       ) : (

@@ -480,13 +480,22 @@ button.opt:disabled:not(.right):not(.wrong) { opacity: 0.55; }
 /* lectures dashboard */
 .lc-grid { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 @media (max-width: 900px) { .lc-grid { grid-template-columns: 1fr; } }
-.lc-card { display: flex; gap: 14px; align-items: flex-start; border-top: 8px solid var(--d); padding: 14px 16px 16px; }
-.lc-body { flex: 1; min-width: 0; display: grid; gap: 6px; align-content: start; }
-.lc-art { position: relative; flex: none; width: 184px; height: 112px; }
-.lc-doodle { position: absolute; left: 0; top: 0; width: 124px; height: auto; }
-.lc-mascot { position: absolute; right: 0; bottom: 0; height: 80px; width: auto; overflow: visible; }
-.lc-mascot.lc-chonk { height: 96px; }
-@media (max-width: 420px) { .lc-card { flex-direction: column; align-items: stretch; } .lc-art { align-self: center; } }
+.lc-card { display: flex; flex-direction: column; border-top: 8px solid var(--d); padding: 0 0 16px; overflow: hidden; }
+.lc-body { display: grid; gap: 6px; align-content: start; padding: 0 18px; }
+.lc-art {
+  position: relative; display: flex; justify-content: center; align-items: flex-end; gap: 6px;
+  height: 128px; margin-bottom: 12px; padding: 10px 16px 6px;
+  background: color-mix(in srgb, var(--d) 10%, var(--card)); border-bottom: 2px dashed var(--paper-dot);
+}
+.lc-doodle { width: 132px; height: auto; align-self: center; }
+.lc-mascot { height: 92px; width: auto; overflow: visible; }
+.lc-mascot.lc-chonk { height: 106px; }
+.lc-lock {
+  position: absolute; top: 10px; right: 12px; display: grid; place-items: center; width: 34px; height: 34px;
+  border-radius: 50%; background: var(--card); border: 2px solid var(--edge); font-size: 1rem;
+}
+.lc-closed { filter: grayscale(1); opacity: 0.7; }
+.lc-closed .lc-art { background: var(--paper-dot); }
 .lc-prof { display: grid; gap: 4px; }
 .lc-prof p { margin: 0; font-size: 0.95rem; }
 .lc-prof b { font-size: 1.15rem; }
