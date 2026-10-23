@@ -47,6 +47,7 @@ export const categories: Category[] = [
       "Arrays live in the <b>heap</b> and are reached through their addresses. When two variables hold the same address, they are <b>aliases</b>, and a change made through one is visible through the other. (Lecture 3)",
       "<b>Structs</b> group fields of different types, and <b>pointers</b> let you link structs together into lists and trees. A <b>NULL pointer</b> refers to nothing, and following it is an error. (Lectures 8 to 10)",
       "<b>Function pointers</b> treat code itself as data that can be stored and passed around. The C0VM shows that a whole program is stored as <b>bytecode</b> in memory. (Lectures 14, 18 and 20)",
+      "A program can be compiled, interpreted or run on a <b>virtual machine</b>. The C0VM runs bytecode using an <b>operand stack, local variables and call frames</b>. (Lecture 20)",
     ],
     ideas: [
       { id: "rep", name: "Data representation" },
@@ -104,7 +105,6 @@ export const categories: Category[] = [
       "C has no <b>garbage collector</b>. Every block of memory you allocate must be <b>freed exactly once</b>, and reading freed or uninitialized memory is <b>undefined behavior</b>. (Lectures 17 and 18)",
       "Memory is allocated with <code>malloc</code>, which takes a <b>size in bytes</b>, usually written with <code>sizeof</code>, and returns an <b>uninitialized block</b>. It <b>returns NULL</b> when memory runs out, so its result must be checked, and the <b>exact pointer</b> it returns must later be passed to <code>free</code>. The course libraries also provide <code>xmalloc</code>, which stops the program instead of returning NULL, and <code>xcalloc</code>, which also sets every byte to zero. (Lectures 17 and 18)",
       "C does not check <b>array bounds</b>, and <b>signed overflow</b> is undefined. The sizes of types depend on the implementation, so careful code uses <b>fixed size types and explicit casts</b>. (Lectures 18 and 19)",
-      "A program can be compiled, interpreted or run on a <b>virtual machine</b>. The C0VM runs bytecode using an <b>operand stack, local variables and call frames</b>. (Lecture 20)",
       "Graphs are implemented in C with a choice of representation. An <b>adjacency matrix</b> uses O(v²) space and checks an edge in O(1), while an <b>adjacency list</b> keeps a linked list of neighbors for each vertex in O(v + e) space and suits <b>sparse graphs</b>. (Lecture 21)",
       "Heaps are rebuilt in C as <b>arrays</b>, with their invariants <b>temporarily broken and then restored</b> by sifting up or down. (Lectures 25 and 26)",
     ],
