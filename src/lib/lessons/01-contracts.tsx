@@ -4,6 +4,7 @@ import { Comic } from "@/components/lesson/Comic";
 import { Big } from "@/components/lesson/Big";
 import { Hi } from "@/components/lesson/Hi";
 import { Pick } from "@/components/lesson/Pick";
+import { ProofTable, SpotStep } from "@/components/lesson/ProofTable";
 import { Rows } from "@/components/lesson/Rows";
 import { RunTable } from "@/components/lesson/RunTable";
 import { Stepper, type Step } from "@/components/lesson/Stepper";
@@ -541,28 +542,27 @@ export const contracts: Lesson = {
             time. Only lines 1 to 7 have run at that point.
           </p>
           <Code src={share} hi={[6, 7, 9, 10]} />
-          <p className="task">Choose the justification for each step.</p>
-          <Rows
-            numbered
+          <p className="task">Justify each step.</p>
+          <ProofTable
             options={["line 2", "line 6", "line 7", "math on earlier steps"]}
             rows={[
               {
                 group: "Line 9 holds.",
-                prompt: <code>chonk_left == chonk</code>,
+                claim: <code>chonk_left == chonk</code>,
                 answer: 2,
                 why: "This is the assignment on line 7.",
               },
-              { prompt: <code>chonk &gt;= 0</code>, answer: 0, why: "This is the precondition on line 2." },
-              { prompt: <code>chonk_left &gt;= 0</code>, answer: 3, why: "This follows from steps 1 and 2." },
+              { claim: <code>chonk &gt;= 0</code>, answer: 0, why: "This is the precondition on line 2." },
+              { claim: <code>chonk_left &gt;= 0</code>, answer: 3, why: "This follows from steps 1 and 2." },
               {
                 group: "Line 10 holds.",
-                prompt: <code>goose_share == 0</code>,
+                claim: <code>goose_share == 0</code>,
                 answer: 1,
                 given: true,
                 why: "This is the assignment on line 6.",
               },
               {
-                prompt: <code>goose_share * geese + chonk_left == 0 * geese + chonk == chonk</code>,
+                claim: <code>goose_share * geese + chonk_left == 0 * geese + chonk == chonk</code>,
                 answer: 3,
                 why: "This follows from steps 1 and 4.",
               },
@@ -583,7 +583,7 @@ export const contracts: Lesson = {
             in <code>chonk_left&apos;</code>.
           </p>
           <Peek />
-          <p className="task">Choose the justification for each step.</p>
+          <p className="task">Justify each step.</p>
           <Comic
             panels={[
               { who: "honk", outfit: "diva", size: "l", pose: "point", say: "chonk_left' >= geese, by line 8!" },
@@ -596,37 +596,36 @@ export const contracts: Lesson = {
               },
             ]}
           />
-          <Rows
-            numbered
+          <ProofTable
             options={["line 8", "line 10", "line 12", "line 13", "math on earlier steps"]}
             rows={[
               {
                 group: "Line 9 still holds.",
-                prompt: <code>chonk_left &gt;= geese</code>,
+                claim: <code>chonk_left &gt;= geese</code>,
                 answer: 0,
                 given: true,
                 why: "The loop guard is true inside the body.",
               },
               {
-                prompt: <code>chonk_left&apos; == chonk_left - geese</code>,
+                claim: <code>chonk_left&apos; == chonk_left - geese</code>,
                 answer: 2,
                 why: "This is the assignment on line 12.",
               },
-              { prompt: <code>chonk_left&apos; &gt;= 0</code>, answer: 4, why: "This follows from steps 1 and 2." },
+              { claim: <code>chonk_left&apos; &gt;= 0</code>, answer: 4, why: "This follows from steps 1 and 2." },
               {
                 group: "Line 10 still holds.",
-                prompt: <code>goose_share * geese + chonk_left == chonk</code>,
+                claim: <code>goose_share * geese + chonk_left == chonk</code>,
                 answer: 1,
                 given: true,
                 why: "The invariant holds at the start of the iteration.",
               },
               {
-                prompt: <code>goose_share&apos; == goose_share + 1</code>,
+                claim: <code>goose_share&apos; == goose_share + 1</code>,
                 answer: 3,
                 why: "This is the assignment on line 13.",
               },
               {
-                prompt: <code>goose_share&apos; * geese + chonk_left&apos; == chonk</code>,
+                claim: <code>goose_share&apos; * geese + chonk_left&apos; == chonk</code>,
                 answer: 4,
                 why: "This follows from steps 2, 4 and 5, because (goose_share + 1) * geese + chonk_left - geese simplifies to the left side of step 4.",
               },
@@ -646,26 +645,25 @@ export const contracts: Lesson = {
             <code>goose_share</code>, so <code>\result</code> equals <code>goose_share</code>.
           </p>
           <Peek />
-          <p className="task">Choose the justification for each step.</p>
-          <Rows
-            numbered
+          <p className="task">Justify each step.</p>
+          <ProofTable
             options={["line 8, negated", "line 9", "line 10", "math on earlier steps"]}
             rows={[
-              { prompt: <code>chonk_left &lt; geese</code>, answer: 0, why: "The loop guard is false after the loop." },
-              { prompt: <code>chonk_left &gt;= 0</code>, answer: 1, why: "This is a loop invariant." },
+              { claim: <code>chonk_left &lt; geese</code>, answer: 0, why: "The loop guard is false after the loop." },
+              { claim: <code>chonk_left &gt;= 0</code>, answer: 1, why: "This is a loop invariant." },
               {
-                prompt: <code>goose_share * geese + chonk_left == chonk</code>,
+                claim: <code>goose_share * geese + chonk_left == chonk</code>,
                 answer: 2,
                 given: true,
                 why: "This is a loop invariant.",
               },
               {
-                prompt: <code>0 &lt;= chonk - goose_share * geese</code>,
+                claim: <code>0 &lt;= chonk - goose_share * geese</code>,
                 answer: 3,
                 why: "This follows from steps 2 and 3, and it proves line 3.",
               },
               {
-                prompt: <code>chonk - goose_share * geese &lt; geese</code>,
+                claim: <code>chonk - goose_share * geese &lt; geese</code>,
                 answer: 3,
                 why: "This follows from steps 1 and 3, and it proves line 4.",
               },
@@ -725,21 +723,13 @@ export const contracts: Lesson = {
               { who: "chonk", outfit: "builder", size: "s", pose: "shrug", say: "Let's check each step." },
             ]}
           />
-          <Pick
-            question="Which step is the first one that is wrong?"
-            options={[
-              <span key="1">
-                1. <code>honks == goose * (goose + 1) / 2</code> by line 9
-              </span>,
-              <span key="2">
-                2. <code>goose&apos; == goose + 1</code> by line 11
-              </span>,
-              <span key="3">
-                3. <code>honks&apos; == honks + goose</code> by line 12
-              </span>,
-              <span key="4">
-                4. <code>honks&apos; == goose&apos; * (goose&apos; + 1) / 2</code> by math on 1, 2 and 3
-              </span>,
+          <p className="task">Flag the first step that is wrong.</p>
+          <SpotStep
+            rows={[
+              { claim: <code>honks == goose * (goose + 1) / 2</code>, by: "line 9" },
+              { claim: <code>goose&apos; == goose + 1</code>, by: "line 11" },
+              { claim: <code>honks&apos; == honks + goose</code>, by: "line 12" },
+              { claim: <code>honks&apos; == goose&apos; * (goose&apos; + 1) / 2</code>, by: "math on steps 1, 2 and 3" },
             ]}
             answer={2}
             explain={

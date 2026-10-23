@@ -117,3 +117,7 @@ A second subagent walked all 18 pages and confirmed every answer with gcc, with 
 - Hints that answered later questions were removed (bubbles on pages 5, 8 and 15, the permissions target that matched page 14, the left shift preset). Page 17 is retitled "Taking the top byte".
 - Page 4 scopes wrapping to + and *, and page 12 contrasts division with them. Page 14 uses distractors with the same operator so the masks are tested, and the bit widget says it is an 8-bit example. Page 10 step 2 cites "Line 3 and step 1". Version tabs keep revealed runs.
 - Declined. Comic fragments stay (allowed by the guide). The wheel on page 6 stays unsigned, since negatives are named there and placed on the circle on page 7.
+
+## Proof tables
+
+The user made it a rule that point-to proofs are real tables. Page 10's proof is a `ProofTable` (step, statement, justification), where the reader drags a justification into each cell or taps a justification and then a cell. Lecture 1's INIT, PRES and EXIT proofs use the same table, and its "spot the bad step" page is a `SpotStep` table with a Flag button per step.

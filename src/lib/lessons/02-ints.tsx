@@ -7,6 +7,7 @@ import { Digits } from "@/components/lesson/Digits";
 import { Hi } from "@/components/lesson/Hi";
 import { Perms } from "@/components/lesson/Perms";
 import { Pick } from "@/components/lesson/Pick";
+import { ProofTable } from "@/components/lesson/ProofTable";
 import { Rows } from "@/components/lesson/Rows";
 import { RunTable } from "@/components/lesson/RunTable";
 import { Shifter } from "@/components/lesson/Shifter";
@@ -440,28 +441,27 @@ export const ints: Lesson = {
           </p>
           <Comic panels={[{ who: "honk", outfit: "pumpkin", size: "s", pose: "think", say: "Prove it, don't just test it." }]} />
           <Code src={add} label="honk_add" />
-          <p className="task">Choose the justification for each step.</p>
-          <Rows
-            numbered
+          <p className="task">Justify each step.</p>
+          <ProofTable
             options={["Line 2", "Line 3 and step 1", "Steps 2 and 3"]}
             rows={[
               {
-                prompt: <><code>int_max() - chonk</code> on line 3 does not overflow</>,
+                claim: <><code>int_max() - chonk</code> on line 3 does not overflow</>,
                 answer: 0,
                 why: "chonk > 0, so the result is between 0 and int_max().",
               },
               {
-                prompt: <><code>honk + chonk &lt;= int_max()</code></>,
+                claim: <><code>honk + chonk &lt;= int_max()</code></>,
                 answer: 1,
                 why: "Add chonk to both sides of line 3, which holds as math because of step 1.",
               },
               {
-                prompt: <><code>honk + chonk &gt; int_min()</code></>,
+                claim: <><code>honk + chonk &gt; int_min()</code></>,
                 answer: 0,
                 why: "Every int is at least int_min(), and chonk > 0 makes the sum bigger.",
               },
               {
-                prompt: <><code>honk + chonk</code> on line 5 does not overflow</>,
+                claim: <><code>honk + chonk</code> on line 5 does not overflow</>,
                 answer: 2,
                 why: "The mathematical result is in range.",
               },

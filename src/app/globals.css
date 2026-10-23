@@ -486,6 +486,44 @@ button.opt:disabled:not(.right):not(.wrong) { opacity: 0.55; }
 .peek[open] summary { margin-bottom: 8px; }
 .step-ctrl { display: flex; gap: 10px; flex-wrap: wrap; }
 
+/* point-to proofs as tables */
+.proof { display: grid; gap: 10px; min-width: 0; }
+.proof-bank { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; border: 2px dashed var(--edge); border-radius: 14px; }
+button.proof-chip {
+  font-family: var(--font-body), system-ui, sans-serif; font-size: 0.92rem; font-weight: 700; padding: 4px 12px;
+  background: var(--c1-soft); color: var(--fg); box-shadow: 2px 3px 0 var(--edge); cursor: grab;
+  border-radius: 14px 6px 12px 8px / 8px 12px 6px 14px;
+}
+button.proof-chip:hover { background: var(--c2-soft); }
+button.proof-chip[aria-pressed="true"] { background: var(--c2-soft); border-color: var(--c2); box-shadow: 2px 3px 0 var(--c2); }
+.proof-table { width: 100%; border-collapse: collapse; }
+.proof-table th, .proof-table td { text-align: left; vertical-align: top; padding: 8px 8px 8px 0; border-bottom: 2px dashed var(--paper-dot); }
+.proof-table thead th { font-size: 0.9rem; }
+.proof-group th { padding-top: 12px; color: var(--link); font-weight: 800; }
+.proof-n { width: 2.4rem; font-weight: 800; }
+.proof-claim { overflow-wrap: anywhere; }
+.proof-claim code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.86em; }
+.proof-why { display: block; margin-top: 4px; font-size: 0.92rem; font-weight: 700; color: var(--c1); }
+.proof-j { width: 13rem; }
+button.proof-slot {
+  width: 100%; min-height: 2.2rem; padding: 4px 10px; text-align: left; font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.92rem; font-weight: 700; background: var(--card); color: var(--fg); box-shadow: none;
+  border: 2px dashed var(--edge); border-radius: 10px;
+}
+button.proof-slot:hover, button.proof-slot.over { background: var(--c2-soft); transform: none; }
+button.proof-slot.right { border-style: solid; border-color: var(--c1); background: var(--c1-soft); opacity: 1; cursor: default; }
+button.proof-slot.wrong { border-style: solid; border-color: var(--c2); background: var(--c2-soft); }
+.proof-given { display: inline-block; padding: 4px 0; font-weight: 700; }
+.proof-flag { width: 4.5rem; }
+tr.flagged td { background: var(--c2-soft); }
+@media (max-width: 640px) {
+  .proof-table thead { display: none; }
+  .proof-table tr { display: grid; grid-template-columns: 2rem minmax(0, 1fr); border-bottom: 2px dashed var(--paper-dot); padding: 6px 0; }
+  .proof-table td, .proof-table th { border: 0; padding: 2px 0; }
+  .proof-table td.proof-j, .proof-table td.proof-flag { grid-column: 2; width: auto; }
+  .proof-group th { grid-column: 1 / -1; }
+}
+
 /* lesson widgets for bits and numbers */
 .digits, .perms, .shifter { display: grid; gap: 10px; min-width: 0; }
 .dg-row { display: grid; gap: 8px; justify-content: start; }
