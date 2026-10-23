@@ -25,15 +25,12 @@ export default async function ConceptsPage() {
     }));
   }
 
-  // A big idea averages the open lectures that teach it.
+  // A big idea averages every lecture that teaches it, counting unopened ones as 0.
   const ideaScores = scores
     ? Object.fromEntries(
         bigIdeas.map((b) => {
-          const open = lecturesFor(b).filter((n) => scores.has(n));
-          const score = open.length
-            ? Math.round(open.reduce((s, n) => s + scores.get(n)!.score, 0) / open.length)
-            : null;
-          return [b.id, score];
+          const all = lecturesFor(b);
+          return [b.id, Math.round(all.reduce((s, n) => s + (scores.get(n)?.score ?? 0), 0) / all.length)];
         }),
       )
     : null;
