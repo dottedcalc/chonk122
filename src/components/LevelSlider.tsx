@@ -25,7 +25,7 @@ export function LevelSlider({ n, initial }: { n: number; initial: Level }) {
     <section className="cm-box ex-level" aria-labelledby="ex-level-label">
       <div className="ex-level-row">
         <label id="ex-level-label" htmlFor="ex-level">
-          Level: <b>{stops[i].name}</b>
+          Level · <b>{stops[i].name}</b>
         </label>
         <input
           id="ex-level"
@@ -43,7 +43,7 @@ export function LevelSlider({ n, initial }: { n: number; initial: Level }) {
           <span key={s.name}>{s.name}</span>
         ))}
       </div>
-      <p className="muted" aria-live="polite">
+      <p aria-live="polite">
         {pending
           ? "Saving…"
           : saved === "failed"
@@ -54,7 +54,7 @@ export function LevelSlider({ n, initial }: { n: number; initial: Level }) {
       </p>
       <details className="ex-how">
         <summary>How levels work</summary>
-        <p>Auto picks the level for you. It moves up after a strong round and down after a weak one.</p>
+        <p>Auto starts you at Medium. It moves up after a strong round and down after a weak one.</p>
         <p>Easy, Medium and Hard keep you at the level you choose.</p>
         <p>A new level starts with your next round. Harder questions count more toward your score.</p>
       </details>

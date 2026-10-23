@@ -65,7 +65,7 @@ Built in small PRs. Each section says which PR adds it.
 - Students pick a level on a slider: Auto (adaptive, the default), Easy, Medium or Hard
   (`set_exercise_level`, `exercise_state.chosen_tier`). A chosen level fixes which tier is served
   first from the next round on. The adaptive tier keeps learning, so Auto resumes where it left
-  off. Resetting exercises keeps the chosen level.
+  off. Resetting exercises keeps the chosen level. Auto starts at Medium (tier 2).
 - `/exercises/<n>` shows one question at a time with the round's four steps.
 - Resets: "Reset lecture" on /lectures clears the lesson and exercises, "Reset exercises"
   clears only the exercises.
