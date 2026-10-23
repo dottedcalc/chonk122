@@ -101,6 +101,10 @@ a { color: var(--link); }
 }
 .kicker { margin: 0 0 8px; color: var(--link); font-size: 1.25rem; font-weight: 700; }
 .hero h1 { font-size: clamp(2.6rem, 7vw, 4.6rem); margin: 0 0 14px; line-height: 0.95; }
+.cta { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 30px; margin-top: 30px; }
+.cta .button.alt { align-self: flex-end; }
+.cta .button { font-size: 1.7rem; padding: 12px 26px; }
+.cta .button.go { font-size: 2.2rem; padding: 16px 34px; -webkit-text-stroke: 0.8px currentColor; box-shadow: 5px 6px 0 var(--edge); }
 .squiggle {
   color: var(--beak);
   text-decoration: underline wavy var(--green);
@@ -157,19 +161,6 @@ a { color: var(--link); }
 
 .section-title { font-size: 2.1rem; margin: 8px 0 18px; }
 
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 22px; }
-.card {
-  background: var(--card); padding: 18px 20px 20px;
-  box-shadow: 5px 6px 0 var(--green);
-  transition: transform 0.15s;
-}
-.card:nth-child(odd) { transform: rotate(-1deg); }
-.card:nth-child(even) { transform: rotate(0.8deg); }
-.card:hover { transform: rotate(0) translateY(-4px); }
-.card h3 { font-size: 1.6rem; margin: 6px 0 4px; line-height: 1.1; }
-.card p { margin: 0; color: var(--muted); }
-.doodle svg { width: 56px; height: 56px; }
-
 .more { text-align: center; margin: 30px 0 0; }
 
 .meet { margin-top: 64px; }
@@ -196,6 +187,8 @@ button:active, .button:active { transform: translate(2px, 3px); box-shadow: 1px 
 button:focus-visible, .button:focus-visible, .mascot:focus-visible { outline: 3px dashed var(--beak); outline-offset: 4px; }
 button:disabled { opacity: 0.6; cursor: wait; }
 .button.small { font-size: 1.15rem; padding: 6px 16px; }
+.button.alt { background: var(--card); color: var(--link); border: 2.5px solid var(--green); }
+.button.alt:hover { background: var(--c1-soft); }
 button.link {
   background: none; color: var(--link); padding: 0; border: 0; box-shadow: none;
   text-decoration: underline; font-family: inherit; font-size: 1rem; font-weight: 400;
@@ -304,6 +297,8 @@ button.cm-dot.sel { box-shadow: 0 0 0 3px var(--beak); }
   .nav-links { margin-left: auto; }
   .logo-honk { width: 34px; height: 41px; }
   .nav .button.small { font-size: 1.05rem; padding: 5px 12px; }
+  .cta .button { font-size: 1.45rem; padding: 10px 22px; }
+  .cta .button.go { font-size: 1.8rem; padding: 14px 24px; white-space: nowrap; }
 }
 @media (max-width: 720px) {
   .cm-cats { grid-template-columns: 1fr; }
