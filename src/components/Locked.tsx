@@ -13,17 +13,17 @@ export function Locked({ n, lock }: { n: number; lock: Lock }) {
       <h1>Lecture {n} is locked</h1>
       {lock.reason === "signin" && (
         <>
-          <p className="muted">Sign in with your school&apos;s Microsoft account to open it and save your progress.</p>
+          <p>Sign in with your school&apos;s Microsoft account to open it and save your progress.</p>
           <Link href="/login" className="button">
             Sign in
           </Link>
         </>
       )}
       {lock.reason === "cmu" && (
-        <p className="muted">Lectures 1 to 3 are open to everyone. The rest are for CMU students.</p>
+        <p>Lectures 1 to 3 are open to everyone. The rest are for CMU students.</p>
       )}
       {lock.reason === "date" && (
-        <p className="muted">
+        <p>
           {lock.unlockAt ? `It opens on ${formatDate(lock.unlockAt)}.` : "It isn't open yet. Check back soon!"}
         </p>
       )}

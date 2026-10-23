@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const lesson = getLesson(Number((await params).n));
   if (!lesson) return {};
   return {
-    title: `Lecture ${lesson.n}: ${lesson.title} · chonk122`,
+    title: `Lecture ${lesson.n}, ${lesson.title} · chonk122`,
     description: `An interactive look back at 15-122 Lecture ${lesson.n}, ${lesson.title}.`,
   };
 }
