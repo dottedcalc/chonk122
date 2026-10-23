@@ -109,7 +109,7 @@ export default async function LecturesPage() {
       <header className="cm-head">
         <h1>Lectures</h1>
         <p className="lede">
-          {banner[tier]} {tier !== "audit" && <Link href="/concepts#progress">See your progress →</Link>}
+          {banner[tier]} {tier !== "audit" && <Link href="/concepts">See your progress →</Link>}
         </p>
       </header>
 
