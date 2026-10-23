@@ -258,6 +258,7 @@ button.cm-chip:hover { background: var(--card); }
 .cm-know h3 { color: var(--k); }
 .cm-eu { margin: 0 0 8px; font-weight: 700; font-size: 1.02rem; }
 .cm-specs { margin: 0; padding-left: 1.4rem; display: grid; gap: 8px; font-size: 0.95rem; line-height: 1.55; }
+.cm-specs b { font-weight: 800; box-shadow: inset 0 -0.42em var(--ks); }
 .cm-specs code { font-size: 0.85rem; background: var(--ks); padding: 0 4px; border-radius: 4px; }
 .cm-lrow {
   display: grid; grid-template-columns: 2.6rem minmax(0, 10rem) minmax(0, 1fr) auto; gap: 12px; align-items: baseline;
