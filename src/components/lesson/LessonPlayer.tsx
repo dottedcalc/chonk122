@@ -6,8 +6,15 @@ import { saveLessonPage } from "@/app/lectures/actions";
 
 export type PlayerPage = { title: string; minutes: number; body: React.ReactNode };
 
+// The zero-based page in the URL hash, or null when the hash names no page.
+function fromHash(count: number): number | null {
+  const p = Number.parseInt(window.location.hash.slice(1), 10);
+  return p >= 1 && p <= count ? p - 1 : null;
+}
+
 // Shows one lesson page at a time, with Back/Next buttons, the arrow keys and a progress bar.
-// The page number lives in the URL hash so a reload or shared link opens the same page.
+// The page number lives in the URL hash so a reload or shared link opens the same page,
+// and each move adds a history entry so the browser Back button steps back a page.
 // Signed-in students resume where they left off, and each page they reach is saved.
 export function LessonPlayer({
   n,
@@ -27,11 +34,27 @@ export function LessonPlayer({
   const moved = useRef(false);
   const last = pages.length - 1;
 
+  // Opens the page in the hash, or else the resume page, and writes it back so the address always matches.
   useEffect(() => {
-    const p = Number.parseInt(window.location.hash.slice(1), 10);
-    if (p >= 1 && p <= pages.length) setK(p - 1);
-    else if (resumeAt > 1 && resumeAt <= pages.length) setK(resumeAt - 1);
+    let start = fromHash(pages.length);
+    if (start === null) start = resumeAt > 1 && resumeAt <= pages.length ? resumeAt - 1 : 0;
+    setK(start);
+    window.history.replaceState(null, "", `#${start + 1}`);
   }, [pages.length, resumeAt]);
+
+  // The browser Back and Forward buttons and hand-edited hashes change the address, so follow it.
+  useEffect(() => {
+    function onNav() {
+      moved.current = true;
+      setK(fromHash(pages.length) ?? 0);
+    }
+    window.addEventListener("popstate", onNav);
+    window.addEventListener("hashchange", onNav);
+    return () => {
+      window.removeEventListener("popstate", onNav);
+      window.removeEventListener("hashchange", onNav);
+    };
+  }, [pages.length]);
 
   useEffect(() => {
     if (saving) saveLessonPage(n, k + 1).catch(() => {});
@@ -42,7 +65,7 @@ export function LessonPlayer({
       if (next < 0 || next > last) return;
       moved.current = true;
       setK(next);
-      window.history.replaceState(null, "", `#${next + 1}`);
+      window.history.pushState(null, "", `#${next + 1}`);
     },
     [last],
   );
