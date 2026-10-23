@@ -201,6 +201,7 @@ button.link:hover { transform: none; box-shadow: none; }
 .login-chonk { height: 220px; }
 .login { display: flex; flex-direction: column; gap: 10px; }
 .error { color: var(--heart); font-weight: 700; }
+.locked { margin: 32px auto 0; display: grid; justify-items: center; gap: 12px; }
 
 /* course map */
 .cm-head { display: grid; gap: 10px; padding: 36px 0 12px; }
