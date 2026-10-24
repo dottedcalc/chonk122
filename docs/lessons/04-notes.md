@@ -91,3 +91,18 @@ Declined, with reasons:
 - Comic bubbles and bold task lines stay short. Bubbles are dialogue, and the task lines match the earlier lessons.
 - Page titles stay as they are, since they read as a story and match the earlier lessons' tone.
 - Honk's bubble on page 14 hints at the trick on purpose, since the page asks which check catches it, not what the trick is.
+
+## Second walkthrough (fresh subagent) and fixes
+
+A second subagent walked all 18 pages and confirmed every output with gcc, with buttons steady, the hash in sync, no sideways scroll, no console errors and no copy rule breaks. Fixes applied:
+
+- Answer positions. The proof table banks on pages 10, 12 and 13 are shuffled so cards no longer follow the blanks, and the diagonal rows on pages 7 and 18 are reordered. Pick answers now sit in all three positions.
+- Give-aways removed. Page 13's assert question appears only once the EXIT proof is done (a new `after` slot on `ProofTable`), and Chonk's bubble no longer states step 4. Page 5's definition of a contract exploit appears after the rows. Page 6's bubble no longer repeats the bullet. Page 7's box sits below the rows. Wrong picks on pages 3 and 5 no longer hand over the answer.
+- Accuracy. Page 2 says out of bounds shows up when the code runs. Page 11's stepper drops i once the loop is over. Page 12's step 7 card reads "Definition of is_in on steps 4 and 6". Page 13 notes that `i <= n` also keeps the `is_in` call on line 8 within its precondition. Page 18's Quicksort feedback is fixed.
+- Lecture 3 links point to its course map row, which guests can open. Page 8 writes -1 the same way as the rest of the lesson, and page 9 no longer repeats a sentence.
+
+Declined, with reasons:
+
+- The orange wrong-card text and the space Rows reserve for feedback are shared styles from earlier lessons, so they're left for a site-wide change.
+- A deep link briefly showing page 1 before hydration is shared player behaviour.
+- The proof pages (10, 12, 13) and page 17 take a careful student about 3 minutes. Cutting blanks would weaken the proofs, so the lesson keeps them and totals about 35 to 40 minutes, within the limit for a long lecture.

@@ -24,14 +24,17 @@ type Chip = { kind: "claim" | "why"; j: number };
 // blank and some leave the justification blank. The reader drags a card from the bank into each blank,
 // or taps a card and then taps the blank. A wrong card can be replaced, and the reason appears once
 // the step is right.
+// after appears once every blank is right, for a follow-up that would give the proof away.
 export function ProofTable({
   options,
   claims = [],
   rows,
+  after,
 }: {
   options: string[];
   claims?: React.ReactNode[];
   rows: ProofRow[];
+  after?: React.ReactNode;
 }) {
   const kindOf = (r: ProofRow) => (r.claimAnswer !== undefined ? "claim" : "why");
   const rightOf = (r: ProofRow) => (r.claimAnswer !== undefined ? r.claimAnswer : r.answer);
@@ -174,6 +177,7 @@ export function ProofTable({
       <p className="rows-done" aria-live="polite">
         {done} of {asked} done{done === asked ? ". Nice!" : ""}
       </p>
+      {after && done === asked && <div className="rows-after">{after}</div>}
     </div>
   );
 }

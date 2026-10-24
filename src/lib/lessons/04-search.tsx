@@ -170,7 +170,7 @@ function walk(honk: number): Step[] {
     if (hit) return steps;
   }
   steps.push({ line: 6, vars: { honk, i: 4 }, seg: [0, 4], note: "The loop guard i < n is false now." });
-  steps.push({ line: 12, vars: { honk, i: 4 }, seg: [0, 4], note: "We looked at every slot, so honk isn't in geese[0, 4)." });
+  steps.push({ line: 12, vars: { honk }, seg: [0, 4], note: "The loop is over, so i is gone. We looked at every slot, so honk isn't in geese[0, 4)." });
   return steps;
 }
 
@@ -181,7 +181,7 @@ const laterNames = ["Big-O", "Binary search", "Quicksort"];
 const laterWhat = [
   "Big-O measures how running time grows, and it doesn't change the code.",
   "Binary search keeps search's contract but needs a sorted array.",
-  "Quicksort is about sorting, and searching is only part of its proofs.",
+  "Quicksort is about sorting an array, not measuring cost or searching one.",
 ];
 const laterMiss = (k: number) => laterNames.map((_, j) => (j === k ? undefined : laterWhat[j]));
 
@@ -229,7 +229,7 @@ export const search: Lesson = {
             options={["geese[i] might be out of bounds", "i is never declared", "Nothing is returned after the loop"]}
             answer={2}
             wrong={[
-              "That's a safety problem, and the compiler doesn't catch it. Contracts do.",
+              "That's a safety problem, which shows up when the code runs, not when it compiles.",
               "Line 2 declares i in the for loop.",
               "",
             ]}
@@ -239,7 +239,7 @@ export const search: Lesson = {
             question={
               <>
                 Which contracts let us prove <code>geese[i]</code> is safe, as in{" "}
-                <Link href="/lessons/3">Lecture 3</Link>?
+                <Link href="/lectures#l3">Lecture 3</Link>?
               </>
             }
             options={[
@@ -299,7 +299,7 @@ export const search: Lesson = {
                 prompt: <>When honk is 5</>,
                 answer: 1,
                 why: "geese[2] is 5, so the caller sets geese[2] to 0.",
-                miss: ["geese[0] is 3, not 5.", undefined, "5 is in geese, at index 2."],
+                miss: ["geese[0] is 3, not 5.", undefined, "-1 means honk is missing. Look along geese again."],
               },
               {
                 prompt: <>When honk is 6</>,
@@ -424,7 +424,7 @@ export const search: Lesson = {
                 prompt: "Is it correct?",
                 answer: 0,
                 why: "The postcondition allows -1 for any input, so it always holds.",
-                miss: [undefined, "Check the postcondition. \\result == -1 makes it true on every input."],
+                miss: [undefined, "Read the postcondition again. What does it say when \\result is -1?"],
               },
               {
                 prompt: "Does it do what we want?",
@@ -434,15 +434,17 @@ export const search: Lesson = {
               },
             ]}
             after={
-              <RunTable
-                runs={[{ call: <code>goose_search(5, geese, 4)</code>, out: "returns -1, and every contract passes" }]}
-              />
+              <>
+                <RunTable
+                  runs={[{ call: <code>goose_search(5, geese, 4)</code>, out: "returns -1, and every contract passes" }]}
+                />
+                <p>
+                  Code that is correct but doesn&apos;t do what we want is a <Big c={1}>contract exploit</Big>. It
+                  means <Hi c={1}>our postcondition is too weak</Hi>.
+                </p>
+              </>
             }
           />
-          <p>
-            Code that is correct but doesn&apos;t do what we want is a <Big c={1}>contract exploit</Big>. It means{" "}
-            <Hi c={1}>our postcondition is too weak</Hi>.
-          </p>
         </>
       ),
     },
@@ -464,7 +466,7 @@ export const search: Lesson = {
             </ul>
             <Comic
               panels={[
-                { who: "honk", outfit: "fence", size: "xs", pose: "think", say: "Is geese[hi] in the segment?" },
+                { who: "honk", outfit: "fence", size: "xs", pose: "think", say: "What's in geese[2, 2)?" },
                 { who: "chonk", outfit: "builder", size: "m", pose: "point", say: "Slide and see." },
               ]}
             />
@@ -502,23 +504,10 @@ export const search: Lesson = {
               { who: "honk", outfit: "pilgrim", size: "s", pose: "think", say: "Which case is which?" },
             ]}
           />
-          <p className="task">Match each case of the math to its code.</p>
-          <FoodForThought title="What makes a good specification function">
-            <p>
-              It should be so plain that nobody doubts it, even if it&apos;s slow. So it&apos;s often recursive, like
-              the math, and usually has no postcondition, since there&apos;s nothing simpler to check it against. We
-              only call it from contracts, so its cost disappears when we compile without <code>-d</code>.
-            </p>
-          </FoodForThought>
+          <p className="task">Match each case to its code.</p>
           <Rows
             options={["Line 4", "Line 5, left of ||", "Line 5, right of ||"]}
             rows={[
-              {
-                prompt: "It's false when lo = hi",
-                answer: 0,
-                why: "An empty segment holds nothing.",
-                miss: [undefined, "That part checks A[lo], which only exists when lo < hi.", "That part recurses, but this case stops."],
-              },
               {
                 prompt: "It's true when lo < hi and A[lo] = x",
                 answer: 1,
@@ -526,13 +515,26 @@ export const search: Lesson = {
                 miss: ["Line 4 handles the empty segment.", undefined, "The recursive call looks past A[lo]."],
               },
               {
-                prompt: "Otherwise, it's x ∈ A[lo + 1, hi)",
+                prompt: "It's x ∈ A[lo + 1, hi) when lo < hi and A[lo] ≠ x",
                 answer: 2,
                 why: "If A[lo] isn't x, look in the rest of the segment.",
                 miss: ["Line 4 handles the empty segment.", "That part checks A[lo] itself.", undefined],
               },
+              {
+                prompt: "It's false when lo = hi",
+                answer: 0,
+                why: "An empty segment holds nothing.",
+                miss: [undefined, "That part checks A[lo], which only exists when lo < hi.", "That part recurses, but this case stops."],
+              },
             ]}
           />
+          <FoodForThought title="What makes a good specification function">
+            <p>
+              It should be so plain that nobody doubts it, even if it&apos;s slow. So it&apos;s often recursive, like
+              the math, and usually has no postcondition, since there&apos;s nothing simpler to check it against. We
+              only call it from contracts, so its cost disappears when we compile without <code>-d</code>.
+            </p>
+          </FoodForThought>
         </>
       ),
     },
@@ -570,14 +572,14 @@ export const search: Lesson = {
                   "Blank 2 joins two bools, so it's && or ||.",
                   "Blank 2 joins two bools, so it's && or ||.",
                   undefined,
-                  "With ||, geese holding 2 and −1 would count, since 2 > 0 is enough.",
+                  "With ||, geese holding 2 and -1 would count, since 2 > 0 is enough.",
                 ],
               },
             ]}
             after={
               <>
                 <p className="task">
-                  <code>geese</code> holds 2 7 −1. Run it.
+                  <code>geese</code> holds 2 7 -1. Run it.
                 </p>
                 <RunTable
                   runs={[
@@ -632,13 +634,13 @@ export const search: Lesson = {
                 Does the call <code>is_in(honk, geese, 0, n)</code> meet the precondition of <code>is_in</code>?
               </>
             }
-            options={["Only when n > 0", "No, n might be negative", "Yes, always"]}
-            answer={2}
-            wrong={["is_in allows lo == hi, the empty segment.", "Line 2 says n is a length, and lengths are never negative.", ""]}
+            options={["Yes, always", "Only when n > 0", "No, n might be negative"]}
+            answer={0}
+            wrong={["", "is_in allows lo == hi, the empty segment.", "n equals the length of geese, so it can't be negative."]}
             explain={
               <>
-                It needs <code>0 &lt;= 0 &amp;&amp; 0 &lt;= n &amp;&amp; n &lt;= \length(geese)</code>. Line 2 says
-                n is the length, and a length is never negative, so all three hold.
+                It needs <code>0 &lt;= 0 &amp;&amp; 0 &lt;= n &amp;&amp; n &lt;= \length(geese)</code>. The first
+                holds trivially, and line 2 gives the other two.
               </>
             }
           />
@@ -651,7 +653,7 @@ export const search: Lesson = {
       body: (
         <>
           <p>
-            Here is the real <code>goose_search</code>. We&apos;ll find line 8 on the next page. It has two returns,
+            Here is the finished <code>goose_search</code>, with line 8 hidden until the next page. It has two returns,
             and the postcondition is an <code>||</code>, so <Hi c={1}>each return must make one side true</Hi>.
             Let&apos;s start with line 10.
           </p>
@@ -666,51 +668,51 @@ export const search: Lesson = {
             each blank.
           </p>
           <ProofTable
-            options={["Line 6", "Line 7", "Line 10", "Steps 1 to 4"]}
+            options={["Line 10", "Steps 1 to 4", "Line 6", "Line 7"]}
             claims={[
-              <code key="a">0 &lt;= i</code>,
-              <code key="b">geese[i] == honk</code>,
-              <code key="c">i &lt;= n</code>,
               <code key="d">geese[i] != honk</code>,
+              <code key="c">i &lt;= n</code>,
+              <code key="b">geese[i] == honk</code>,
+              <code key="a">0 &lt;= i</code>,
             ]}
             rows={[
               {
                 claim: <code>\result == i</code>,
-                answer: 2,
+                answer: 0,
                 why: "Line 10 returns i.",
-                miss: ["Line 6 makes i, but doesn't return it.", "Line 7 is a loop invariant about i.", undefined, "This is the first step."],
+                miss: [undefined, "This is the first step.", "Line 6 makes i, but doesn't return it.", "Line 7 is a loop invariant about i."],
               },
               {
                 claim: <code>0 &lt;= i</code>,
-                claimAnswer: 0,
-                answer: 1,
+                claimAnswer: 3,
+                answer: 3,
                 why: "The loop invariant is true at the start of each iteration.",
-                miss: [undefined, "That's step 4.", "That's also from line 7, but this step needs the lower bound.", "Line 10 only returns when geese[i] == honk."],
+                miss: ["Line 10 only returns when geese[i] == honk.", "That's also from line 7, but this step needs the lower bound.", "That's step 4.", undefined],
               },
               {
                 claim: <code>i &lt; n</code>,
-                answer: 0,
+                answer: 2,
                 why: "The loop guard is true inside the body.",
-                miss: [undefined, "Line 7 only gives i <= n, which allows i == n.", "Line 10 says nothing about n.", "Steps 1 to 4 come later."],
+                miss: ["Line 10 says nothing about n.", "Steps 1 to 4 come later.", undefined, "Line 7 only gives i <= n, which allows i == n."],
               },
               {
                 claim: <code>geese[i] == honk</code>,
-                claimAnswer: 1,
-                answer: 2,
+                claimAnswer: 2,
+                answer: 0,
                 why: "We only return on line 10 when the test is true.",
-                miss: ["That's step 2.", undefined, "That's a loop invariant, not what line 10 tests.", "Then line 10 wouldn't return."],
+                miss: ["Then line 10 wouldn't return.", "That's a loop invariant, not what line 10 tests.", undefined, "That's step 2."],
               },
               {
                 claim: <code>0 &lt;= \result &amp;&amp; \result &lt; n &amp;&amp; geese[\result] == honk</code>,
-                answer: 3,
+                answer: 1,
                 why: "Swap \\result for i using step 1, then use steps 2, 3 and 4.",
-                miss: ["Line 6 alone doesn't say what's returned.", "Line 7 alone doesn't say what's returned.", "Line 10 alone doesn't give the bounds.", undefined],
+                miss: ["Line 10 alone doesn't give the bounds.", undefined, "Line 6 alone doesn't say what's returned.", "Line 7 alone doesn't say what's returned."],
               },
             ]}
           />
           <p>
             We never needed EXIT, the step after the loop ends, since returning skips it. Line 7 is proved as in{" "}
-            <Link href="/lessons/3">Lecture 3</Link>.
+            <Link href="/lectures#l3">Lecture 3</Link>.
           </p>
         </>
       ),
@@ -784,48 +786,48 @@ export const search: Lesson = {
           />
           <p className="task">Fill in each blank.</p>
           <ProofTable
-            options={["Line 6", "Line 10", "Assumption", "Definition of is_in", "Math on steps 1 and 2", "Steps 4 and 6", "Math on steps 5 and 7"]}
+            options={["Assumption", "Definition of is_in on steps 4 and 6", "Line 10", "Math on steps 1 and 2", "Line 6", "Definition of is_in", "Math on steps 5 and 7"]}
             claims={[
+              <code key="d">geese[i] == honk</code>,
               <code key="a">!is_in(honk, geese, 0, 0)</code>,
               <code key="b">geese[i] != honk</code>,
               <code key="c">is_in(honk, geese, 0, 0)</code>,
-              <code key="d">geese[i] == honk</code>,
             ]}
             rows={[
               {
                 group: "INIT",
                 claim: <code>i == 0</code>,
-                answer: 0,
+                answer: 4,
                 why: "The loop starts i at 0.",
-                miss: [undefined, "Line 10 is inside the loop body.", "INIT has nothing to assume yet.", "is_in says nothing about i.", "This is the first step.", "This is the first step.", "This is the first step."],
+                miss: ["INIT has nothing to assume yet.", "This is the first step.", "Line 10 is inside the loop body.", "This is the first step.", undefined, "is_in says nothing about i.", "This is the first step."],
               },
               {
                 claim: <code>!is_in(honk, geese, 0, 0)</code>,
-                claimAnswer: 0,
-                answer: 3,
+                claimAnswer: 1,
+                answer: 5,
                 why: "geese[0, 0) is empty, so is_in returns false.",
-                miss: [undefined, "That's about the loop body, which hasn't run yet.", "Line 4 of is_in returns false for an empty segment.", "That's about the loop body, which hasn't run yet."],
+                miss: ["That's about the loop body, which hasn't run yet.", undefined, "That's about the loop body, which hasn't run yet.", "Line 4 of is_in returns false for an empty segment."],
               },
-              { claim: <code>!is_in(honk, geese, 0, i)</code>, answer: 4, given: true },
-              { group: "PRES", claim: <code>!is_in(honk, geese, 0, i)</code>, answer: 2, given: true },
+              { claim: <code>!is_in(honk, geese, 0, i)</code>, answer: 3, given: true },
+              { group: "PRES", claim: <code>!is_in(honk, geese, 0, i)</code>, answer: 0, given: true },
               {
                 claim: <code>i&apos; == i + 1</code>,
-                answer: 0,
+                answer: 4,
                 why: "The i++ on line 6 makes the new value.",
-                miss: [undefined, "Line 10 doesn't change i.", "We assume the invariant, not how i changes.", "is_in says nothing about i.", "Steps 1 and 2 belong to INIT.", "Steps 4 and 6 come later.", "Step 5 can't cite itself."],
+                miss: ["We assume the invariant, not how i changes.", "Steps 4 and 6 come later.", "Line 10 doesn't change i.", "Steps 1 and 2 belong to INIT.", undefined, "is_in says nothing about i.", "Step 5 can't cite itself."],
               },
               {
                 claim: <code>geese[i] != honk</code>,
-                claimAnswer: 1,
-                answer: 1,
+                claimAnswer: 2,
+                answer: 2,
                 why: "If geese[i] were honk, line 10 would have returned, and we'd never check the invariant again.",
-                miss: ["That's step 2, for INIT.", undefined, "That's false, since an empty segment holds nothing.", "Then line 10 returns, and there's nothing to preserve."],
+                miss: ["Then line 10 returns, and there's nothing to preserve.", "That's step 2, for INIT.", undefined, "That's false, since an empty segment holds nothing."],
               },
               {
                 claim: <code>!is_in(honk, geese, 0, i + 1)</code>,
-                answer: 5,
-                why: "honk isn't in geese[0, i) by step 4, and it isn't geese[i] by step 6. By the definition of is_in, it isn't in geese[0, i + 1).",
-                miss: ["Line 6 is about i, not what's in geese.", "Line 10 gives step 6, but we need step 4 too.", "This step needs a reason, not an assumption.", "The definition alone doesn't know what's in geese. Which steps feed it?", "Steps 1 and 2 belong to INIT.", undefined, "Step 7 can't cite itself."],
+                answer: 1,
+                why: "honk isn't in geese[0, i) by step 4, and it isn't geese[i] by step 6, so it isn't in geese[0, i + 1).",
+                miss: ["This step needs a reason, not an assumption.", undefined, "Line 10 gives step 6, but we need step 4 too.", "Steps 1 and 2 belong to INIT.", "Line 6 is about i, not what's in geese.", "The definition needs facts about geese. Which steps give them?", "Step 7 can't cite itself."],
               },
               { claim: <code>!is_in(honk, geese, 0, i&apos;)</code>, answer: 6, given: true },
             ]}
@@ -844,50 +846,54 @@ export const search: Lesson = {
             <code>i &lt;= n</code>.
           </p>
           <Code src={final} label="goose_search, final version" hi={[6, 7, 8]} />
-          <Comic panels={[{ who: "chonk", outfit: "winter", size: "l", pose: "oops", say: "Without i <= n, we couldn't prove i == n!" }]} />
+          <Comic panels={[{ who: "chonk", outfit: "winter", size: "l", pose: "oops", say: "What does line 7 add?" }]} />
           <p className="task">Fill in each blank.</p>
           <ProofTable
-            options={["Line 6", "Line 7", "Line 8", "Math on steps 2 and 3", "Math on steps 1 and 4"]}
-            claims={[<code key="a">i &gt;= n</code>, <code key="b">i == n</code>, <code key="c">i &lt; n</code>, <code key="d">i &lt;= n</code>]}
+            options={["Math on steps 1 and 4", "Line 8", "Line 6", "Math on steps 2 and 3", "Line 7"]}
+            claims={[<code key="c">i &lt; n</code>, <code key="d">i &lt;= n</code>, <code key="a">i &gt;= n</code>, <code key="b">i == n</code>]}
             rows={[
               {
                 group: "EXIT",
                 claim: <code>!is_in(honk, geese, 0, i)</code>,
-                answer: 2,
+                answer: 1,
                 why: "Loop invariants hold when the loop exits.",
-                miss: ["Line 6 is the loop guard.", "Line 7 is about the bounds of i.", undefined, "This is the first step.", "This is the first step."],
+                miss: ["This is the first step.", undefined, "Line 6 is the loop guard.", "This is the first step.", "Line 7 is about the bounds of i."],
               },
               {
                 claim: <code>i &gt;= n</code>,
-                claimAnswer: 0,
-                answer: 0,
+                claimAnswer: 2,
+                answer: 2,
                 why: "The loop only exits when the guard i < n is false.",
-                miss: [undefined, "That's step 4, which needs more.", "That's the guard when it's true. Here it's false.", "That comes from line 7, not line 6."],
+                miss: ["That's the guard when it's true. Here it's false.", "That comes from line 7, not line 6.", undefined, "That's step 4, which needs more."],
               },
-              { claim: <code>i &lt;= n</code>, answer: 1, given: true },
+              { claim: <code>i &lt;= n</code>, answer: 4, given: true },
               {
                 claim: <code>i == n</code>,
-                claimAnswer: 1,
+                claimAnswer: 3,
                 answer: 3,
-                why: "i >= n and i <= n together give i == n.",
-                miss: ["That's step 2.", undefined, "The guard is false when the loop exits.", "That's step 3."],
+                why: "i >= n and i <= n together give i == n. Line 7's i <= n also keeps the is_in call on line 8 within its precondition.",
+                miss: ["The guard is false when the loop exits.", "That's step 3.", "That's step 2.", undefined],
               },
               {
                 claim: <code>!is_in(honk, geese, 0, n)</code>,
-                answer: 4,
+                answer: 0,
                 why: "Swap n for i in step 1, using step 4.",
-                miss: ["Line 6 is the loop guard.", "Line 7 gives step 3.", "Line 8 says 0 to i, and we still need i == n.", "Steps 2 and 3 give step 4.", undefined],
+                miss: [undefined, "Line 8 says 0 to i, and we still need i == n.", "Line 6 is the loop guard.", "Steps 2 and 3 give step 4.", "Line 7 gives step 3."],
               },
             ]}
-          />
-          <p>Why not record step 4 in the code, right after the loop?</p>
-          <Code src={scopeEnd} label="An assert after the loop" start={9} hi={[12]} />
-          <Pick
-            question="Why doesn't line 12 compile?"
-            options={["//@assert can't use ==", "i only exists inside the for loop", "i might not equal n there"]}
-            answer={1}
-            wrong={[ "Contracts use == all the time, like n == \\length(geese) in the precondition.", "", "We just proved i == n. The trouble is the name i itself."]}
-            explain="A variable declared in a for loop goes out of scope when the loop ends. So the proof step stays on paper."
+            after={
+              <>
+                <p>Why not record step 4 in the code, right after the loop?</p>
+                <Code src={scopeEnd} label="An assert after the loop" start={9} hi={[12]} />
+                <Pick
+                  question="Why doesn't line 12 compile?"
+                  options={["//@assert can't use ==", "i only exists inside the for loop", "i might not equal n there"]}
+                  answer={1}
+                  wrong={["Contracts use == all the time, like n == \\length(geese) in the precondition.", "", "We just proved i == n. The trouble is the name i itself."]}
+                  explain="A variable declared in a for loop goes out of scope when the loop ends. So the proof step stays on paper."
+                />
+              </>
+            }
           />
           <FoodForThought title="Loop variables elsewhere">
             <p>
@@ -1135,9 +1141,9 @@ export const search: Lesson = {
           <Rows
             options={laterNames}
             rows={[
-              { prompt: "Count how the work of goose_search grows with n", answer: 0, why: <><Link href="/lectures#l5">Big-O</Link>, Lecture 5, counts the steps, and linear search takes about n.</>, miss: laterMiss(0) },
               { prompt: "Keep the same postcondition, but use a sorted array to skip most of it", answer: 1, why: <><Link href="/lectures#l6">Binary search</Link>, Lecture 6, halves the segment it searches each time.</>, miss: laterMiss(1) },
               { prompt: "Prove a sort correct with segment specification functions", answer: 2, why: <><Link href="/lectures#l7">Quicksort</Link>, Lecture 7, proves its sorts with functions like is_sorted.</>, miss: laterMiss(2) },
+              { prompt: "Count how the work of goose_search grows with n", answer: 0, why: <><Link href="/lectures#l5">Big-O</Link>, Lecture 5, counts the steps, and linear search takes about n.</>, miss: laterMiss(0) },
             ]}
           />
         </>
