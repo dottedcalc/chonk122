@@ -719,6 +719,50 @@ button.lf-cell:focus-visible { outline: 3px dashed var(--beak); outline-offset: 
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 
+/* lesson widgets for cost and sorting */
+.plot { display: grid; gap: 10px; min-width: 0; }
+.plot svg { width: 100%; max-width: 480px; height: auto; border: 2px solid var(--edge); border-radius: 10px 4px 9px 5px / 5px 9px 4px 10px; background: var(--card); }
+.plot-axis { fill: none; stroke: var(--edge); stroke-width: 2; }
+.plot-line { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.plot-line.c1 { stroke: var(--c1); }
+.plot-line.c2 { stroke: var(--c2); stroke-dasharray: 7 4; }
+.plot-zone { fill: var(--c3-soft); }
+.plot-t { font: 700 11px var(--font-body), system-ui, sans-serif; fill: var(--fg); }
+.plot-key { list-style: none; padding: 0 !important; margin: 0; display: flex !important; flex-wrap: wrap; gap: 4px 18px; font-weight: 700; }
+.plot-key li.c1 { color: var(--c1); }
+.plot-key li.c2 { color: var(--c2); }
+.plot-toggle { display: flex; align-items: center; gap: 8px; font-weight: 700; }
+.plot-toggle input { width: 20px; height: 20px; accent-color: var(--c3); }
+.ai-out.good { color: var(--c1); font-weight: 700; }
+.race { display: grid; gap: 10px; min-width: 0; }
+.race-ctrl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.race-ctrl .sh-k { flex: 1 1 14rem; }
+.race-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.race-table th { width: 7.6rem; text-align: left; padding: 4px 8px 4px 0; font-weight: 800; white-space: nowrap; }
+.race-name { display: block; font-size: 0.82rem; font-weight: 700; }
+.race-bar-cell { padding: 4px 8px 4px 0; }
+.race-bar { display: block; height: 16px; border: 2px solid var(--edge); border-radius: 4px; }
+.race-bar.c1 { background: var(--c1-soft); }
+.race-bar.c2 { background: var(--c2-soft); }
+.race-bar.c3 { background: var(--c3-soft); }
+.race-bar.over { border-right-style: dashed; }
+.race-v { width: 9.5rem; font-variant-numeric: tabular-nums; font-weight: 700; overflow-wrap: anywhere; }
+@media (max-width: 520px) { .race-table th { width: 6.4rem; } .race-v { width: 6.8rem; font-size: 0.85rem; } }
+.order { display: grid; gap: 6px; min-width: 0; }
+.order-end { margin: 0; font-weight: 800; color: var(--link); }
+.order-list { list-style: none; padding: 0 !important; margin: 0; display: grid; gap: 6px; }
+.order-list li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 4px 8px; border: 2px solid var(--edge); border-radius: 8px; background: var(--card); }
+.order-list li.right { border-color: var(--c1); background: var(--c1-soft); }
+.order-list li.wrong { border-color: var(--c2); border-style: dashed; }
+.order-item { font-weight: 700; }
+.order-btns { display: flex; gap: 6px; }
+.order-check { min-height: 2.4rem; }
+.order-why { margin: 0; min-height: 3em; font-weight: 700; color: var(--c2); }
+.order-why.good { color: var(--c1); }
+.lf-cell.sorted { background: var(--c1-soft); border-color: var(--c1); box-shadow: none; }
+.lf-status.bad { color: var(--c2); }
+.flock { display: flex; flex-wrap: wrap; gap: 4px; }
+
 /* lectures dashboard */
 .lc-grid { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 @media (max-width: 900px) { .lc-grid { grid-template-columns: 1fr; } }

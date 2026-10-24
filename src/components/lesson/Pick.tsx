@@ -10,12 +10,15 @@ export function Pick({
   answer,
   explain,
   wrong = [],
+  after,
 }: {
   question: React.ReactNode;
   options: React.ReactNode[];
   answer: number;
   explain: React.ReactNode;
   wrong?: React.ReactNode[];
+  // Shown once the reader has picked, for a follow-up that would give the answer away.
+  after?: React.ReactNode;
 }) {
   const [picked, setPicked] = useState<number | null>(null);
 
@@ -55,6 +58,7 @@ export function Pick({
           </div>
         )}
       </div>
+      {after && picked !== null && <div className="rows-after">{after}</div>}
     </div>
   );
 }

@@ -12,6 +12,8 @@ export type Step = {
   // With an array to show, the slots from seg[0] up to but not including seg[1] are shaded, and slot at is marked.
   seg?: [number, number];
   at?: number;
+  // The array's contents at this step, when the code changes them.
+  cells?: number[];
 };
 
 // Steps through precomputed states of a run, marking the current line and showing the variables.
@@ -28,6 +30,7 @@ export function Stepper({
   const steps = sets[s].steps;
   const step = steps[k];
   const arr = sets[s].array;
+  const cells = step.cells ?? arr?.cells ?? [];
 
   return (
     <div className="stepper">
@@ -70,8 +73,8 @@ export function Stepper({
             </tbody>
           </table>
           {arr && (
-            <div className="ai-cells step-arr" role="img" aria-label={`${arr.name} holds ${arr.cells.map(num).join(", ")}`}>
-              {arr.cells.map((c, j) => (
+            <div className="ai-cells step-arr" role="img" aria-label={`${arr.name} holds ${cells.map(num).join(", ")}`}>
+              {cells.map((c, j) => (
                 <span
                   key={j}
                   className={`ai-cell${step.seg && j >= step.seg[0] && j < step.seg[1] ? " seg" : ""}${j === step.at ? " at" : ""}`}
