@@ -44,35 +44,35 @@ const pairs = `int honk_pairs(int[] geese, int n)
 const firstFive = `int first_five(int[] geese, int n)
 //@requires n == \\length(geese) && n >= 5;
 {
-  int honks = 0;
+  int goose_total = 0;
   for (int i = 0; i < 5; i++) {
-    honks += geese[i];
+    goose_total += geese[i];
   }
-  return honks;
+  return goose_total;
 }`;
 
 const halvings = `int halvings(int honk)
 //@requires honk >= 1;
 {
-  int chonk = 0;
+  int halves = 0;
   while (honk > 1) {
     honk = honk / 2;
-    chonk++;
+    halves++;
   }
-  return chonk;
+  return halves;
 }`;
 
-const twoFlocks = `int loud_in_both(int[] geese, int n, int[] honks, int m)
-//@requires n == \\length(geese) && m == \\length(honks);
+const twoFlocks = `int loud_in_both(int[] geese, int n, int[] goslings, int m)
+//@requires n == \\length(geese) && m == \\length(goslings);
 {
-  int chonk = 0;
+  int loud_geese = 0;
   for (int i = 0; i < n; i++) {
-    if (geese[i] > 100) chonk++;
+    if (geese[i] > 100) loud_geese++;
   }
   for (int j = 0; j < m; j++) {
-    if (honks[j] > 100) chonk++;
+    if (goslings[j] > 100) loud_geese++;
   }
-  return chonk;
+  return loud_geese;
 }`;
 
 const shorter = `int count_shorter(int honk, int[] geese, int n)
@@ -92,6 +92,10 @@ bool is_sorted(int[] A, int lo, int hi)
 
 /* lt_seg: x < A[lo,hi) */
 bool lt_seg(int x, int[] A, int lo, int hi)
+/*@requires 0 <= lo && lo <= hi && hi <= \\length(A); @*/ ;
+
+/* le_seg: x <= A[lo,hi) */
+bool le_seg(int x, int[] A, int lo, int hi)
 /*@requires 0 <= lo && lo <= hi && hi <= \\length(A); @*/ ;
 
 /* ge_seg: x >= A[lo,hi) */
@@ -172,6 +176,7 @@ function sortSteps(): Step[] {
   const top = (a: number[], i: number): Step => ({
     line: 6,
     vars: { lo: 0, hi, i },
+    cells: a,
     seg: [i, hi],
     checks: [
       { label: "lo <= i && i <= hi", value: tf(0 <= i && i <= hi), ok: 0 <= i && i <= hi },
@@ -184,6 +189,7 @@ function sortSteps(): Step[] {
     steps.push({
       line: 10,
       vars: { lo: 0, hi, i: r.i, tallest: r.t },
+      cells: r.before,
       seg: [r.i, hi],
       at: r.t,
       note: `The tallest goose in geese[0, ${r.i}) is ${r.before[r.t]}, at index ${r.t}.`,
@@ -191,6 +197,7 @@ function sortSteps(): Step[] {
     steps.push({
       line: 11,
       vars: { lo: 0, hi, i: r.i, tallest: r.t },
+      cells: r.after,
       seg: [r.i - 1, hi],
       at: r.i - 1,
       note:
@@ -201,15 +208,15 @@ function sortSteps(): Step[] {
   }
   const done = rounds().at(-1)!.after;
   steps.push(top(done, 0));
-  steps.push({ line: 5, vars: { lo: 0, hi, i: 0 }, seg: [0, hi], note: "The guard lo < i is false, so the loop is over and geese is sorted." });
+  steps.push({ line: 5, vars: { lo: 0, hi, i: 0 }, cells: done, seg: [0, hi], note: "The guard lo < i is false, so the loop is over and geese is sorted." });
   return steps;
 }
 
 const laterNames = ["Binary search", "Quicksort", "Unbounded arrays"];
 const laterWhat = [
-  "Binary search is about searching a sorted array, not sorting or growing one.",
-  "Quicksort sorts an array, but it doesn't grow one.",
-  "Unbounded arrays grow as we add to them, and they don't search or sort.",
+  "Binary search searches a sorted array. It doesn't sort, and it has no rare slow step.",
+  "Quicksort sorts an array. It doesn't search, and it has no rare slow step to spread out.",
+  "Unbounded arrays spread out the cost of growing. They don't search or sort.",
 ];
 const laterMiss = (k: number) => laterNames.map((_, j) => (j === k ? undefined : laterWhat[j]));
 
@@ -256,14 +263,13 @@ export const bigO: Lesson = {
               { who: "honk", outfit: "takeoff", size: "s", pose: "think", say: "How many lineups is that?" },
             ]}
           />
-          <p className="task">Slide to change how many geese line up.</p>
-          <Lineups />
           <Pick
-            question="The observable universe has about 10⁸⁰ atoms. How many geese have more lineups than that?"
+            question="The observable universe has about 10⁸⁰ atoms. How many geese does it take to have more lineups than that?"
             options={["About 2000", "About 60", "About 300"]}
             answer={1}
-            wrong={["It happens far sooner. Slide to 60 and look.", "", "It happens far sooner. Slide to 60 and look."]}
+            wrong={["It happens far sooner. Slide to 59 and look.", "", "It happens far sooner. Slide to 59 and look."]}
             explain="59 geese have about 1.4 × 10⁸⁰ lineups, and 200 geese have about 7.9 × 10³⁷⁴. A correct plan can still be hopeless, so this lecture measures how cost grows."
+            after={<Lineups />}
           />
         </>
       ),
@@ -274,8 +280,8 @@ export const bigO: Lesson = {
       body: (
         <>
           <p>
-            So how do we measure cost? The first idea is to time the code. We timed a search through a million
-            geese, 200 times over.
+            So how do we measure cost? The first idea is to time the code. We ran the same search through a million
+            geese three times, timing 200 searches each run.
           </p>
           <RunTable
             runs={[
@@ -287,12 +293,12 @@ export const bigO: Lesson = {
           <Comic panels={[{ who: "honk", outfit: "drink", size: "m", pose: "shrug", say: "Same code, three different times?" }]} />
           <Pick
             question="Why not use seconds as our measure of cost?"
-            options={["The code has a bug", "Seconds depend on the machine and what else it is doing", "Timing is never useful"]}
+            options={["The input changed between runs", "Seconds depend on the machine and what else it is doing", "The code has a bug"]}
             answer={1}
             wrong={[
-              "The code is the same and gives the same answer each time. Only the time changes.",
+              "Each run searched the same million geese.",
               "",
-              "Timing is useful in practice. It just can't compare algorithms in general.",
+              "The code is the same and gives the same answer each time. Only the time changes.",
             ]}
             explain="A faster laptop or a busy one changes the seconds without changing the code. We want a measure of the algorithm itself."
           />
@@ -337,7 +343,7 @@ export const bigO: Lesson = {
             after={
               <p>
                 That&apos;s 1 + (n + 1) + n + n + 1 = 3n + 3 steps. A step really costs some constant time, so we
-                write the <b>cost function</b> as T(n) = an + b.
+                write the <b>cost function</b> as T(n) = an + b for some constants a and b.
               </p>
             }
           />
@@ -351,7 +357,7 @@ export const bigO: Lesson = {
         <>
           <p>
             We assumed no goose was loud. But <code>first_loud_goose</code> can return early, so the count depends on
-            what is in <code>geese</code>, not only on n.
+            what is in <code>geese</code>. The <b>worst case</b> is the input of size n that takes the most steps.
           </p>
           <Comic
             panels={[
@@ -359,7 +365,7 @@ export const bigO: Lesson = {
               { who: "chonk", outfit: "sleepy", size: "s", pose: "think", say: "Then the search stops at you." },
             ]}
           />
-          <p className="task">Run each flock of 4 geese and count the steps.</p>
+          <p className="task">Run each flock of 4 geese. Each return counts as a step.</p>
           <RunTable
             runs={[
               { call: <code>120 5 7 9</code>, out: "returns 0 after 4 steps" },
@@ -375,8 +381,8 @@ export const bigO: Lesson = {
             wrong={["That stops after 4 steps, the fewest.", "That stops halfway, so it does about half the work.", ""]}
             explain={
               <>
-                With no loud goose, it checks every slot, 3n + 3 steps. We use the <Hi c={2}>worst case</Hi>, the
-                most steps over all inputs of size n, so our count is a promise for every input.
+                With no loud goose, it checks every slot, 3n + 3 steps. We count the <Hi c={2}>worst case</Hi>, so
+                our count is a promise for every input of size n.
               </>
             }
           />
@@ -410,7 +416,7 @@ export const bigO: Lesson = {
           />
           <FoodForThought title="Constants still matter in practice">
             <p>
-              Big-O ignores constants, but real code still feels them. Python&apos;s built in sort uses insertion
+              Big-O ignores constants, but real code still feels them. Python&apos;s built-in sort uses insertion
               sort, an O(n²) method, on short stretches of a list, because for a few dozen items its small constant
               beats faster methods. Big-O picks the right algorithm for large n, and timing tunes it for small n.
             </p>
@@ -424,15 +430,11 @@ export const bigO: Lesson = {
       body: (
         <>
           <p>
-            Let&apos;s make &quot;large n, no constants&quot; precise. This is{" "}
-            <Big c={2}>Big-O</Big>.
-          </p>
-          <p>
-            f ∈ O(g) if there are a real <b>c</b> &gt; 0 and a natural number <b>n₀</b> such that f(n) ≤ c · g(n)
-            for every n ≥ n₀.
+            <Big c={2}>Big-O</Big> makes that precise. For cost functions f and g, f ∈ O(g) if there is a real number <b>c</b> &gt; 0 and a natural number{" "}
+            <b>n₀</b> such that f(n) ≤ c · g(n) for every n ≥ n₀.
           </p>
           <p>So c scales g, and n₀ says where &quot;large&quot; starts.</p>
-          <p className="task">Find c and n₀ that work, then try the second tab.</p>
+          <p className="task">Find c and n₀ for 4n + 7. Can you for n²?</p>
           <Versions
             label="Functions"
             tabs={[
@@ -440,7 +442,7 @@ export const bigO: Lesson = {
               { label: <>n² and n</>, body: <BigODef f="n²" g="n" /> },
             ]}
           />
-          <Comic panels={[{ who: "honk", outfit: "valentine", size: "s", pose: "love", say: "Any bigger c or n₀ works too!" }]} />
+          <Comic panels={[{ who: "honk", outfit: "valentine", size: "s", pose: "love", say: "c stretches the dashed line." }]} />
           <Pick
             question="Is n² ∈ O(n)?"
             options={["Yes, with a big c", "No", "Yes, with a big n₀"]}
@@ -464,9 +466,9 @@ export const bigO: Lesson = {
       body: (
         <>
           <p>
-            Many sets describe the same cost, so which one do we write? We always write a <Big c={2}>complexity class</Big>{" "}
-            in <Hi c={2}>simplest and tightest form</Hi>. Keep the fastest growing term, drop the rest and drop its
-            constant.
+            Many sets describe the same cost, so which one do we write? A <Big c={2}>complexity class</Big> is a set
+            O(g) for a simple g, such as O(n). We write it in <Hi c={2}>simplest and tightest form</Hi>. Keep the
+            fastest-growing term, drop the rest and drop its constant.
           </p>
           <Comic panels={[{ who: "chonk", outfit: "tidy", size: "m", pose: "stand", say: "Tidy it up!" }]} />
           <p className="task">Give each cost function its class.</p>
@@ -481,7 +483,7 @@ export const bigO: Lesson = {
           />
           <Pick
             question="Honk says the search on page 3 is O(n²). Is that right?"
-            options={["Wrong, it's O(n)", "True, and the tightest", "True, but not the tightest"]}
+            options={["No, it's O(n)", "Yes, and it's the tightest", "Yes, but it's not the tightest"]}
             answer={2}
             wrong={["3n + 3 ≤ n² once n ≥ 4, so it really is in O(n²).", "O(n) is smaller and still holds, so O(n²) isn't tightest.", ""]}
             explain="Every linear function is in O(n²), so it's true, but O(n) says more. When asked for the cost, give the tightest class."
@@ -501,11 +503,10 @@ export const bigO: Lesson = {
       minutes: 2,
       body: (
         <>
-          <p>So how different are the classes? Press Play and watch the steps grow.</p>
-          <Race />
+          <p>So how different are the classes? Make a guess first, then check it with the race below.</p>
           <Comic
             panels={[
-              { who: "honk", outfit: "diva", size: "m", pose: "dance", say: "Constant time is my favourite song." },
+              { who: "honk", outfit: "diva", size: "m", pose: "dance", say: "Constant time never slows down!" },
               { who: "chonk", outfit: "hero", size: "xl", pose: "cheer", say: "And factorial is Chonk's photo plan!" },
             ]}
           />
@@ -525,6 +526,8 @@ export const bigO: Lesson = {
               "n! multiplies by bigger and bigger numbers, so it grows fastest of all.",
             ]}
           />
+          <p className="task">Press Play and watch the steps grow.</p>
+          <Race />
         </>
       ),
     },
@@ -534,8 +537,8 @@ export const bigO: Lesson = {
       body: (
         <>
           <p>
-            Nothing is special about the name n, and an input can have more than one size. A goose photo is w
-            pixels wide and h pixels high, so its cost can depend on both.
+            Some inputs have more than one size. A goose photo is w pixels wide and h pixels high, so its cost can
+            depend on both.
           </p>
           <Comic panels={[{ who: "honk", outfit: "pilgrim", size: "s", pose: "wave", say: "Say cheese!" }]} />
           <p className="task">What does each photo task cost?</p>
@@ -548,7 +551,7 @@ export const bigO: Lesson = {
             ]}
           />
           <p>
-            With two sizes, the definition uses one c and a starting point for each, such as w₀ and h₀.
+            With two sizes, f(w, h) ∈ O(g(w, h)) if one c works for every w ≥ w₀ and h ≥ h₀.
           </p>
         </>
       ),
@@ -637,7 +640,7 @@ export const bigO: Lesson = {
       body: (
         <>
           <p>
-            Searching any array is O(n), since an unsorted array gives us no reason to skip a slot. But a{" "}
+            We can now tally linear search too. It is O(n), and on an unsorted array no search does better. But a{" "}
             <Big c={2}>sorted</Big> array does. <code>count_shorter</code> counts the geese shorter than{" "}
             <code>honk</code>, and it stops at the first goose that isn&apos;t.
           </p>
@@ -683,8 +686,8 @@ export const bigO: Lesson = {
         <>
           <p>
             To reason about sorting, our contracts must say things like &quot;everything here is at most everything
-            there&quot;. Writing those <Big c={1}>specification functions</Big> ourselves would be long, so the course
-            gives us a library, <b>arrayutil</b>.
+            there&quot;. Writing those <Big c={1}>specification functions</Big>, functions we call in contracts, would be long, so
+            the course gives us a library, <b>arrayutil</b>.
           </p>
           <Code src={arrayutil} label="Part of the arrayutil interface" />
           <p>
@@ -704,12 +707,12 @@ export const bigO: Lesson = {
           <Pick
             question={
               <>
-                What does <code>lt_seg(3, geese, 2, 2)</code> return?
+                <code>geese</code> holds 2 4 4 7 9. What does <code>lt_seg(3, geese, 2, 2)</code> return?
               </>
             }
             options={["false", "true", "It breaks its precondition"]}
             answer={1}
-            wrong={["geese[2, 2) is empty, so there is no goose that 3 fails to be less than.", "", "0 <= 2, 2 <= 2 and 2 <= \\length(geese) all hold when geese has at least 2 slots."]}
+            wrong={["geese[2, 2) is empty, so there is no goose that 3 fails to be less than.", "", "0 <= 2, 2 <= 2 and 2 <= 5 all hold."]}
             explain="Every fact about all the geese in an empty segment is true. We'll lean on that in our proofs."
           />
         </>
@@ -731,11 +734,10 @@ export const bigO: Lesson = {
               { who: "honk", outfit: "irish", size: "xs", pose: "stand", say: "I'll wait at the front." },
             ]}
           />
-          <p className="task">Each round, tap the tallest goose that isn&apos;t sorted yet.</p>
           <SwapSort cells={flock} />
           <p>
             This is <b>selection sort</b>. Each round selects the tallest goose left and swaps it to the back of
-            the unsorted part, so the sorted part grows from the right.
+            the unsorted part. The lecture moves the shortest to the front instead, and ours is its mirror image.
           </p>
           <FoodForThought title="Why only swap?">
             <p>
@@ -753,8 +755,8 @@ export const bigO: Lesson = {
       body: (
         <>
           <p>
-            Now let&apos;s get ready to write it as <Big c={4}>deliberate programming</Big>. Before coding, we ask
-            what is true at the top of every round. Here are the first three rounds on the same geese, with the
+            Now let&apos;s write it by <Big c={4}>deliberate programming</Big>, letting what must be true guide the
+            code. A round is one iteration of the loop, so we ask what is true at the top of every round. Here are the first three rounds on the same geese, with the
             sorted part shaded.
           </p>
           <Cols>
@@ -765,7 +767,7 @@ export const bigO: Lesson = {
           <Rows
             options={["Always", "Not always"]}
             rows={[
-              { prompt: <>geese[i, hi) is sorted</>, answer: 0, why: "The shaded part is sorted in every picture.", miss: [undefined, "Check each shaded part. 8, then 7 8, then 6 7 8 are all sorted."] },
+              { prompt: <>geese[i, hi) is sorted</>, answer: 0, why: "The shaded part is sorted in every picture.", miss: [undefined, "Check each shaded part. Empty, then 8, then 7 8 are all sorted."] },
               { prompt: <>geese[lo, i) is sorted</>, answer: 1, why: "In round 2, geese[0, 5) is 4 7 1 6 3.", miss: ["In round 2, geese[0, 5) is 4 7 1 6 3, which isn't sorted."] },
               { prompt: <>geese[lo, i) ≤ geese[i, hi)</>, answer: 0, why: "Each round took the tallest, so nobody left is taller than the sorted geese.", miss: [undefined, "In round 3, every goose in 4 3 1 6 is at most every goose in 7 8."] },
               { prompt: <>lo ≤ i ≤ hi</>, answer: 0, why: "i starts at hi and stops at lo.", miss: [undefined, "i counts down from hi to lo and no further."] },
@@ -803,16 +805,22 @@ export const bigO: Lesson = {
               "",
             ]}
             explain="The unsorted part is geese[lo, i), and the guard lo < i means it's never empty."
+            after={
+              <Pick
+                question="What fills blank 2?"
+                options={[<code key="a">i</code>, <code key="b">i - 1</code>, <code key="c">hi - 1</code>]}
+                answer={1}
+                wrong={["In round 1 on 4 8 1 6 3 7, i is 6, which is out of bounds for swap.", "", "That spot is already sorted after round 1, so round 2 would undo it."]}
+                explain="geese[i − 1] is the last slot of the unsorted part, so the tallest goose goes there."
+                after={
+                  <>
+                    <p className="task">Now step through the finished code on 4 8 1 6 3 7.</p>
+                    <Stepper src={sort} sets={[{ label: "4 8 1 6 3 7", steps: sortSteps(), array: { name: "geese", cells: flock } }]} />
+                  </>
+                }
+              />
+            }
           />
-          <Pick
-            question="What fills blank 2?"
-            options={[<code key="a">i</code>, <code key="b">i - 1</code>, <code key="c">hi - 1</code>]}
-            answer={1}
-            wrong={["In round 1 on 4 8 1 6 3 7, i is 6, which is out of bounds for swap.", "", "That spot is already sorted after round 1, so round 2 would undo it."]}
-            explain="geese[i − 1] is the last slot of the unsorted part, so the tallest goose goes there."
-          />
-          <p className="task">Now step through the finished code on 4 8 1 6 3 7.</p>
-          <Stepper src={sort} sets={[{ label: "4 8 1 6 3 7", steps: sortSteps(), array: { name: "geese", cells: flock } }]} />
         </>
       ),
     },
@@ -822,8 +830,8 @@ export const bigO: Lesson = {
       body: (
         <>
           <p>
-            The stepper showed one run. Now let&apos;s prove the calls on lines 10 and 11 meet their preconditions every
-            time, as in <Link href="/lectures#l3">Lecture 3</Link>.
+            The stepper showed one run. Now let&apos;s use point-to reasoning to prove the calls on lines 10 and 11 meet
+            their preconditions every time, as in <Link href="/lectures#l3">Lecture 3</Link>.
           </p>
           <Code src={sort} label="goose_sort" />
           <Comic panels={[{ who: "honk", outfit: "clown", size: "m", pose: "oops", say: "What if i − 1 is negative?" }]} />
@@ -849,7 +857,7 @@ export const bigO: Lesson = {
                 claim: <code>i &lt;= hi</code>,
                 answer: 2,
                 why: "The first loop invariant holds at the start of each iteration.",
-                miss: ["Line 2 is about lo and hi, not i.", "The guard is lo < i, about the lower end.", undefined, "This step comes before step 4.", "Steps 1 and 2 are about lo.", "That's this step's own result."],
+                miss: ["Line 2 is about lo and hi, not i.", "The guard is lo < i, about the lower end.", undefined, "This step comes before step 4.", "Steps 1 and 2 are about lo.", "Step 4 is built from this step, so it can't justify it."],
               },
               {
                 claim: <code>i &lt;= \length(geese)</code>,
@@ -951,8 +959,8 @@ export const bigO: Lesson = {
             ]}
           />
           <p>
-            EXIT never needed line 8. So why is it there? The next page shows that we can&apos;t keep line 7 true
-            without it.
+            The loop also ends, since i goes down by 1 each round and stops at lo. EXIT never needed line 8, so why
+            is it there? The next page shows we can&apos;t keep line 7 true without it.
           </p>
         </>
       ),
@@ -963,8 +971,8 @@ export const bigO: Lesson = {
       body: (
         <>
           <p>
-            Now PRES for line 7. We assume the invariants at the top of a round, with i&apos; for the new i, and
-            show <code>is_sorted(geese, i&apos;, hi)</code>. The bounds on line 6 work as in Lecture 3.
+            Now <b>PRES</b>, showing each round keeps the invariants true. We assume them at the top of a round,
+            with i&apos; for the new i, and show <code>is_sorted(geese, i&apos;, hi)</code>. The bounds on line 6 work as in Lecture 3.
           </p>
           <Code src={sort} label="goose_sort" />
           <Comic panels={[{ who: "honk", outfit: "thanksgiving", size: "s", pose: "point", say: "Watch where the tallest goose lands." }]} />
@@ -1084,8 +1092,8 @@ export const bigO: Lesson = {
             ]}
           />
           <p>
-            Every invariant holds at INIT and is preserved, and EXIT gives the postcondition. So{" "}
-            <code>goose_sort</code> is correct.
+            Every invariant holds at INIT and is preserved, the loop ends, and EXIT gives the postcondition. Since
+            it only swaps, it keeps the same geese too. So <code>goose_sort</code> is correct.
           </p>
         </>
       ),
@@ -1096,8 +1104,9 @@ export const bigO: Lesson = {
       body: (
         <>
           <p>
-            We proved it&apos;s correct. Now how fast is it? Let n = hi − lo. <code>tallest_goose(geese, lo, i)</code>{" "}
-            makes i − lo − 1 comparisons, and swap is O(1).
+            We proved it&apos;s correct. Now how fast is it? Let n = hi − lo, and say{" "}
+            <code>tallest_goose(geese, lo, i)</code> scans geese[lo, i) once, making i − lo − 1 comparisons. swap is
+            O(1).
           </p>
           <Comic panels={[{ who: "honk", outfit: "piada", size: "m", pose: "think", say: "Add up every round." }]} />
           <Pick
@@ -1107,7 +1116,7 @@ export const bigO: Lesson = {
             wrong={["Each round does a whole scan, not one comparison.", "", "Each round scans one fewer goose, so the counts go down by 1, not by half."]}
             explain="The rounds scan n, n − 1, …, 1 geese, so they make n − 1, n − 2, …, 0 comparisons. That adds up to n(n − 1)/2."
           />
-          <p className="task">Count the comparisons for bigger flocks.</p>
+          <p className="task">Run each flock size.</p>
           <RunTable
             runs={[
               { call: <>n = 1000</>, out: "499,500 comparisons" },
@@ -1117,7 +1126,7 @@ export const bigO: Lesson = {
           />
           <Pick
             question="So goose_sort is O(___)?"
-            options={["O(n), one loop over n", "O(n²), n(n − 1)/2 is quadratic", "O(n log n), the scans get shorter"]}
+            options={["O(n), one loop over n", "O(n²), the n rounds scan about n/2 geese on average", "O(n log n), the scans get shorter"]}
             answer={1}
             wrong={["Each of the n rounds calls tallest_goose, which loops too.", "", "They get shorter by 1 each time, so on average a scan is still about n/2."]}
             explain={
@@ -1149,7 +1158,7 @@ export const bigO: Lesson = {
           <Code src={taller} label="first_taller, with two blanks" hi={[5, 10]} />
           <Comic panels={[{ who: "honk", outfit: "rockstar", size: "l", pose: "wave", say: "Use arrayutil. You've got this!" }]} />
           <Pick
-            question="What fills blank 1, so the result is the first taller goose?"
+            question="What fills blank 1, so the result is the index of the first goose taller than honk?"
             options={[<code key="a">is_sorted(geese, 0, \result)</code>, <code key="b">lt_seg(honk, geese, 0, \result)</code>, <code key="c">ge_seg(honk, geese, 0, \result)</code>]}
             answer={2}
             wrong={[
@@ -1164,7 +1173,7 @@ export const bigO: Lesson = {
             options={[<code key="a">ge_seg(honk, geese, 0, i)</code>, <code key="b">lt_seg(honk, geese, i, n)</code>, <code key="c">ge_seg(honk, geese, 0, n)</code>]}
             answer={0}
             wrong={["", "That's the part we haven't looked at. For 2 4 4 7 9 and honk 4, it fails at once, since 2 isn't taller than 4.", "That says no goose at all is taller. For 2 4 4 7 9 and honk 4, it fails at once."]}
-            explain="We've looked at geese[0, i), and none of them was taller. When the loop stops, sortedness gives the lt_seg half."
+            explain="We've looked at geese[0, i), and none of them was taller. When the loop stops, either i == n or geese[i] > honk, and sortedness then gives the lt_seg half."
           />
           <Pick
             question="What does first_taller cost, and why?"
@@ -1181,17 +1190,17 @@ export const bigO: Lesson = {
       minutes: 1.5,
       body: (
         <>
+          <p>
+            We counted steps up to constants to see which algorithm wins as inputs grow, and we proved a sort
+            correct with arrayutil and <Big c={1}>loop invariants</Big>. This was the second of four lectures on{" "}
+            <Big c={4}>deliberate programming</Big>.
+          </p>
           <Comic
             panels={[
               { who: "chonk", outfit: "plain", size: "xl", pose: "cheer", say: "Correct and quadratic!" },
               { who: "honk", outfit: "love", size: "m", pose: "dance", say: "And order is what lets us do better." },
             ]}
           />
-          <p>
-            We counted steps up to constants to see which algorithm wins as inputs grow, and we proved a sort
-            correct with arrayutil and <Big c={1}>loop invariants</Big>. This was the second of four lectures on{" "}
-            <Big c={4}>deliberate programming</Big>.
-          </p>
           <p className="task">Match each idea to its lecture.</p>
           <Rows
             options={laterNames}

@@ -40,8 +40,6 @@ export function Crossover({ f, g, fName, gName, max = 400 }: { f: string; g: str
   const G0 = costs[g];
   const G = (n: number) => (fast ? G0(n) / 10 : G0(n));
   const top = Math.max(F(m), G(m), 1);
-  let cross = 1;
-  while (cross < 100000 && G(cross) <= F(cross)) cross++;
   const better = F(m) <= G(m) ? fName : gName;
 
   return (
@@ -70,8 +68,7 @@ export function Crossover({ f, g, fName, gName, max = 400 }: { f: string; g: str
         times faster
       </label>
       <p className="ai-out" aria-live="polite">
-        At n = {m}, {fName} takes {steps(F(m))} steps and {gName} takes {steps(Math.round(G(m)))}, so {better} wins. {gName}{" "}
-        falls behind for good from n = {cross}.
+        At n = {m}, {fName} takes {steps(F(m))} steps and {gName} takes {steps(Math.round(G(m)))}, so {better} wins.
       </p>
     </div>
   );

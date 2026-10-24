@@ -99,3 +99,24 @@ The lecture's own PRES proofs work on `A[lo, i)` from the left. These run from t
 - Page 11, no search beats O(n) on an unsorted array. The slides say no algorithm has better complexity for searching a generic array. The skipped slot argument is the standard adversary argument.
 - Page 13, why only swap. The notes say a sort that only swaps is guaranteed to return a permutation, and the Lecture 4 slides say C0 contracts can't state that an array is unchanged.
 - Page 20, doubling tells you the class. The notes' empirical validation section, where doubling n gave time ratios near 4 for selection sort.
+
+## Student walkthrough (subagent) and fixes
+
+A fresh subagent walked all 22 pages at desktop and phone widths in both themes, by mouse, touch-style taps and keyboard, with the browser Back and Forward buttons, reduced motion, and as a guest on Lectures 4 and 6. It confirmed every number with its own gcc translation and found no console errors, no sideways scroll and no copy rule breaks. Fixes applied:
+
+- The page 15 stepper now shows the array as it changes. Each step carries its own snapshot through a new optional `cells` field on `Step`, so the shading and the tallest marker match the notes.
+- Give-aways removed. Page 15 shows the finished code only after both blanks are answered, using a new `after` slot on `Pick`. Page 8 asks for the order before the race. Page 1 asks its question before the slider appears. Page 5's graph no longer prints the crossover point. Page 6's bubble no longer says bigger c and n₀ work.
+- Accuracy. Page 1's slider now says "more than the atoms" from 59 geese, as the answer says. Page 14's feedback names the shaded parts as they appear. Page 22 gives a reason per lecture that fits every row. Page 12's `lt_seg` question gives the array. Page 11 says linear search is O(n) and no search of an unsorted array does better.
+- Proof completeness. Page 17 adds termination, page 18 defines PRES, page 19 says the loop ends and the swaps keep the same geese, and page 12's listing adds `le_seg`, which pages 18 and 19 use.
+- Definitions. Worst case (page 4), complexity class (page 7), specification functions (page 12) and deliberate programming (page 14) are defined where they first appear, and page 14 says a round is one loop iteration. Page 13 says ours is the mirror image of the lecture's sort.
+- Wording. Page 2 explains the three runs and has a real distractor, page 3 says a and b are constants, page 4 says each return counts as a step, page 6 introduces f and g and has a clearer task line, page 7's options read "Yes" and "No", page 9's bridge and two-size definition are concrete, page 16 names point-to reasoning and has clearer feedback, page 20 states what `tallest_goose` costs and its last option no longer repeats the explanation, and page 21 words blank 1 precisely and mentions the negated guard.
+- Page 10 renames `goose_total`, `halves`, `goslings` and `loud_geese`, so each name says what it holds.
+- The Order widget keeps keyboard focus on the moved item and says how many items are in place. The race starts at n = 8.
+
+Declined, with reasons:
+
+- Feedback below multiple choice questions and proof tables still pushes the Next button down, and arrow keys don't change pages while an answer button has focus. These are shared player and widget designs from Lectures 1 to 4, so they're left for a site-wide change.
+- Page 21's cost question stays, though page 11 asks a similar one, since writing O(___) with a reason for a new function is the skill checkins test.
+- The proof pages take a careful student 3 to 5 minutes. Cutting blanks would weaken the proofs, so they stay, as in Lecture 4.
+- The sticky card bank for long proof tables on phones would be a shared `ProofTable` change.
+- The "Step k of 20" wording in the stepper is shared with earlier lessons.

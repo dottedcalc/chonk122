@@ -60,7 +60,7 @@ export function SwapSort({ cells }: { cells: number[] }) {
         ))}
       </div>
       <p className={`lf-status${bad ? " bad" : ""}`} aria-live="polite">
-        {done ? `Sorted, with ${swaps} swaps and the same geese as before.` : msg ?? "Tap the tallest goose that isn't sorted yet."}
+        {done ? `Sorted, with ${swaps} swaps and the same geese as before.` : msg ?? "Round 1. Tap the tallest goose that isn't sorted yet."}
       </p>
       <div className="lf-next">
         {(done || swaps > 0) && (

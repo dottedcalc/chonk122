@@ -9,7 +9,7 @@ const names = ["Constant", "Logarithmic", "Linear", "n log n", "Quadratic", "Exp
 // How many steps each complexity class takes as n grows, as bars on one scale.
 // Play runs n up to the top, and a bar that leaves the chart says so.
 export function Race({ max = 64 }: { max?: number }) {
-  const [n, setN] = useState(4);
+  const [n, setN] = useState(8);
   const [playing, setPlaying] = useState(false);
   const timer = useRef<number | null>(null);
   const cap = max * max;

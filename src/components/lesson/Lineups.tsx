@@ -30,8 +30,8 @@ function short(d: string): React.ReactNode {
 export function Lineups({ max = 200, start = 4 }: { max?: number; start?: number }) {
   const [n, setN] = useState(start);
   const d = fact(n);
-  // 10^80 has 81 digits, so n! has passed it once it has more.
-  const past = d.length > 81;
+  // 10^80 is the smallest number with 81 digits, and n! is never exactly 10^80, so 81 digits is past it.
+  const past = d.length >= 81;
 
   return (
     <div className="ai">
