@@ -71,3 +71,23 @@ All code is original and goose named. `is_in` is reprinted exactly as the course
 - Page 8, all versus any. An empty segment makes "every element" true and "some element" false, and `!is_in` says every element differs. `is_sorted` returns in Binary search (Lecture 6 uses `is_sorted` in its preconditions).
 - Page 13, loop variables elsewhere. C (C99 on), C++ and Java scope a variable declared in a for header to the loop, and Python keeps its loop variable afterwards (language references).
 - Page 14, promising not to change an array. Dafny's `old` and `modifies`, ACSL's `\old` and `assigns`, and Rust's shared references (language references). The slides say C0 can't state this and other languages can.
+
+## Student walkthrough (subagent) and fixes
+
+A fresh subagent walked all 18 pages at desktop and phone widths in both themes, by mouse and keyboard, with the browser Back and Forward buttons and as a guest. It confirmed every output with its own gcc translation and found no console errors and no sideways scroll. Fixes applied:
+
+- Page 10's listing gave away page 11's answer. Line 8 now shows as `???` on page 10, and pages 12 and 13 show the full listing, so every cited line is on the page.
+- Answers were usually the first option. Picks and rows on pages 2, 4, 6, 9, 11, 13, 16 and 17 are reordered.
+- Run buttons no longer shift rows when pressed (rows keep the button's height), the selected tab stands out, arrow keys inside a code block no longer flip pages, and an edited hash that names no page now reads #1. These are shared fixes.
+- Answers that running code would give away now wait until the rows are done (pages 5 and 8), using a new `after` slot on `Rows`.
+- Accuracy. Page 13's bubble no longer says i could run past n. Page 12's PRES step cites steps 4 and 6 as well as the definition of `is_in`. Page 11's "guard is false" note is on line 6. Page 2's explanation names each contract's role.
+- Missing or thin feedback. Page 15's first row explains every wrong pick, and page 18 says why each lecture fits or doesn't.
+- Wording. `honk`, `geese` and `goose_search` are in code font in prose. Page 7 defines ∈ and is under 100 words, with the "what makes a good specification function" point moved to a box. Page 8 uses goose IDs, matching page 1. Page 3 says why the caller clears a slot. Page 15 defines "catches", page 16 defines stress tests, page 17 drops "from scratch" and the spaced hyphen, and prose fragments on pages 10, 11 and 13 are full sentences.
+
+Declined, with reasons:
+
+- Proof table feedback sits below the table on phones. That's the shared design from Lecture 3, so nothing moves, and each blank already shows ✓ or ✗ in place.
+- Long contract lines scroll inside the code box on phones. Splitting them would shift every line number that the proofs cite.
+- Comic bubbles and bold task lines stay short. Bubbles are dialogue, and the task lines match the earlier lessons.
+- Page titles stay as they are, since they read as a story and match the earlier lessons' tone.
+- Honk's bubble on page 14 hints at the trick on purpose, since the page asks which check catches it, not what the trick is.

@@ -46,7 +46,10 @@ export function LessonPlayer({
   useEffect(() => {
     function onNav() {
       moved.current = true;
-      setK(fromHash(pages.length) ?? 0);
+      const at = fromHash(pages.length);
+      setK(at ?? 0);
+      // A hash that names no page opens page 1, so the address says so too.
+      if (at === null) window.history.replaceState(null, "", "#1");
     }
     window.addEventListener("popstate", onNav);
     window.addEventListener("hashchange", onNav);
@@ -78,7 +81,7 @@ export function LessonPlayer({
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
-      if ((e.target as HTMLElement).closest("input, textarea, select, [contenteditable], .lp-page button")) return;
+      if ((e.target as HTMLElement).closest("input, textarea, select, [contenteditable], .lp-page button, .code")) return;
       if (e.key === "ArrowRight") go(k + 1);
       else if (e.key === "ArrowLeft") go(k - 1);
     }

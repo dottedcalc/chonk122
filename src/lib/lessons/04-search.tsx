@@ -36,7 +36,7 @@ const safe = `int goose_search(int honk, int[] geese, int n)
 
 const caller = `int k = goose_search(honk, geese, 4);
 if (k != -1) {
-  geese[k] = 0;
+  geese[k] = 0; // goose honk left the club
 }`;
 
 const head = `int goose_search(int honk, int[] geese, int n)
@@ -97,6 +97,9 @@ const final = `${strong}
   }
   return -1;
 }`;
+
+// The final version with line 8 still to be found, for the page before we find it.
+const mystery = final.replace("!is_in(honk, geese, 0, i);", "???;");
 
 const scopeEnd = `  {
     if (geese[i] == honk) return i;
@@ -166,7 +169,7 @@ function walk(honk: number): Step[] {
     });
     if (hit) return steps;
   }
-  steps[steps.length - 1].note = "The loop guard i < n is false now.";
+  steps.push({ line: 6, vars: { honk, i: 4 }, seg: [0, 4], note: "The loop guard i < n is false now." });
   steps.push({ line: 12, vars: { honk, i: 4 }, seg: [0, 4], note: "We looked at every slot, so honk isn't in geese[0, 4)." });
   return steps;
 }
@@ -174,7 +177,13 @@ function walk(honk: number): Step[] {
 const tests = ["Exploit A only", "Exploit B only", "Both"];
 
 const laterNames = ["Big-O", "Binary search", "Quicksort"];
-const laterMiss = (k: number) => laterNames.map((m, j) => (j === k ? undefined : `${m} fits another row better.`));
+// Why each lecture is the wrong match, said about what that lecture does.
+const laterWhat = [
+  "Big-O measures how running time grows, and it doesn't change the code.",
+  "Binary search keeps search's contract but needs a sorted array.",
+  "Quicksort is about sorting, and searching is only part of its proofs.",
+];
+const laterMiss = (k: number) => laterNames.map((_, j) => (j === k ? undefined : laterWhat[j]));
 
 export const search: Lesson = {
   n: 4,
@@ -210,17 +219,19 @@ export const search: Lesson = {
       minutes: 1.5,
       body: (
         <>
-          <p>Here&apos;s a first try at linear search in C0. It returns the index where it finds honk.</p>
+          <p>
+            Here&apos;s a first try at linear search in C0. It returns the index where it finds <code>honk</code>.
+          </p>
           <Code src={first} label="goose_search, first try" />
           <Comic panels={[{ who: "honk", outfit: "umpire", size: "m", pose: "point", say: "Two problems. Can you spot them?" }]} />
           <Pick
             question="Why doesn't it compile?"
-            options={["Nothing is returned after the loop", "geese[i] might be out of bounds", "i is never declared"]}
-            answer={0}
+            options={["geese[i] might be out of bounds", "i is never declared", "Nothing is returned after the loop"]}
+            answer={2}
             wrong={[
-              "",
               "That's a safety problem, and the compiler doesn't catch it. Contracts do.",
               "Line 2 declares i in the for loop.",
+              "",
             ]}
             explain="When honk isn't in geese, the loop ends and the function has nothing to return. We'll fix that on the next page."
           />
@@ -252,8 +263,9 @@ export const search: Lesson = {
             ]}
             explain={
               <>
-                The precondition says n is the length, and the loop invariant <code>0 &lt;= i</code> gives the lower
-                bound. With <code>i &lt; n</code> from the guard, every access is in bounds.
+                As a precondition, <code>n == \length(geese)</code> says n is the length. As a loop invariant,{" "}
+                <code>0 &lt;= i</code> gives the lower bound. With <code>i &lt; n</code> from the guard, we can point to
+                a line for every fact we need.
               </>
             }
           />
@@ -266,7 +278,7 @@ export const search: Lesson = {
       body: (
         <>
           <p>
-            So what should we return when honk isn&apos;t in geese? Every index is at least 0, so we return{" "}
+            So what should we return when <code>honk</code> isn&apos;t in <code>geese</code>? Every index is at least 0, so we return{" "}
             <code>-1</code>, which can&apos;t be mistaken for an index.
           </p>
           <Code src={safe} label="goose_search, safe" hi={[9]} />
@@ -278,7 +290,7 @@ export const search: Lesson = {
           />
           <Code src={caller} label="A caller of goose_search" />
           <p className="task">
-            geese holds 3 8 5 1. What is <code>k</code>?
+            <code>geese</code> holds 3 8 5 1. What is <code>k</code>?
           </p>
           <Rows
             options={["0", "2", "-1"]}
@@ -320,7 +332,8 @@ export const search: Lesson = {
           </p>
           <Comic panels={[{ who: "honk", outfit: "inclass", size: "l", pose: "think", say: "Does the order inside the && matter?" }]} />
           <p className="task">
-            Say a bug makes the function return n instead of -1. Run it with <code>-d</code> on each version.
+            Say a bug makes the function return n instead of -1. <code>geese</code> holds 3 8 5 1. Run it with{" "}
+            <code>-d</code> on each tab.
           </p>
           <Versions
             label="Order of the postcondition"
@@ -368,16 +381,16 @@ export const search: Lesson = {
               </>
             }
             options={[
-              <span key="a">
-                <code>&amp;&amp;</code> skips it once <code>\result &lt; n</code> is false
-              </span>,
               <span key="b">
                 <code>\result</code> is always less than n
               </span>,
+              <span key="a">
+                <code>&amp;&amp;</code> skips it once <code>\result &lt; n</code> is false
+              </span>,
               "Contracts never go out of bounds",
             ]}
-            answer={0}
-            wrong={["", "The buggy version returns n, which is 4 here.", "The element first version just did."]}
+            answer={1}
+            wrong={["The buggy version returns n, which is 4 here.", "", "Run the element first tab. Its contract reads geese[4] and goes out of bounds."]}
             explain={
               <>
                 This is <b>short-circuiting</b>. If the left side of <code>&amp;&amp;</code> is false, C0 never
@@ -395,17 +408,14 @@ export const search: Lesson = {
         <>
           <p>
             A function is <b>correct</b> when its postconditions hold whenever its preconditions hold. Honk wrote a
-            very short goose_search. Is it correct?
+            very short <code>goose_search</code>. Is it correct?
           </p>
           <Code src={exploit} label="A very short goose_search" hi={[6]} />
           <Comic
             panels={[
-              { who: "chonk", outfit: "wizard", size: "m", pose: "oops", say: "That can't be right!" },
-              { who: "honk", outfit: "frankenstein", size: "xl", pose: "dance", say: "Every contract passes!" },
+              { who: "honk", outfit: "frankenstein", size: "xl", pose: "dance", say: "It's so fast!" },
+              { who: "chonk", outfit: "wizard", size: "m", pose: "oops", say: "Suspiciously fast." },
             ]}
-          />
-          <RunTable
-            runs={[{ call: <code>goose_search(5, geese, 4)</code>, out: "returns -1, and every contract passes" }]}
           />
           <Rows
             options={["Yes", "No"]}
@@ -423,6 +433,11 @@ export const search: Lesson = {
                 miss: ["It never looks at geese, so it can't find 5 at index 2."],
               },
             ]}
+            after={
+              <RunTable
+                runs={[{ call: <code>goose_search(5, geese, 4)</code>, out: "returns -1, and every contract passes" }]}
+              />
+            }
           />
           <p>
             Code that is correct but doesn&apos;t do what we want is a <Big c={1}>contract exploit</Big>. It means{" "}
@@ -449,21 +464,21 @@ export const search: Lesson = {
             </ul>
             <Comic
               panels={[
-                { who: "honk", outfit: "fence", size: "xs", pose: "think", say: "Why leave hi out?" },
-                { who: "chonk", outfit: "builder", size: "m", pose: "point", say: "Try it and see." },
+                { who: "honk", outfit: "fence", size: "xs", pose: "think", say: "Is geese[hi] in the segment?" },
+                { who: "chonk", outfit: "builder", size: "m", pose: "point", say: "Slide and see." },
               ]}
             />
           </Cols>
           <p className="task">Slide lo and hi.</p>
           <Segment name="geese" cells={[7, 3, 12, 5, 8]} />
           <Rows
-            options={["hi − lo", "hi − lo + 1", "hi − lo − 1"]}
+            options={["hi − lo + 1", "hi − lo", "hi − lo − 1"]}
             rows={[
               {
                 prompt: "geese[lo, hi) holds this many elements",
-                answer: 0,
+                answer: 1,
                 why: "So geese[3, 3) is empty, and geese[0, n) is the whole array when n is the length.",
-                miss: [undefined, "That would include geese[hi]. geese[1, 4) holds 3 elements.", "geese[1, 4) holds 3 elements, not 2."],
+                miss: ["That would include geese[hi]. geese[1, 4) holds 3 elements.", undefined, "geese[1, 4) holds 3 elements, not 2."],
               },
             ]}
           />
@@ -476,10 +491,9 @@ export const search: Lesson = {
       body: (
         <>
           <p>
-            To use &quot;honk is in geese[lo, hi)&quot; in a contract, we write a <Big c={1}>specification
-            function</Big>, code that copies the math so closely it&apos;s obviously correct. These are meant for
-            contracts, often recursive and usually without postconditions. The course&apos;s <code>is_in</code> is
-            one.
+            In math we write x ∈ A[lo, hi) for &quot;x is in A[lo, hi)&quot;. To use it in a contract, we write a{" "}
+            <Big c={1}>specification function</Big>, code that copies the math so closely it&apos;s obviously
+            correct. The course&apos;s <code>is_in</code> is one.
           </p>
           <Code src={isIn} label="is_in" />
           <Comic
@@ -488,7 +502,14 @@ export const search: Lesson = {
               { who: "honk", outfit: "pilgrim", size: "s", pose: "think", say: "Which case is which?" },
             ]}
           />
-          <p className="task">Match each case of x ∈ A[lo, hi) to its code.</p>
+          <p className="task">Match each case of the math to its code.</p>
+          <FoodForThought title="What makes a good specification function">
+            <p>
+              It should be so plain that nobody doubts it, even if it&apos;s slow. So it&apos;s often recursive, like
+              the math, and usually has no postcondition, since there&apos;s nothing simpler to check it against. We
+              only call it from contracts, so its cost disappears when we compile without <code>-d</code>.
+            </p>
+          </FoodForThought>
           <Rows
             options={["Line 4", "Line 5, left of ||", "Line 5, right of ||"]}
             rows={[
@@ -522,8 +543,8 @@ export const search: Lesson = {
         <>
           <p>
             <code>is_in</code> came from the course, but you&apos;ll often write your own{" "}
-            <Big c={1}>specification functions</Big>. Let&apos;s write one that is true when every goose weight in
-            geese[lo, hi) is positive.
+            <Big c={1}>specification functions</Big>. Real goose IDs are positive, so let&apos;s write one that is
+            true when every ID in geese[lo, hi) is positive.
           </p>
           <Comic panels={[{ who: "honk", outfit: "karaoke", size: "l", pose: "cheer", say: "Same shape as is_in. Two blanks to fill!" }]} />
           <Code src={allPos} label="all_pos_geese, with two blanks" hi={[4, 5]} />
@@ -533,7 +554,7 @@ export const search: Lesson = {
               {
                 prompt: "Blank 1",
                 answer: 0,
-                why: "An empty segment has no goose that breaks the rule.",
+                why: "An empty segment has no ID that breaks the rule.",
                 miss: [
                   undefined,
                   "Every call ends at an empty segment, so the function would always be false, even for geese holding just 2.",
@@ -544,7 +565,7 @@ export const search: Lesson = {
               {
                 prompt: "Blank 2",
                 answer: 2,
-                why: "The first goose must be positive and so must the rest.",
+                why: "The first ID must be positive and so must the rest.",
                 miss: [
                   "Blank 2 joins two bools, so it's && or ||.",
                   "Blank 2 joins two bools, so it's && or ||.",
@@ -553,14 +574,20 @@ export const search: Lesson = {
                 ],
               },
             ]}
-          />
-          <p className="task">geese holds 2 7 −1. Run it.</p>
-          <RunTable
-            runs={[
-              { call: <code>all_pos_geese(geese, 0, 2)</code>, out: "true" },
-              { call: <code>all_pos_geese(geese, 0, 3)</code>, out: "false" },
-              { call: <code>all_pos_geese(geese, 1, 1)</code>, out: "true" },
-            ]}
+            after={
+              <>
+                <p className="task">
+                  <code>geese</code> holds 2 7 −1. Run it.
+                </p>
+                <RunTable
+                  runs={[
+                    { call: <code>all_pos_geese(geese, 0, 2)</code>, out: "true" },
+                    { call: <code>all_pos_geese(geese, 0, 3)</code>, out: "false" },
+                    { call: <code>all_pos_geese(geese, 1, 1)</code>, out: "true" },
+                  ]}
+                />
+              </>
+            }
           />
           <FoodForThought title="All versus any">
             <p>
@@ -581,7 +608,7 @@ export const search: Lesson = {
         <>
           <p>
             Back to Honk&apos;s exploit. We add <code>!is_in(honk, geese, 0, n)</code> to the -1 case, so -1 now
-            really means &quot;not there&quot;.
+            really means &quot;not there&quot;. Read <code>!</code> as &quot;not&quot;.
           </p>
           <Code src={strongExploit} label="The exploit against the stronger postcondition" hi={[3]} />
           <Comic
@@ -591,7 +618,7 @@ export const search: Lesson = {
             ]}
           />
           <p className="task">
-            geese holds 3 8 5 1. Run with <code>-d</code>.
+            <code>geese</code> holds 3 8 5 1. Run with <code>-d</code>.
           </p>
           <RunTable
             runs={[
@@ -602,16 +629,16 @@ export const search: Lesson = {
           <Pick
             question={
               <>
-                Does <code>is_in(honk, geese, 0, n)</code> meet its own precondition?
+                Does the call <code>is_in(honk, geese, 0, n)</code> meet the precondition of <code>is_in</code>?
               </>
             }
-            options={["Yes, always", "Only when n > 0", "No, n might be negative"]}
-            answer={0}
-            wrong={["", "is_in allows lo == hi, the empty segment.", "Line 2 says n is a length, and lengths are never negative."]}
+            options={["Only when n > 0", "No, n might be negative", "Yes, always"]}
+            answer={2}
+            wrong={["is_in allows lo == hi, the empty segment.", "Line 2 says n is a length, and lengths are never negative.", ""]}
             explain={
               <>
-                It needs <code>0 &lt;= 0 &amp;&amp; 0 &lt;= n &amp;&amp; n &lt;= \length(geese)</code>, and line 2
-                gives all of that.
+                It needs <code>0 &lt;= 0 &amp;&amp; 0 &lt;= n &amp;&amp; n &lt;= \length(geese)</code>. Line 2 says
+                n is the length, and a length is never negative, so all three hold.
               </>
             }
           />
@@ -624,11 +651,11 @@ export const search: Lesson = {
       body: (
         <>
           <p>
-            Here is the real goose_search with the stronger postcondition. Is it correct? It has two returns, and the
-            postcondition is an <code>||</code>, so <Hi c={1}>each return must make one side true</Hi>. First, the
-            return on line 10.
+            Here is the real <code>goose_search</code>. We&apos;ll find line 8 on the next page. It has two returns,
+            and the postcondition is an <code>||</code>, so <Hi c={1}>each return must make one side true</Hi>.
+            Let&apos;s start with line 10.
           </p>
-          <Code src={final} label="goose_search, final version" hi={[10]} />
+          <Code src={mystery} label="goose_search, with line 8 still to find" hi={[10]} />
           <Comic
             panels={[
               { who: "honk", outfit: "diva", size: "m", pose: "think", say: "We just found it, so it's easy. Right?" },
@@ -682,8 +709,8 @@ export const search: Lesson = {
             ]}
           />
           <p>
-            We never needed EXIT, the step that uses the loop invariant after the loop ends. When we return from
-            inside the loop, the loop invariant isn&apos;t checked again.
+            We never needed EXIT, the step after the loop ends, since returning skips it. Line 7 is proved as in{" "}
+            <Link href="/lessons/3">Lecture 3</Link>.
           </p>
         </>
       ),
@@ -694,13 +721,13 @@ export const search: Lesson = {
       body: (
         <>
           <p>
-            Now the return on line 12. It must show <code>!is_in(honk, geese, 0, n)</code>, and no single line says
-            that. So what do we know each time the loop comes around?
+            Now let&apos;s look at the return on line 12. It must show <code>!is_in(honk, geese, 0, n)</code>, and no
+            single line says that. So what do we know each time the loop comes around?
           </p>
           <Cols>
             <p>
-              Every slot before i, we looked at and didn&apos;t find honk. That&apos;s true on every iteration, which
-              makes it a candidate <Big c={1}>loop invariant</Big>.
+              We&apos;ve looked at every slot before i and didn&apos;t find <code>honk</code> there. That&apos;s true
+              on every iteration, which makes it a candidate <Big c={1}>loop invariant</Big> for line 8.
             </p>
             <Comic
               panels={[
@@ -712,15 +739,15 @@ export const search: Lesson = {
           <Pick
             question="Which loop invariant says that?"
             options={[
-              <code key="a">!is_in(honk, geese, 0, i)</code>,
               <code key="b">!is_in(honk, geese, 0, n)</code>,
               <code key="c">geese[i] != honk</code>,
+              <code key="a">!is_in(honk, geese, 0, i)</code>,
             ]}
-            answer={0}
+            answer={2}
             wrong={[
-              "",
               "That says honk is nowhere in geese, which is false when honk is 5 and geese holds 3 8 5 1.",
               "That's one slot, and the one we haven't checked yet. It's false at index 2 when honk is 5.",
+              "",
             ]}
             explain={
               <>
@@ -745,18 +772,19 @@ export const search: Lesson = {
         <>
           <p>
             Before we can point to line 8, we have to prove it&apos;s a <Big c={1}>loop invariant</Big>. INIT shows
-            it holds before the first check, and PRES shows one iteration keeps it true. We write i&apos; for i after
-            one more iteration.
+            it holds at the first check, and PRES shows one iteration keeps it true. We write i&apos; for i after one
+            more iteration.
           </p>
+          <Code src={final} label="goose_search, final version" hi={[6, 8, 10]} />
           <Comic
             panels={[
               { who: "honk", outfit: "irish", size: "m", pose: "shrug", say: "What if line 10 returns?" },
-              { who: "chonk", outfit: "grad", size: "m", pose: "point", say: "Then there's no next check to worry about." },
+              { who: "chonk", outfit: "grad", size: "m", pose: "point", say: "Good question. Keep it in mind." },
             ]}
           />
           <p className="task">Fill in each blank.</p>
           <ProofTable
-            options={["Line 6", "Line 10", "Assumption", "Definition of is_in", "Math on steps 1 and 2", "Math on steps 5 and 7"]}
+            options={["Line 6", "Line 10", "Assumption", "Definition of is_in", "Math on steps 1 and 2", "Steps 4 and 6", "Math on steps 5 and 7"]}
             claims={[
               <code key="a">!is_in(honk, geese, 0, 0)</code>,
               <code key="b">geese[i] != honk</code>,
@@ -769,7 +797,7 @@ export const search: Lesson = {
                 claim: <code>i == 0</code>,
                 answer: 0,
                 why: "The loop starts i at 0.",
-                miss: [undefined, "Line 10 is inside the loop body.", "INIT has nothing to assume yet.", "is_in says nothing about i.", "This is the first step.", "This is the first step."],
+                miss: [undefined, "Line 10 is inside the loop body.", "INIT has nothing to assume yet.", "is_in says nothing about i.", "This is the first step.", "This is the first step.", "This is the first step."],
               },
               {
                 claim: <code>!is_in(honk, geese, 0, 0)</code>,
@@ -784,7 +812,7 @@ export const search: Lesson = {
                 claim: <code>i&apos; == i + 1</code>,
                 answer: 0,
                 why: "The i++ on line 6 makes the new value.",
-                miss: [undefined, "Line 10 doesn't change i.", "We assume the invariant, not how i changes.", "is_in says nothing about i.", "Steps 1 and 2 belong to INIT.", "Step 5 can't cite itself."],
+                miss: [undefined, "Line 10 doesn't change i.", "We assume the invariant, not how i changes.", "is_in says nothing about i.", "Steps 1 and 2 belong to INIT.", "Steps 4 and 6 come later.", "Step 5 can't cite itself."],
               },
               {
                 claim: <code>geese[i] != honk</code>,
@@ -795,11 +823,11 @@ export const search: Lesson = {
               },
               {
                 claim: <code>!is_in(honk, geese, 0, i + 1)</code>,
-                answer: 3,
-                why: "honk isn't in geese[0, i) by step 4, and it isn't geese[i] by step 6.",
-                miss: ["Line 6 is about i, not what's in geese.", "Line 10 gives step 6, but we need step 4 too.", "This step needs a reason, not an assumption.", undefined, "Steps 1 and 2 belong to INIT.", "Step 7 can't cite itself."],
+                answer: 5,
+                why: "honk isn't in geese[0, i) by step 4, and it isn't geese[i] by step 6. By the definition of is_in, it isn't in geese[0, i + 1).",
+                miss: ["Line 6 is about i, not what's in geese.", "Line 10 gives step 6, but we need step 4 too.", "This step needs a reason, not an assumption.", "The definition alone doesn't know what's in geese. Which steps feed it?", "Steps 1 and 2 belong to INIT.", undefined, "Step 7 can't cite itself."],
               },
-              { claim: <code>!is_in(honk, geese, 0, i&apos;)</code>, answer: 5, given: true },
+              { claim: <code>!is_in(honk, geese, 0, i&apos;)</code>, answer: 6, given: true },
             ]}
           />
         </>
@@ -811,10 +839,12 @@ export const search: Lesson = {
       body: (
         <>
           <p>
-            Last step. When the loop exits, line 8 gives <code>!is_in(honk, geese, 0, i)</code>, but we want n, not i.
-            That&apos;s why line 7 also says <code>i &lt;= n</code>.
+            There&apos;s one step left. When the loop exits, line 8 gives{" "}
+            <code>!is_in(honk, geese, 0, i)</code>, and we want it for n. That&apos;s why line 7 also says{" "}
+            <code>i &lt;= n</code>.
           </p>
-          <Comic panels={[{ who: "chonk", outfit: "winter", size: "l", pose: "oops", say: "Without i <= n, i could have run past n!" }]} />
+          <Code src={final} label="goose_search, final version" hi={[6, 7, 8]} />
+          <Comic panels={[{ who: "chonk", outfit: "winter", size: "l", pose: "oops", say: "Without i <= n, we couldn't prove i == n!" }]} />
           <p className="task">Fill in each blank.</p>
           <ProofTable
             options={["Line 6", "Line 7", "Line 8", "Math on steps 2 and 3", "Math on steps 1 and 4"]}
@@ -854,9 +884,9 @@ export const search: Lesson = {
           <Code src={scopeEnd} label="An assert after the loop" start={9} hi={[12]} />
           <Pick
             question="Why doesn't line 12 compile?"
-            options={["i only exists inside the for loop", "//@assert can't use ==", "i might not equal n there"]}
-            answer={0}
-            wrong={["", "Contracts use == all the time, like n == \\length(geese) on line 2.", "We just proved i == n. The trouble is the name i itself."]}
+            options={["//@assert can't use ==", "i only exists inside the for loop", "i might not equal n there"]}
+            answer={1}
+            wrong={[ "Contracts use == all the time, like n == \\length(geese) in the precondition.", "", "We just proved i == n. The trouble is the name i itself."]}
             explain="A variable declared in a for loop goes out of scope when the loop ends. So the proof step stays on paper."
           />
           <FoodForThought title="Loop variables elsewhere">
@@ -875,7 +905,7 @@ export const search: Lesson = {
       body: (
         <>
           <p>
-            We proved goose_search correct. But a caller only sees the contracts. Could other code meet them and still
+            We proved <code>goose_search</code> correct. But a caller only sees the contracts. Could other code meet them and still
             be wrong? Honk has two more tries.
           </p>
           <Comic
@@ -894,7 +924,7 @@ export const search: Lesson = {
           <Pick
             question={
               <>
-                geese holds 3 8 5 1. Under <code>-d</code>, which check stops Exploit B on{" "}
+                <code>geese</code> holds 3 8 5 1. Under <code>-d</code>, which check stops Exploit B on{" "}
                 <code>goose_search(5, geese, 4)</code>?
               </>
             }
@@ -947,7 +977,10 @@ export const search: Lesson = {
             ]}
           />
           <Comic panels={[{ who: "chonk", outfit: "party", size: "m", pose: "point", say: "Which test catches which exploit?" }]} />
-          <p className="task">Each test starts from a new geese holding 4 9 5.</p>
+          <p className="task">
+            A test catches an exploit when its assert fails on it. Each test starts from a new <code>geese</code>{" "}
+            holding 4 9 5.
+          </p>
           <Rows
             options={tests}
             rows={[
@@ -955,7 +988,7 @@ export const search: Lesson = {
                 prompt: <code>assert(goose_search(5, geese, 3) == 2);</code>,
                 answer: 1,
                 why: "Exploit A writes 5 into geese[2] and returns 2, so it passes. Exploit B returns -1.",
-                miss: [undefined, undefined, "Exploit A returns 2 here, since 5 is already in the last slot."],
+                miss: ["Exploit A writes 5 into geese[2] and returns 2, so this test passes it.", undefined, "Exploit A returns 2 here, since 5 is already in the last slot."],
               },
               {
                 prompt: <code>assert(goose_search(7, geese, 3) == -1);</code>,
@@ -981,37 +1014,37 @@ export const search: Lesson = {
         <>
           <p>
             The first test missed Exploit A because 5 sat in the last slot. So test <b>edge cases</b>, inputs at the
-            ends of what&apos;s allowed. Add a few <b>stress tests</b> too, such as a million geese checked in a loop.
+            ends of what&apos;s allowed. Add a few <b>stress tests</b> too, big inputs checked in a loop.
           </p>
           <Comic
             panels={[
               { who: "honk", outfit: "valentine", size: "s", pose: "think", say: "Which inputs are edge cases?" },
-              { who: "chonk", outfit: "cozy", size: "l", pose: "stand", say: "Think about the ends." },
+              { who: "chonk", outfit: "cozy", size: "l", pose: "stand", say: "Where do bugs like to hide?" },
             ]}
           />
           <Rows
-            options={["Edge case", "Not an edge case"]}
+            options={["Not an edge case", "Edge case"]}
             rows={[
-              { prompt: "honk is geese[0]", answer: 0, why: "The first element is one end of the array.", miss: [undefined, "The first slot is an end, where off-by-one bugs hide."] },
-              { prompt: "geese has length 0", answer: 0, why: "The empty array is the smallest input.", miss: [undefined, "Length 0 is the smallest array there is."] },
-              { prompt: "honk is in the middle of 9 geese", answer: 1, why: "The middle is the most ordinary case.", miss: ["The middle isn't near either end."] },
+              { prompt: "honk is in the middle of 9 geese", answer: 0, why: "The middle is the most ordinary case.", miss: [undefined, "The middle isn't near either end."] },
+              { prompt: "honk is geese[0]", answer: 1, why: "The first element is one end of the array.", miss: ["The first slot is an end, where off-by-one bugs hide."] },
+              { prompt: "geese has length 0", answer: 1, why: "The empty array is the smallest input.", miss: ["Length 0 is the smallest array there is."] },
             ]}
           />
           <Pick
             question="One of these tests is bad. Which?"
             options={[
-              <span key="a">
-                geese holds 5 5, <code>assert(goose_search(5, geese, 2) == 0);</code>
-              </span>,
               <span key="b">
                 geese is empty, <code>assert(goose_search(5, geese, 0) == -1);</code>
               </span>,
               <span key="c">
                 geese holds 3 8, <code>assert(goose_search(8, geese, 2) == 1);</code>
               </span>,
+              <span key="a">
+                geese holds 5 5, <code>assert(goose_search(5, geese, 2) == 0);</code>
+              </span>,
             ]}
-            answer={0}
-            wrong={["", "An empty geese must give -1. That's a good edge case.", "8 is only at index 1, so 1 is the only right answer."]}
+            answer={2}
+            wrong={["An empty geese must give -1. That's a good edge case.", "8 is only at index 1, so 1 is the only right answer.", ""]}
             explain={
               <>
                 The postcondition allows 0 or 1 here, so a correct search that returns the last match fails this
@@ -1028,7 +1061,7 @@ export const search: Lesson = {
       body: (
         <>
           <p>
-            Now let&apos;s do <Big c={4}>deliberate programming</Big> from scratch, writing the contracts first and
+            Now let&apos;s do <Big c={4}>deliberate programming</Big> on your own, writing the contracts first and
             letting them guide the code. <code>goose_last</code> returns the last index where honk appears, so it
             searches from the back.
           </p>
@@ -1037,36 +1070,40 @@ export const search: Lesson = {
           <Pick
             question="Which fills blank 1, so the result is the last match?"
             options={[
-              <code key="a">!is_in(honk, geese, \result + 1, n)</code>,
               <code key="b">!is_in(honk, geese, 0, \result)</code>,
+              <code key="a">!is_in(honk, geese, \result + 1, n)</code>,
               <code key="c">is_in(honk, geese, \result, n)</code>,
             ]}
-            answer={0}
+            answer={1}
             wrong={[
-              "",
               "That says no earlier slot matches, which is the first match. For geese holding 5 2 5 and honk 5, it rejects the right answer 2.",
+              "",
               "That's always true once geese[\\result] == honk, so returning 0 for geese holding 5 2 5 would pass.",
             ]}
             explain="No slot after the result holds honk."
           />
           <Pick
             question="Which fills blank 2, the bounds on i?"
-            options={[<code key="a">-1 &lt;= i &amp;&amp; i &lt; n</code>, <code key="b">0 &lt;= i &amp;&amp; i &lt; n</code>, <code key="c">0 &lt;= i &amp;&amp; i &lt;= n</code>]}
-            answer={0}
+            options={[<code key="b">0 &lt;= i &amp;&amp; i &lt; n</code>, <code key="c">0 &lt;= i &amp;&amp; i &lt;= n</code>, <code key="a">-1 &lt;= i &amp;&amp; i &lt; n</code>]}
+            answer={2}
             wrong={[
-              "",
               "The loop exits with i == -1, and the invariant is checked then. With an empty geese, i starts at -1 and the check fails at once.",
               "With an empty geese, i starts at -1, so 0 <= i fails at once.",
+              "",
             ]}
-            explain="i starts at n - 1 and the loop exits at -1, so these are the bounds that always hold."
+            explain={
+              <>
+                i starts at <code>n - 1</code> and the loop exits at <code>-1</code>, so these bounds always hold.
+              </>
+            }
           />
           <Pick
             question="Which fills blank 3, what we know so far?"
-            options={[<code key="a">!is_in(honk, geese, i + 1, n)</code>, <code key="b">!is_in(honk, geese, 0, i)</code>, <code key="c">!is_in(honk, geese, i, n)</code>]}
-            answer={0}
+            options={[<code key="b">!is_in(honk, geese, 0, i)</code>, <code key="a">!is_in(honk, geese, i + 1, n)</code>, <code key="c">!is_in(honk, geese, i, n)</code>]}
+            answer={1}
             wrong={[
-              "",
               "That's the part we haven't checked. For geese holding 5 7 and honk 5, i starts at 1 and 5 is in geese[0, 1), so the check fails at once.",
+              "",
               "geese[i] isn't checked yet. For geese holding 5 and honk 5, i starts at 0 and 5 is in geese[0, 1), so the check fails at once.",
             ]}
             explain={
@@ -1098,9 +1135,9 @@ export const search: Lesson = {
           <Rows
             options={laterNames}
             rows={[
-              { prompt: "Count how the work of goose_search grows with n", answer: 0, why: <><Link href="/lectures#l5">Big-O</Link>, Lecture 5.</>, miss: laterMiss(0) },
-              { prompt: "Keep the same postcondition, but use a sorted array to skip most of it", answer: 1, why: <><Link href="/lectures#l6">Binary search</Link>, Lecture 6.</>, miss: laterMiss(1) },
-              { prompt: "Prove a sort correct with segment specification functions", answer: 2, why: <><Link href="/lectures#l7">Quicksort</Link>, Lecture 7.</>, miss: laterMiss(2) },
+              { prompt: "Count how the work of goose_search grows with n", answer: 0, why: <><Link href="/lectures#l5">Big-O</Link>, Lecture 5, counts the steps, and linear search takes about n.</>, miss: laterMiss(0) },
+              { prompt: "Keep the same postcondition, but use a sorted array to skip most of it", answer: 1, why: <><Link href="/lectures#l6">Binary search</Link>, Lecture 6, halves the segment it searches each time.</>, miss: laterMiss(1) },
+              { prompt: "Prove a sort correct with segment specification functions", answer: 2, why: <><Link href="/lectures#l7">Quicksort</Link>, Lecture 7, proves its sorts with functions like is_sorted.</>, miss: laterMiss(2) },
             ]}
           />
         </>

@@ -16,7 +16,7 @@ export function LookFor({ name, cells, targets }: { name: string; cells: number[
 
   let status = `Find the goose with ID ${num(t)}.`;
   if (at !== -1) status = `Found ID ${num(t)} at index ${at} after ${looks} ${looks === 1 ? "look" : "looks"}.`;
-  else if (done) status = `You looked at all ${cells.length} slots, so ID ${num(t)} isn't in ${name}.`;
+  else if (done) status = `You looked at all ${cells.length} slots, so ID ${num(t)} isn't in the ${name}.`;
 
   return (
     <div className="lf">
