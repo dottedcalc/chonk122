@@ -109,6 +109,16 @@ service role key:
 NEXT_PUBLIC_SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... node scripts/upload-pool.mjs 1 path/to/L01
 ```
 
+After rebuilding or editing a pool, run the same command with `--sync` so the database matches the
+folder. It adds new questions, swaps in any image that changed, updates a changed tier or alt, and
+turns off questions that left the manifest, which keeps students' attempts. Add `--dry-run` first to
+see the changes without making them.
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... node scripts/upload-pool.mjs 1 path/to/L01 --sync --dry-run
+NEXT_PUBLIC_SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... node scripts/upload-pool.mjs 1 path/to/L01 --sync
+```
+
 Lecture 1 comes first.
 
 ## Setup after each migration
