@@ -14,6 +14,8 @@ export type ProofRow = {
   claimAnswer?: number;
   // Starts a new labelled part of the proof, such as the steps for one loop invariant.
   group?: string;
+  // Why a wrong card is wrong here, indexed by the card's place in its bank.
+  miss?: React.ReactNode[];
 };
 
 type Chip = { kind: "claim" | "why"; j: number };
@@ -36,6 +38,7 @@ export function ProofTable({
   const [placed, setPlaced] = useState<(Chip | null)[]>(() => rows.map(() => null));
   const [held, setHeld] = useState<Chip | null>(null);
   const [over, setOver] = useState<number | null>(null);
+  const [miss, setMiss] = useState<number | null>(null);
   const isRight = (i: number) => {
     const c = placed[i];
     return c !== null && c.kind === kindOf(rows[i]) && c.j === rightOf(rows[i]);
@@ -49,6 +52,7 @@ export function ProofTable({
     if (isRight(i)) return;
     setPlaced(placed.map((x, k) => (k === i ? c : x)));
     setHeld(null);
+    setMiss(i);
   }
 
   function chips(kind: "claim" | "why", items: React.ReactNode[], name: string) {
@@ -149,6 +153,15 @@ export function ProofTable({
           })}
         </tbody>
       </table>
+      {/* The latest wrong card is explained below the table, so nothing above it moves. */}
+      <p className="proof-miss" aria-live="polite">
+        {miss !== null && !isRight(miss) && placed[miss] !== null && (
+          <>
+            ✗ Step {miss + 1}, not quite.{" "}
+            {placed[miss]!.kind === kindOf(rows[miss]) && rows[miss].miss?.[placed[miss]!.j]} Try another.
+          </>
+        )}
+      </p>
       <p className="rows-done" aria-live="polite">
         {done} of {asked} done{done === asked ? ". Nice!" : ""}
       </p>

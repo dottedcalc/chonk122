@@ -10,6 +10,8 @@ export type Row = {
   group?: string;
   // Shown already answered, so a long proof can ask about only some of its steps.
   given?: boolean;
+  // Why a wrong option is wrong, indexed by option.
+  miss?: React.ReactNode[];
 };
 
 // A run of small choices that share one set of options: blame a caller, sort a fact, justify a proof step.
@@ -60,7 +62,7 @@ export function Rows({ options, rows, numbered = false }: { options: string[]; r
                   </span>
                 )}
                 <span aria-live="polite">
-                  {right ? r.why && <>✓ {r.why}</> : p !== null && <>✗ Not quite. Try another.</>}
+                  {right ? r.why && <>✓ {r.why}</> : p !== null && <>✗ Not quite. {r.miss?.[p]} Try another.</>}
                 </span>
               </div>
             </div>
