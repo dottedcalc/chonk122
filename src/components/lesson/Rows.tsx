@@ -46,21 +46,29 @@ export function Rows({ options, rows, numbered = false }: { options: string[]; r
                       type="button"
                       className={`opt small${p === j ? (right ? " right" : " wrong") : ""}`}
                       aria-pressed={p === j}
-                      disabled={right}
-                      onClick={() => setPicks(picks.map((x, k) => (k === i ? j : x)))}
+                      aria-disabled={right}
+                      onClick={() => !right && setPicks(picks.map((x, k) => (k === i ? j : x)))}
                     >
                       {o}
                     </button>
                   ))}
                 </div>
               )}
-              {/* The hidden copy of the reason holds its space, so rows below never move when it appears. */}
+              {/* Hidden copies of every message hold the space, so rows below never move when one appears. */}
               <div className="row-why">
                 {r.why && !r.given && (
                   <span className="row-why-space" aria-hidden="true">
                     ✓ {r.why}
                   </span>
                 )}
+                {!r.given &&
+                  options.map((_, j) =>
+                    j === r.answer ? null : (
+                      <span key={j} className="row-why-space" aria-hidden="true">
+                        ✗ Not quite. {r.miss?.[j]} Try another.
+                      </span>
+                    ),
+                  )}
                 <span aria-live="polite">
                   {right ? r.why && <>✓ {r.why}</> : p !== null && <>✗ Not quite. {r.miss?.[p]} Try another.</>}
                 </span>

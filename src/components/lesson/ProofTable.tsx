@@ -92,7 +92,7 @@ export function ProofTable({
         type="button"
         className={`proof-slot${over === i ? " over" : ""}${right ? " right" : c !== null ? " wrong" : ""}`}
         aria-label={`${kindOf(rows[i]) === "claim" ? "Statement" : "Justification"} for step ${i + 1}${c !== null ? `, now ${text(c)}` : ", empty"}`}
-        disabled={right}
+        aria-disabled={right}
         onClick={() => held !== null && place(i, held)}
         onDragOver={(e) => {
           e.preventDefault();
@@ -142,7 +142,6 @@ export function ProofTable({
                   <td className="proof-n">{i + 1}</td>
                   <td className="proof-claim">
                     {blankClaim ? slot(i) : r.claim}
-                    {!r.given && right && r.why && <span className="proof-why">✓ {r.why}</span>}
                   </td>
                   <td className="proof-j">
                     {blankWhy ? slot(i) : <span className="proof-given">{options[r.answer]}</span>}
@@ -153,14 +152,24 @@ export function ProofTable({
           })}
         </tbody>
       </table>
-      {/* The latest wrong card is explained below the table, so nothing above it moves. */}
-      <p className="proof-miss" aria-live="polite">
-        {miss !== null && !isRight(miss) && placed[miss] !== null && (
-          <>
-            ✗ Step {miss + 1}, not quite.{" "}
-            {placed[miss]!.kind === kindOf(rows[miss]) && rows[miss].miss?.[placed[miss]!.j]} Try another.
-          </>
-        )}
+      {/* The latest card is explained below the table, so nothing above it moves. */}
+      <p className={`proof-miss${miss !== null && isRight(miss) ? " good" : ""}`} aria-live="polite">
+        {miss !== null &&
+          placed[miss] !== null &&
+          (isRight(miss) ? (
+            <>
+              ✓ Step {miss + 1}. {rows[miss].why}
+            </>
+          ) : placed[miss]!.kind !== kindOf(rows[miss]) ? (
+            <>
+              ✗ Step {miss + 1} needs a {kindOf(rows[miss]) === "claim" ? "statement" : "justification"}, so pick a card
+              from the {kindOf(rows[miss]) === "claim" ? "statements" : "justifications"}.
+            </>
+          ) : (
+            <>
+              ✗ Step {miss + 1}, not quite. {rows[miss].miss?.[placed[miss]!.j]} Try another.
+            </>
+          ))}
       </p>
       <p className="rows-done" aria-live="polite">
         {done} of {asked} done{done === asked ? ". Nice!" : ""}

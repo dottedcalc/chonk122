@@ -36,13 +36,13 @@ Big ideas for the ultra highlight: **memory** (local memory, allocated memory, a
 | 4 | Too big for one variable | coin runs, a memory diagram, then address or int for `geese` and `geese[1]` | 2 min |
 | 5 | Addresses aren't numbers | Does each line compile (4 rows) | 1.5 min |
 | 6 | Default values | Predict element 0 for int, bool, char, string | 1.5 min |
-| 7 | Out of bounds | Index slider past both ends with coin's errors, C0 and C tabs | 1.5 min |
+| 7 | Out of bounds | Index slider past both ends with coin's errors, then a pick on what C does | 1.5 min |
 | 8 | Contracts for arrays | Which line of `goose_sum` doesn't compile, and which loop guard to use | 2 min |
 | 9 | Two names, one array | Predict `honk[0]`, step the aliases, then two `==` rows | 2 min |
 | 10 | Garbage collection | Which array is unreachable, then a stepper that marks it garbage | 1.5 min |
 | 11 | Arrays as arguments | What lines 14 and 15 print, then a stepper behind "Show the memory" | 2 min |
-| 12 | Drawing memory | Draw three arrows, then pick what array A holds | 2 min |
-| 13 | A real copy | Run the aliasing `goose_reverse`, pick what went wrong, then run the fix | 1.5 min |
+| 12 | Drawing memory | Draw three arrows (one to A, two to B), then pick what array A holds | 2 min |
+| 13 | Reversing an array | Run the aliasing `goose_reverse`, pick what went wrong, then run the fix | 1.5 min |
 | 14 | Is every access safe? | Proof table for `honk[n - 1 - i]`, two statements and two justifications | 2 min |
 | 15 | Proving the invariant | INIT and PRES proof table, two statements and two justifications | 2 min |
 | 16 | Callers see contracts | Pick the postcondition, then a two-step proof table | 1.5 min |
@@ -54,10 +54,28 @@ There is no `cc0` or `coin` in the build container, so outputs were checked with
 
 - `honk_twice(chonk + 1)` with `chonk` = 5 returns 12.
 - `honk_reset` prints 9 for `honk[0]` and 8 for `goose`.
-- The drawing program leaves array A holding 2, 4, 6, with `honk`, `chonk` and `goose` all pointing to it, and array B unreachable.
+- The drawing program leaves `honk` pointing to array A, which holds 0, 4, 6, and `chonk` and `goose` pointing to array B, which holds 2, 0, 0.
 - The aliasing `goose_reverse` on 1 2 3 4 returns 4 3 3 4 and leaves the caller's array as 4 3 3 4. The fixed version returns 4 3 2 1 and leaves 1 2 3 4.
 - Aliases compare `==` true, and a second array with equal elements compares false (C0 reference, comparisons of `t[]` are comparisons of references).
 - Default values are 0, false, `'\0'` and `""` (C0 reference). coin's messages `geese is 0x... (int[] with 4 elements)`, `geese[1] is 7 (int)`, `Error: accessing element 5 in 5-element array` and `Error: accessing negative element in 5-element array` follow the format in the Fall 2026 slides and notes. The address `0xF5A2C0` is made up, as addresses change between runs.
 - Compile errors on page 5 and page 8 follow the C0 reference. `+` needs ints, `int[]` and `int` don't mix, and `\length` may only appear in contracts.
 
 All code is original. `alloc_array` and the array access contracts are reprinted as the course gives them.
+
+## Student walkthrough (subagent) and fixes
+
+A fresh subagent walked all 17 pages at desktop and phone widths in both themes, by mouse and keyboard, and visited as a guest. It found the C0 correct throughout, no sideways scroll and no console errors. Fixes applied:
+
+- Nothing moves under the pointer. Stepper buttons now sit above the memory diagram. Rows reserve space for every wrong-answer reason. Proof tables explain the latest card below the table instead of inside a cell. The arrow drawing rows keep their height.
+- Every wrong card in a proof table now has a reason, and a card of the wrong kind says which bank to use. Feedback after a wrong pick names the right answer first (pages 10 and 16).
+- Give-aways removed. Page 3 shows its code first and hides the stepper behind "Step through it". Page 4 asks before it says what the variable holds, and its diagram waits behind "Show the memory". Page 9 no longer states how == works before the rows. Page 13 is retitled "Reversing an array" and its options are even. Page 14 asks to prove that `honk[n - 1 - i]` is safe without listing the goals. Page 16 no longer names the postcondition.
+- Focus stays on the button after answering, since answered buttons are now aria-disabled instead of disabled, so the arrow keys no longer jump pages afterward. This applies to every lesson.
+- Accuracy. Page 4 no longer says an array variable is the size of an int. The `chonk[i]` note cites lines 5 and 6 as well. A mismatched reason on page 15 is fixed.
+- Page 12 now draws one arrow to A and two to B. Page 7 asks what C does. Page 17's binary search prompt no longer repeats the lecture name.
+- Wording. Defined coin, decommissioned, point-to reasoning, INIT and PRES. Removed "carry" and "talks to" metaphors, padding lines and the "not the elements" contrast. Code in feedback is in code font. Slider labels added and a plural fixed.
+
+Declined, with reasons:
+
+- Rows on page 6 can be matched by type. Knowing each type's default is the point, and the reasons teach it.
+- `weigh` and `n` on page 1 stay undefined, since the page is about the shape of the code.
+- The site header name and the tab title differ site-wide, which is outside this lesson.

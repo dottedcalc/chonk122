@@ -426,7 +426,7 @@ mark.hi.c3 { background: var(--c3-soft); }
 
 /* small buttons and option chips used by the widgets */
 button.small-btn { font-size: 1.05rem; padding: 3px 14px; box-shadow: 2px 3px 0 var(--edge); }
-button.small-btn:disabled { cursor: default; opacity: 0.4; }
+button.small-btn:disabled, button.small-btn[aria-disabled="true"] { cursor: default; opacity: 0.4; }
 button.opt {
   font-family: var(--font-body), system-ui, sans-serif; font-size: 0.95rem; font-weight: 700; text-align: left;
   padding: 6px 12px; background: var(--card); color: var(--fg); box-shadow: 2px 3px 0 var(--edge);
@@ -437,8 +437,10 @@ button.opt:hover { background: var(--c1-soft); }
 button.opt[aria-pressed="true"] { background: var(--c1-soft); }
 button.opt.right, button.opt.right:hover { background: var(--c1-soft); border-color: var(--c1); box-shadow: 2px 3px 0 var(--c1); }
 button.opt.wrong, button.opt.wrong:hover { background: var(--c2-soft); border-color: var(--c2); box-shadow: 2px 3px 0 var(--c2); }
-button.opt:disabled { cursor: default; opacity: 1; }
-button.opt:disabled:not(.right):not(.wrong) { opacity: 0.55; }
+button.opt:disabled, button.opt[aria-disabled="true"] { cursor: default; opacity: 1; }
+button.opt:disabled:not(.right):not(.wrong), button.opt[aria-disabled="true"]:not(.right):not(.wrong) { opacity: 0.55; }
+button.opt[aria-disabled="true"]:not(.right):not(.wrong):hover { background: var(--card); box-shadow: 2px 3px 0 var(--edge); }
+button[aria-disabled="true"]:hover, button[aria-disabled="true"]:active { transform: none; }
 
 .runs { display: grid; gap: 6px; }
 .run-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 6px 0; border-top: 2px dashed var(--paper-dot); }
@@ -644,6 +646,9 @@ button.dg.tiny { box-shadow: 1px 2px 0 var(--edge); }
 .mem-draw-why .bad { color: var(--c2); }
 .reveal { display: grid; gap: 10px; min-width: 0; animation: pop-in 0.2s ease-out; }
 .proof-miss { margin: 0; font-weight: 700; color: var(--c2); }
+.proof-miss.good { color: var(--c1); }
+.pick, .pick-why { min-width: 0; }
+.mem-draw .mem-vars tr { height: 2.5rem; }
 .proof-miss:empty { display: none; }
 
 /* lesson widgets for arrays */

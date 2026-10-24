@@ -99,6 +99,7 @@ export function MemDiagram({ state, pick }: { state: MemState; pick?: (v: string
           </div>
         ))}
       </div>
+      {state.arrays.length > 0 && (
       <div className="mem-col">
         <p className="mem-head">Allocated memory</p>
         {state.arrays.map((a) => (
@@ -118,6 +119,7 @@ export function MemDiagram({ state, pick }: { state: MemState; pick?: (v: string
           </div>
         ))}
       </div>
+      )}
       <svg className="mem-arrows" aria-hidden="true">
         <defs>
           <marker id={head} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
@@ -141,20 +143,26 @@ export function MemStepper({ src, steps, label }: { src: string; steps: MemStep[
   return (
     <div className="stepper">
       <Code src={src} hi={[step.line]} label={label} />
+      {/* The buttons sit above the diagram, which changes height from step to step, so they never move. */}
+      <div className="step-ctrl">
+        <button type="button" className="small-btn" onClick={() => k > 0 && setK(k - 1)} aria-disabled={k === 0}>
+          ◂ Step back
+        </button>
+        <button
+          type="button"
+          className="small-btn"
+          onClick={() => k < steps.length - 1 && setK(k + 1)}
+          aria-disabled={k === steps.length - 1}
+        >
+          Step ▸
+        </button>
+      </div>
       <div aria-live="polite" className="mem-step">
         <p className="step-count">
           Step {k + 1} of {steps.length} · line {step.line}
         </p>
-        <MemDiagram state={step} />
         {step.note && <p className="step-note">{step.note}</p>}
-      </div>
-      <div className="step-ctrl">
-        <button type="button" className="small-btn" onClick={() => setK(k - 1)} disabled={k === 0}>
-          ◂ Step back
-        </button>
-        <button type="button" className="small-btn" onClick={() => setK(k + 1)} disabled={k === steps.length - 1}>
-          Step ▸
-        </button>
+        <MemDiagram state={step} />
       </div>
     </div>
   );
@@ -212,7 +220,7 @@ export function MemDraw({
           if (p === null) return null;
           return (
             <p key={v.name} className={p === v.answer ? "good" : "bad"}>
-              <code>{v.name}</code> {p === v.answer ? <>✓ {v.why}</> : <>✗ Not quite. {v.miss?.[p]} Try again.</>}
+              <code>{v.name}</code> {p === v.answer ? <>✓ {v.why}</> : <>✗ Not quite. {v.miss?.[p]} Try another.</>}
             </p>
           );
         })}

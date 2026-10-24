@@ -11,7 +11,6 @@ import { ProofTable } from "@/components/lesson/ProofTable";
 import { Reveal } from "@/components/lesson/Reveal";
 import { Rows } from "@/components/lesson/Rows";
 import { RunTable } from "@/components/lesson/RunTable";
-import { Versions } from "@/components/lesson/Versions";
 import type { Lesson } from "./types";
 
 // Lecture 3, Arrays. Every output below was checked with gcc or by tracing; see docs/lessons/03-notes.md.
@@ -79,8 +78,8 @@ const draw = `int main() {
   int[] goose = honk;
   honk[1] = 4;
   goose[2] = 6;
-  chonk = goose;
-  chonk[0] = 2;
+  goose = chonk;
+  goose[0] = 2;
   return 0;
 }`;
 
@@ -147,7 +146,7 @@ export const arrays: Lesson = {
         <>
           <p>
             In <Link href="/lessons/2">Lecture 2</Link>, one int held one number. Now Chonk wants to weigh every goose
-            in the flock and add up the weights. If each goose gets its own variable, how well does that go?
+            in the flock and add up the weights. Can each goose get its own variable?
           </p>
           <Comic
             panels={[
@@ -178,8 +177,8 @@ export const arrays: Lesson = {
             ]}
             explain={
               <>
-                An <b>array</b> holds as many values as we ask for while the program runs. Arrays carry much of the
-                course, since <Hi c={1}>looping over arrays leads to loop invariants, sorting and searching</Hi>.
+                An <b>array</b> holds as many values as we ask for while the program runs. Arrays show up through
+                much of the course, since <Hi c={1}>looping over arrays leads to loop invariants, sorting and searching</Hi>.
               </>
             }
           />
@@ -191,7 +190,6 @@ export const arrays: Lesson = {
       minutes: 1.5,
       body: (
         <>
-          <p>So let&apos;s meet arrays properly.</p>
           <ul>
             <li>
               For any type t, <code>t[]</code> is the type of arrays whose elements have type t, such as{" "}
@@ -230,7 +228,7 @@ export const arrays: Lesson = {
                   </>
                 ),
                 answer: 0,
-                why: "Arrays can have length 0, and that's often handy.",
+                why: "Arrays can have length 0.",
                 miss: [undefined, "The second argument is the length, and here it's 0.", "The second argument is the length, and here it's 0."],
               },
             ]}
@@ -246,7 +244,8 @@ export const arrays: Lesson = {
           <p>
             Before we store an array, where do ordinary variables live? C0 keeps them in <Big c={2}>local memory</Big>.
             Each function call gets its own <b>frame</b> that holds its variables. A function can only use the
-            variables in its own frame, and when it returns, its frame is <b>decommissioned</b>.
+            variables in its own frame, and when it returns, its frame is <b>decommissioned</b>, which means it goes
+            away.
           </p>
           <Comic
             panels={[
@@ -264,6 +263,7 @@ export const arrays: Lesson = {
               { who: "honk", outfit: "butterfly", size: "l", pose: "wave", say: "Let's step through and see." },
             ]}
           />
+          <Code src={twice} label="honk_twice and main" />
           <Pick
             question={
               <>
@@ -292,9 +292,10 @@ export const arrays: Lesson = {
               </>
             }
           />
+          <Reveal label="Step through it">
           <MemStepper
             src={twice}
-            label="honk_twice and main"
+            label="honk_twice and main, step by step"
             steps={[
               { line: 7, frames: [{ fn: "main", active: true, vars: [{ name: "chonk", value: 5 }] }], arrays: [] },
               {
@@ -353,6 +354,7 @@ export const arrays: Lesson = {
               },
             ]}
           />
+          </Reveal>
         </>
       ),
     },
@@ -362,27 +364,28 @@ export const arrays: Lesson = {
       body: (
         <>
           <p>
-            Back to arrays. <Link href="/lessons/2">Lecture 2</Link> showed that a variable holds one word, the size of
-            one int. A hundred ints can&apos;t fit in one variable!
+            Back to arrays. In <Link href="/lessons/2">Lecture 2</Link>, an int was one word, a fixed number of bits.
+            A variable holds one small value like that, so a hundred ints can&apos;t fit in it!
           </p>
           <p>
-            So <code>alloc_array</code> puts the array in <Big c={2}>allocated memory</Big>, a separate part of memory,
-            and returns its <b>address</b>, which says where the array is. <Hi c={2}>The array variable holds only that
-            address</Hi>.
+            So <code>alloc_array</code> puts the array in <Big c={2}>allocated memory</Big>, a separate part of memory.
+            Let&apos;s try it in <b>coin</b>, the C0 interpreter.
           </p>
-          <p className="task">Run each line in coin.</p>
+          <p className="task">Run each line.</p>
           <RunTable
             runs={[
               { call: <code>int[] geese = alloc_array(int, 4);</code>, out: <code>geese is 0xF5A2C0 (int[] with 4 elements)</code> },
               { call: <code>geese[1] = 7;</code>, out: <code>geese[1] is 7 (int)</code> },
             ]}
           />
-          <MemDiagram
-            state={{
-              frames: [{ fn: "main", active: true, vars: [{ name: "geese", to: "A" }] }],
-              arrays: [{ id: "A", cells: ["", 7, "", ""] }],
-            }}
-          />
+          <Reveal label="Show the memory">
+            <MemDiagram
+              state={{
+                frames: [{ fn: "main", active: true, vars: [{ name: "geese", to: "A" }] }],
+                arrays: [{ id: "A", cells: ["", 7, "", ""] }],
+              }}
+            />
+          </Reveal>
           <Comic
             panels={[
               {
@@ -396,7 +399,7 @@ export const arrays: Lesson = {
                   </>
                 ),
               },
-              { who: "chonk", outfit: "detective", size: "s", pose: "point", say: "Look where the arrow starts." },
+              { who: "chonk", outfit: "detective", size: "s", pose: "point", say: "And what's that hex number?" },
             ]}
           />
           <p className="task">What does each one hold?</p>
@@ -406,7 +409,12 @@ export const arrays: Lesson = {
               {
                 prompt: <code>geese</code>,
                 answer: 0,
-                why: "It holds the address of the array, drawn as the arrow.",
+                why: (
+                  <>
+                    It holds the array&apos;s <b>address</b>, which says where the array is in allocated memory. We draw it
+                    as an arrow.
+                  </>
+                ),
                 miss: [undefined, "geese has type int[], so it can't hold an int."],
               },
               {
@@ -426,7 +434,8 @@ export const arrays: Lesson = {
       body: (
         <>
           <p>
-            coin printed <code>geese</code> as <code>0xF5A2C0</code>. Can we use that like a number?
+            When coin printed <code>geese</code>, it showed the address <code>0xF5A2C0</code>. Can we use that like a
+            number?
           </p>
           <p>
             No. Addresses can change from run to run, and C0 never lets a program compute with them. If{" "}
@@ -461,7 +470,7 @@ export const arrays: Lesson = {
               {
                 prompt: <code>int[] chonk = geese;</code>,
                 answer: 0,
-                why: "Both are int[], so chonk gets a copy of the address. We'll see what that means soon.",
+                why: "Both are int[], so chonk gets a copy of the address.",
                 miss: [undefined, "Both sides have type int[], so the types match."],
               },
             ]}
@@ -524,25 +533,24 @@ export const arrays: Lesson = {
           <ArrayIndex name="geese" cells={[12, 9, 15, 7, 11]} min={-2} max={6} start={4} />
           <p>
             There is no element there, so C0 stops with an error. Reading or writing out of bounds is a{" "}
-            <Big c={1}>safety</Big> violation, just like dividing by 0 in <Link href="/lessons/2">Lecture 2</Link>.
+            <Big c={1}>safety</Big> violation, just like dividing by 0 in <Link href="/lessons/2">Lecture 2</Link>. C0
+            checks every access.
           </p>
-          <Versions
-            label="C0 and C"
-            tabs={[
-              {
-                label: "In C0",
-                body: <p>Every access is checked, so a bad index stops the program.</p>,
-              },
-              {
-                label: "In C",
-                body: (
-                  <p>
-                    Nothing is checked, so the program may read or overwrite other memory. Attackers use this in{" "}
-                    <b>buffer overflow</b> attacks.
-                  </p>
-                ),
-              },
-            ]}
+          <Pick
+            question={
+              <>
+                Does C also stop with an error at <code>geese[5]</code>?
+              </>
+            }
+            options={["Yes, every time", "No, anything can happen"]}
+            answer={1}
+            wrong={["C never checks array bounds, so nothing stops the program."]}
+            explain={
+              <>
+                Reading out of bounds in C is <b>undefined behavior</b>. The program may read or overwrite other memory,
+                and attackers use this in <b>buffer overflow</b> attacks.
+              </>
+            }
           />
         </>
       ),
@@ -560,7 +568,8 @@ export const arrays: Lesson = {
           <Code src={arrayOps} label="Contracts of the array operations" />
           <p>
             <code>\length(A)</code> is the length of A, but <Hi c={1}>only contracts may use it</Hi>. C0 stores the
-            length to check bounds, but C doesn&apos;t store it at all, so C0 code can&apos;t ask for it either.
+            length to check bounds. C doesn&apos;t store it at all, and C0 code is meant to carry over to C, so C0 code
+            can&apos;t ask for it either.
           </p>
           <Comic
             panels={[
@@ -588,7 +597,15 @@ export const arrays: Lesson = {
             }
             options={[<code key="a">i &lt; n</code>, <code key="b">i &lt;= n</code>, <code key="c">i &lt; n - 1</code>]}
             answer={0}
-            wrong={["", "When i is n, geese[i] is one past the end.", "That skips the last element, geese[n-1]."]}
+            wrong={[
+              "",
+              <>
+                When <code>i</code> is n, <code>geese[i]</code> is one past the end.
+              </>,
+              <>
+                That skips the last element, <code>geese[n-1]</code>.
+              </>,
+            ]}
             explain={<>Line 2 says n is the length, so every <code>geese[i]</code> stays in bounds.</>}
           />
         </>
@@ -627,7 +644,7 @@ export const arrays: Lesson = {
             }
             options={["0", "7"]}
             answer={1}
-            wrong={["Line 2 copied only the address, so no second array exists."]}
+            wrong={["No second array was ever made."]}
             explain={
               <>
                 Line 2 copies the address, so <code>honk</code> and <code>chonk</code> point to the same array. They
@@ -689,8 +706,8 @@ export const arrays: Lesson = {
             }
           />
           <p>
-            Lines 4 and 5 then make <code>goose</code>, a new array that also starts with 7. On arrays,{" "}
-            <code>==</code> compares their addresses.
+            Lines 4 and 5 then make <code>goose</code>, a new array that also starts with 7. What does{" "}
+            <code>==</code> say about these arrays?
           </p>
           <Rows
             options={["true", "false"]}
@@ -698,13 +715,13 @@ export const arrays: Lesson = {
               {
                 prompt: <code>honk == chonk</code>,
                 answer: 0,
-                why: "They hold the same address.",
+                why: "On arrays, == compares addresses, and these two hold the same address.",
                 miss: [undefined, "They hold the same address, so == is true."],
               },
               {
                 prompt: <code>honk == goose</code>,
                 answer: 1,
-                why: "They are different arrays, even with equal elements.",
+                why: "On arrays, == compares addresses, and these are two different arrays.",
                 miss: ["The elements match, but == compares addresses, and these are two arrays."],
               },
             ]}
@@ -727,7 +744,8 @@ export const arrays: Lesson = {
             wrong={["", "honk and chonk both point to it.", "After line 4, no arrow leads to the first array."]}
             explain={
               <>
-                That array is <b>garbage</b>. In <Big c={2}>allocated memory</Big>, C0&apos;s <b>garbage collector</b>{" "}
+                After line 4, nothing points to the first array, so it is <b>garbage</b>. In{" "}
+                <Big c={2}>allocated memory</Big>, C0&apos;s <b>garbage collector</b>{" "}
                 eventually reclaims garbage, whenever C0 decides to. Local memory is never garbage collected, since
                 frames are decommissioned instead. C has no garbage collector, so in{" "}
                 <Link href="/lectures#l18">C&apos;s memory model</Link> you&apos;ll free memory yourself.
@@ -790,7 +808,7 @@ export const arrays: Lesson = {
                 answer: 2,
                 why: "On line 4, geese and honk were aliases, so main sees the 9.",
                 miss: [
-                  "Line 4 wrote to the shared array before geese moved.",
+                  "Line 4 wrote to the shared array before line 6 pointed geese at a new one.",
                   "8 is the value of goose, but line 4 stored chonk + 1.",
                   undefined,
                   "Line 6 pointed geese at a new array first, so the 99 went there.",
@@ -810,7 +828,7 @@ export const arrays: Lesson = {
             ]}
           />
           <p>
-            <Hi c={2}>A function talks to its caller by returning a value or by changing shared allocated memory.</Hi>
+            <Hi c={2}>A function can only affect its caller by returning a value or by changing shared allocated memory.</Hi>
           </p>
           <Reveal label="Show the memory">
             <MemStepper
@@ -937,19 +955,19 @@ export const arrays: Lesson = {
               { id: "B", cells: ["?", "?", "?"] },
             ]}
             vars={[
-              { name: "honk", answer: "A", why: "Only line 2 assigns honk.", miss: { B: "Only line 2 assigns honk, and it gets array A." } },
-              { name: "chonk", answer: "A", why: "Line 7 copied the address in goose.", miss: { B: "chonk starts at B, but line 7 moves it." } },
-              { name: "goose", answer: "A", why: "Line 4 copied the address in honk.", miss: { B: "Line 4 copies honk, which points to A." } },
+              { name: "honk", answer: "A", why: "Only line 2 assigns honk.", miss: { B: "Only line 2 assigns honk." } },
+              { name: "chonk", answer: "B", why: "Only line 3 assigns chonk.", miss: { A: "No line after line 3 assigns chonk." } },
+              { name: "goose", answer: "B", why: "Line 7 copied the address in chonk.", miss: { A: "goose starts out pointing to A, but line 7 assigns it again." } },
             ]}
           />
           <Rows
-            options={["0, 4, 6", "2, 4, 6", "2, 0, 0"]}
+            options={["0, 4, 6", "2, 4, 6", "0, 4, 0"]}
             rows={[
               {
                 prompt: "On line 9, array A holds",
-                answer: 1,
-                why: "All three names point to A, so lines 5, 6 and 8 all write to it.",
-                miss: ["Line 8 writes through chonk, which points to A by then.", undefined, "Lines 5 and 6 also write to A, through honk and goose."],
+                answer: 0,
+                why: "Lines 5 and 6 write to A through honk and goose. By line 8, goose points to B.",
+                miss: [undefined, "Line 7 moved goose to B, so line 8 writes to B.", "goose still pointed to A on line 6."],
               },
             ]}
           />
@@ -957,13 +975,13 @@ export const arrays: Lesson = {
       ),
     },
     {
-      title: "A real copy",
+      title: "Reversing an array",
       minutes: 1.5,
       body: (
         <>
           <p>
-            Aliases can trick us. Chonk wants <code>goose_reverse</code> to return a new array holding the elements of{" "}
-            <code>honk</code> in reverse order.
+            Now let&apos;s write a function of our own. Chonk wants <code>goose_reverse</code> to return a new array
+            holding the elements of <code>honk</code> in reverse order.
           </p>
           <Comic
             panels={[
@@ -992,7 +1010,7 @@ export const arrays: Lesson = {
             question="What went wrong?"
             options={[
               <span key="a">
-                <code>chonk</code> is an alias of <code>honk</code>, so the loop overwrites elements it still needs
+                Writes to <code>chonk</code> change <code>honk</code>
               </span>,
               <span key="b">
                 <code>honk[n - 1 - i]</code> goes out of bounds
@@ -1003,7 +1021,8 @@ export const arrays: Lesson = {
             wrong={["", "Here n is 4, so the index goes from 3 down to 0, all in bounds.", "i goes from 0 to 3, once per element."]}
             explain={
               <>
-                Line 4 has to make a new array instead.
+                Line 4 makes <code>chonk</code> an alias of <code>honk</code>, so by the time i is 2, the loop reads
+                elements it already overwrote. Line 4 has to make a new array instead.
                 <Code src={reverseNew} label="goose_reverse, fixed" hi={[4]} />
                 <RunTable
                   runs={[
@@ -1035,11 +1054,12 @@ export const arrays: Lesson = {
           <Comic panels={[{ who: "honk", outfit: "pilgrim", size: "m", pose: "shrug", say: "i starts at 0 and goes up, so it's fine. Right?" }]} />
           <p>
             That&apos;s <b>operational reasoning</b>, tracing how the code runs, with no line to point to. So we state
-            it as the loop invariant on line 6, prove it next, and let <Big c={1}>point-to reasoning</Big> cite it.
+            it as the loop invariant on line 6 and prove it next. Then <Big c={1}>point-to reasoning</Big>, which
+            justifies each fact by pointing to a line, can cite line 6.
           </p>
           <Code src={reverseInv} label="goose_reverse with a loop invariant" />
           <p className="task">
-            Show <code>0 &lt;= n - 1 - i</code> and <code>n - 1 - i &lt; \length(honk)</code>. Fill in each blank.
+            Prove that <code>honk[n - 1 - i]</code> is safe. Fill in each blank.
           </p>
           <ProofTable
             options={["Line 2", "Line 5", "Line 6", "Math on step 1", "Math on step 3", "Steps 4 and 5"]}
@@ -1055,7 +1075,14 @@ export const arrays: Lesson = {
                 claim: <code>i &lt; n</code>,
                 answer: 1,
                 why: "The loop guard is true inside the body.",
-                miss: ["Line 2 says n is the length, nothing about i.", undefined, "Line 6 gives 0 <= i, not i < n."],
+                miss: [
+                  "Line 2 says n is the length, nothing about i.",
+                  undefined,
+                  "Line 6 gives a lower bound on i.",
+                  "This is the first step, so there is no earlier step to use.",
+                  "This is the first step, so there is no earlier step to use.",
+                  "This is the first step, so there is no earlier step to use.",
+                ],
               },
               { claim: <code>0 &lt;= n - 1 - i</code>, answer: 3, given: true },
               { claim: <code>0 &lt;= i</code>, answer: 2, given: true },
@@ -1068,13 +1095,28 @@ export const arrays: Lesson = {
                     Since <code>i &gt;= 0</code>, the index is at most <code>n - 1</code>.
                   </>
                 ),
-                miss: ["That's step 2.", undefined, "We need n first, then step 5 swaps in the length.", "That's false when i is n - 1.", "We need n first, then step 5 swaps in the length."],
+                miss: [
+                  "That's step 2.",
+                  undefined,
+                  "We need n first, then step 5 swaps in the length.",
+                  <>
+                    That&apos;s false when <code>i</code> is <code>n - 1</code>.
+                  </>,
+                  "We need n first, then step 5 swaps in the length.",
+                ],
               },
               {
                 claim: <code>n == \length(honk)</code>,
                 answer: 0,
                 why: "The precondition, and neither n nor honk changes.",
-                miss: [undefined, "Line 5 is the loop. The length comes from the precondition.", "Line 6 is about i."],
+                miss: [
+                  undefined,
+                  "Line 5 is the loop. The length comes from the precondition.",
+                  "Line 6 is about i.",
+                  "Step 1 is about i, and this step is about n.",
+                  "Step 3 is about i, and this step is about n.",
+                  "A step can't cite itself.",
+                ],
               },
               {
                 claim: <code>n - 1 - i &lt; \length(honk)</code>,
@@ -1085,14 +1127,16 @@ export const arrays: Lesson = {
                   "That's step 2.",
                   "That's step 4, which uses n.",
                   undefined,
-                  "That's not even true when i is n - 1.",
+                  <>
+                    That&apos;s false when <code>i</code> is <code>n - 1</code>.
+                  </>,
                   "<= isn't enough, since an index equal to the length is out of bounds.",
                 ],
               },
             ]}
           />
           <p>
-            <code>chonk[i]</code> is safe too, by the postcondition of <code>alloc_array</code>.
+            <code>chonk[i]</code> is safe too, by lines 5 and 6 and the postcondition of <code>alloc_array</code>.
           </p>
         </>
       ),
@@ -1104,7 +1148,8 @@ export const arrays: Lesson = {
         <>
           <p>
             Step 3 pointed to line 6, so now we owe a proof that the <Big c={1}>loop invariant</Big> is true. As in{" "}
-            <Link href="/lessons/1">Lecture 1</Link>, we show INIT and PRES. We write <code>i&apos;</code> for the value
+            <Link href="/lessons/1">Lecture 1</Link>, we show INIT, that it holds before the first check, and PRES,
+            that one iteration keeps it true. We write <code>i&apos;</code> for the value
             of i after one more iteration.
           </p>
           <Comic
@@ -1141,7 +1186,13 @@ export const arrays: Lesson = {
                 claim: <code>i == 0</code>,
                 answer: 0,
                 why: "The loop starts i at 0.",
-                miss: [undefined, "INIT has nothing to assume yet."],
+                miss: [
+                  undefined,
+                  "INIT has nothing to assume yet.",
+                  "This is the first step, so there is no earlier step to use.",
+                  "This is the first step, so there is no earlier step to use.",
+                  "This is the first step, so there is no earlier step to use.",
+                ],
               },
               { claim: <code>0 &lt;= i</code>, answer: 2, given: true },
               { group: "PRES", claim: <code>0 &lt;= i</code>, answer: 1, given: true },
@@ -1156,7 +1207,7 @@ export const arrays: Lesson = {
                   "That's about the next value, step 6.",
                   "The guard gives the stronger i < n.",
                   "i++ changes i, so i' isn't i.",
-                  "We need the guard here, not the invariant.",
+                  "That's not what the guard says.",
                 ],
               },
               {
@@ -1167,14 +1218,27 @@ export const arrays: Lesson = {
                     <code>n &lt;= int_max()</code>, and i is less than n, so <code>i + 1</code> can&apos;t overflow.
                   </>
                 ),
-                miss: ["Line 5 doesn't mention int_max().", "We can't assume it. We have to prove it.", "Step 1 belongs to INIT."],
+                miss: [
+                  "Line 5 doesn't mention int_max().",
+                  "We can't assume it. We have to prove it.",
+                  "Step 1 belongs to INIT.",
+                  undefined,
+                  "Step 6 comes after this one.",
+                ],
               },
               {
                 claim: <code>i&apos; == i + 1</code>,
                 claimAnswer: 2,
                 answer: 0,
                 why: "The i++ on line 5 makes the new value.",
-                miss: ["That's step 3.", "That's step 4.", undefined, undefined, "i++ adds 1, so i' isn't i."],
+                miss: [
+                  "That's step 3.",
+                  "That's step 4.",
+                  undefined,
+                  "That's about i, but line 5 also says how i changes.",
+                  "i++ adds 1, so i' isn't i.",
+                  "That's about i, but line 5 also says how i changes.",
+                ],
               },
               { claim: <code>0 &lt;= i&apos;</code>, answer: 4, given: true },
             ]}
@@ -1192,8 +1256,8 @@ export const arrays: Lesson = {
           </p>
           <Code src={caller} label="Calling goose_reverse twice" />
           <p>
-            Line 4 needs <code>3 == \length(chonk)</code>. You might say <code>goose_reverse</code> returns an array of
-            length n, but that comes from reading its code, which is operational reasoning again.{" "}
+            Line 4 needs <code>3 == \length(chonk)</code>. Reading the code of <code>goose_reverse</code> would tell
+            us, but that&apos;s operational reasoning again.{" "}
             <Hi c={1}>A caller may only point to the contracts of the functions it calls.</Hi>
           </p>
           <Comic
@@ -1217,8 +1281,8 @@ export const arrays: Lesson = {
             wrong={["", "That's already the precondition, and it says nothing about the result.", "It's true, but it says nothing about the length."]}
             explain={
               <>
-                It holds, since <code>goose_reverse</code> returns the <code>chonk</code> it allocated with length n.
-                Now the caller can point to it.
+                The first one is right. It holds, since <code>goose_reverse</code> returns the <code>chonk</code> it
+                allocated with length n. Now the caller can point to it.
                 <ProofTable
                   options={[
                     "Line 2 and the postcondition of alloc_array",
@@ -1270,14 +1334,15 @@ export const arrays: Lesson = {
             ]}
           />
           <p>
-            Arrays carry the first half of the course. Looping over them gives us invariants, order and worklists.
+            Most of the first half of the course uses arrays. Looping over them gives us invariants, sorting and
+            worklists.
           </p>
           <p className="task">Match each idea to its lecture.</p>
           <Rows
             options={["Searching arrays", "Binary search", "Quicksort", "Unbounded arrays"]}
             rows={[
               { prompt: "Check each element for a value", answer: 0, why: <><Link href="/lectures#l4">Searching arrays</Link>, Lecture 4.</>, miss: laterMiss(0) },
-              { prompt: "Halve the part of a sorted array we look at", answer: 1, why: <><Link href="/lectures#l6">Binary search</Link>, Lecture 6.</>, miss: laterMiss(1) },
+              { prompt: "Use the order of a sorted array to skip most elements", answer: 1, why: <><Link href="/lectures#l6">Binary search</Link>, Lecture 6.</>, miss: laterMiss(1) },
               { prompt: "Sort by splitting an array around a pivot", answer: 2, why: <><Link href="/lectures#l7">Quicksort</Link>, Lecture 7.</>, miss: laterMiss(2) },
               { prompt: "Grow a full array by copying it", answer: 3, why: <><Link href="/lectures#l11">Unbounded arrays</Link>, Lecture 11.</>, miss: laterMiss(3) },
             ]}

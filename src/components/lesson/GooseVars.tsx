@@ -20,7 +20,7 @@ export function GooseVars({ max = 100 }: { max?: number }) {
   const shown = Math.min(n, 4);
   const lines: string[] = [];
   for (let i = 1; i <= shown; i++) lines.push(`int goose${i} = weigh(${i});`);
-  if (n > shown) lines.push(`// ... ${n - shown} more lines like these ...`);
+  if (n > shown) lines.push(`// ... ${n - shown} more ${n - shown === 1 ? "line" : "lines"} like these ...`);
   const terms = n <= 4 ? Array.from({ length: n }, (_, i) => `goose${i + 1}`).join(" + ") : `goose1 + goose2 + ... + goose${n}`;
   lines.push(`int chonk = ${terms};`);
 
@@ -30,7 +30,7 @@ export function GooseVars({ max = 100 }: { max?: number }) {
         <span>
           {n} {n === 1 ? "goose" : "geese"}
         </span>
-        <input type="range" min={1} max={max} value={n} onChange={(e) => setN(Number(e.target.value))} />
+        <input type="range" aria-label="Number of geese" min={1} max={max} value={n} onChange={(e) => setN(Number(e.target.value))} />
       </label>
       <div className="ver-tabs" role="group" aria-label="Version">
         <button type="button" className="opt small" aria-pressed={!arr} onClick={() => setArr(false)}>

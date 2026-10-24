@@ -47,7 +47,7 @@ export function ArrayIndex({
         <span>
           <code>i</code> = {num(i)}
         </span>
-        <input type="range" min={min} max={hi} value={i} onChange={(e) => setI(Number(e.target.value))} />
+        <input type="range" aria-label="Index i" min={min} max={hi} value={i} onChange={(e) => setI(Number(e.target.value))} />
       </label>
       <p className={`ai-out${inside ? "" : " bad"}`} aria-live="polite">
         <code>
