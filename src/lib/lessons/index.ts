@@ -5,8 +5,9 @@ import { contracts } from "./01-contracts";
 import { ints } from "./02-ints";
 import { arrays } from "./03-arrays";
 import { search } from "./04-search";
+import { bigO } from "./05-bigo";
 
-const lessons: Lesson[] = [contracts, ints, arrays, search];
+const lessons: Lesson[] = [contracts, ints, arrays, search, bigO];
 
 export function getLesson(n: number): Lesson | undefined {
   return lessons.find((l) => l.n === n);
