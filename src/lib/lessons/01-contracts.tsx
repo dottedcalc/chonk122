@@ -769,11 +769,12 @@ export const contracts: Lesson = {
             This is why <code>geese &gt; 0</code> matters. In <code>f(10, 0)</code>, <code>chonk_left</code> never
             decreases, so the loop runs forever.
           </p>
-          <FoodForThought title="Why can't a tool check TERM for us?">
+          <FoodForThought title="The same argument works for recursion">
             <p>
-              In 1936, Alan Turing proved that no program can decide, for every program and input, whether it
-              eventually stops. This is the <b>halting problem</b>. So no tool can prove termination for every loop,
-              and we argue it ourselves, one loop at a time, with a quantity that keeps decreasing.
+              TERM&apos;s template isn&apos;t only for loops. A recursive function stops if some quantity strictly
+              decreases on every recursive call and can&apos;t go below a bound, like a size that shrinks toward 0.
+              You&apos;ll use this for recursion from <Link href="/lectures#l7">Quicksort</Link> on. No tool can do it
+              for us in general, because Turing proved in 1936 that no program can decide whether every program stops.
             </p>
           </FoodForThought>
         </>

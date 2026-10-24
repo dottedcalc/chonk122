@@ -228,10 +228,11 @@ export const arrays: Lesson = {
           />
           <FoodForThought title="Why start counting at 0?">
             <p>
-              An index says how far an element is from the start of the array. The first element is 0 steps from the
-              start, so it&apos;s element 0. In 1982, Edsger Dijkstra also argued that ranges written as{" "}
-              <code>0 &lt;= i &amp;&amp; i &lt; n</code> are the neatest to work with, because they hold exactly n
-              values and an empty range is just n = 0.
+              An index is an offset, how far an element sits from the start. So element i lives at the array&apos;s
+              address plus i times the size of one element, and the first one is 0 steps in. Ranges like{" "}
+              <code>0 &lt;= i &amp;&amp; i &lt; n</code> also work out neatly, since they hold exactly n values.
+              You&apos;ll write <code>lo</code> and <code>hi</code> bounds this way all through{" "}
+              <Link href="/lectures#l6">Binary search</Link>.
             </p>
           </FoodForThought>
         </>
@@ -556,12 +557,12 @@ export const arrays: Lesson = {
               </>
             }
           />
-          <FoodForThought title="What happens in C?">
+          <FoodForThought title="Why does C0 check every access?">
             <p>
-              C doesn&apos;t check bounds, so reading or writing out of bounds is <b>undefined behavior</b>. The
-              program may crash, or quietly read or overwrite other memory, and attackers use this in{" "}
-              <b>buffer overflow</b> attacks. The Heartbleed bug, found in OpenSSL in 2014, let anyone read past the end
-              of a buffer and steal passwords and secret keys from web servers.
+              C0 checks so that a bug stops at the line that caused it. C skips the checks to run a little faster, so
+              in C, reading or writing out of bounds is <b>undefined behavior</b>. The program may crash or quietly
+              read or overwrite other memory, which attackers use in <b>buffer overflow</b> attacks. Most newer
+              languages, like Java, Python and Rust, check bounds the way C0 does.
             </p>
           </FoodForThought>
         </>
@@ -743,6 +744,14 @@ export const arrays: Lesson = {
               },
             ]}
           />
+          <FoodForThought title="Aliases are everywhere">
+            <p>
+              Copying the address instead of the data is the rule for everything in allocated memory. When structs and
+              pointers arrive, as in <Link href="/lectures#l10">Linked lists</Link>, copying a pointer makes an alias in
+              just the same way. Small values that fit in a variable, like ints and bools, are copied instead. So
+              whenever two variables share an address, a change through one shows through the other.
+            </p>
+          </FoodForThought>
         </>
       ),
     },
@@ -796,11 +805,12 @@ export const arrays: Lesson = {
               </>
             }
           />
-          <FoodForThought title="Who cleans up the garbage?">
+          <FoodForThought title="Garbage means unreachable">
             <p>
-              John McCarthy did, around 1959, for his language Lisp, so that programmers wouldn&apos;t have to free
-              memory by hand. C has no garbage collector, so in <Link href="/lectures#l18">C&apos;s memory model</Link>{" "}
-              you&apos;ll free memory yourself.
+              A garbage collector looks for arrays that no chain of arrows from a variable can reach. Nothing can ever
+              use them again, so reclaiming them is safe. Java, Python and JavaScript also collect garbage for you. C
+              has none, so in <Link href="/lectures#l18">C&apos;s memory model</Link> you&apos;ll free memory yourself,
+              and freeing too early or twice becomes a new kind of bug.
             </p>
           </FoodForThought>
         </>

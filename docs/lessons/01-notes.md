@@ -91,8 +91,8 @@ A subagent walked through all 14 pages as a student and checked the wording rule
 
 ## Food for thought boxes
 
-Optional purple boxes, folded shut, that don't count toward the 100 word limit.
+Optional purple boxes, folded shut, that don't count toward the 100 word limit. They focus on the why behind language and design choices, connections between ideas, and generalizations and facts that are useful later in the course.
 
 - Page 5, why contracts are off by default. C's `assert` is removed by `-DNDEBUG` (C standard, `<assert.h>`).
 - Page 10, INIT and PRES as induction on the number of iterations.
-- Page 12, the halting problem (Turing, "On Computable Numbers", 1936).
+- Page 12, the TERM argument generalizes to recursion, and no tool can do it in general (Turing's halting problem, 1936).

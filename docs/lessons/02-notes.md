@@ -124,10 +124,10 @@ The user made it a rule that point-to proofs are real tables. Page 10's proof is
 
 ## Food for thought boxes
 
-Optional purple boxes, folded shut, that don't count toward the 100 word limit.
+Optional purple boxes, folded shut, that don't count toward the 100 word limit. They focus on the why behind language and design choices, connections between ideas, and generalizations and facts that are useful later in the course.
 
-- Page 2, why base 2. The voltage reason moved here from the page text, since it isn't examinable.
-- Page 4, Ariane 5 flight 501 (1996). A 64-bit float to 16-bit signed integer conversion raised an unhandled Operand Error and shut down both inertial reference systems (Lions inquiry board report).
-- Page 5, how floats break the laws. Checked with gcc, `0.1 + 0.2 == 0.3` is 0, `(1e20 + -1e20) + 1.0` is 1 and `1e20 + (-1e20 + 1.0)` is 0.
+- Page 2, everything is bits, and the type says how to read them (data representation). The voltage reason moved here from the page text.
+- Page 4, how other languages handle overflow. Java `int` wraps (JLS 15.18.2), Python ints are arbitrary precision, C signed overflow is undefined (C standard 6.5).
+- Page 5, how floats break the laws, and why C0 leaves them out. Checked with gcc, `0.1 + 0.2 == 0.3` is 0, `(1e20 + -1e20) + 1.0` is 1 and `1e20 + (-1e20 + 1.0)` is 0.
 - Page 7, why two's complement beats sign and magnitude and ones' complement (two zeros, extra adder logic).
-- Page 8, the year 2038 problem. `date -u -d @2147483647` gives 19 January 2038 03:14:07 UTC, and -2^31 seconds is 13 December 1901.
+- Page 8, the same rules at any width k, the range is -2^(k-1) to 2^(k-1) - 1, so |int_min()| doesn't fit.

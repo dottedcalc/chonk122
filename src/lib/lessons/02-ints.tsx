@@ -107,11 +107,12 @@ export const ints: Lesson = {
               { label: "Twelve in binary", value: 12, base: 2 },
             ]}
           />
-          <FoodForThought title="Why base 2?">
+          <FoodForThought title="Everything is bits">
             <p>
-              A chip stores each digit as a voltage. Telling two levels apart, high and low, is fast and reliable even
-              when the voltage wobbles a little. Telling ten levels apart would be slower and far more error prone. So
-              hardware works in bits, and every other kind of data is built out of them.
+              Chips store bits because telling two voltage levels apart is fast and reliable. So every value a program
+              uses, such as ints, bools, chars and even the addresses of arrays, is a pattern of bits. The bits alone
+              don&apos;t say what they mean. Their type tells the computer how to read them, and that idea, data
+              representation, runs through the whole course.
             </p>
           </FoodForThought>
         </>
@@ -198,13 +199,12 @@ export const ints: Lesson = {
               </>
             }
           />
-          <FoodForThought title="A rocket lost to an overflow error">
+          <FoodForThought title="How other languages handle overflow">
             <p>
-              In 1996, the first Ariane 5 rocket was destroyed about 37 seconds after launch. Its guidance software
-              converted a large floating point value into a 16-bit signed integer. The value didn&apos;t fit, so the
-              language raised an error, nothing handled it, and both inertial reference systems, which tell the rocket
-              where it&apos;s pointing, shut down. So an error on overflow helps only if the program is ready to
-              handle it.
+              Languages answer this question differently. Java wraps around like C0. Python lets its ints grow as big
+              as needed, so they never overflow but get slower. In C, signed overflow is undefined behavior, so the
+              compiler may assume it never happens, and anything can go wrong if it does. You&apos;ll see this in{" "}
+              <Link href="/lectures#l19">Types in C</Link>. C0 wraps so that every program has one defined answer.
             </p>
           </FoodForThought>
         </>
@@ -241,10 +241,10 @@ export const ints: Lesson = {
           <FoodForThought title="How floats break the laws">
             <p>
               A <code>double</code> in C keeps about 16 significant digits, so most results get rounded. In C,{" "}
-              <code>0.1 + 0.2 == 0.3</code> is false. Worse, with <code>1e20</code> meaning 10<sup>20</sup>,{" "}
-              <code>(1e20 + -1e20) + 1.0</code> is 1 but{" "}
-              <code>1e20 + (-1e20 + 1.0)</code> is 0, because the 1 is lost when it&apos;s added to a huge number
-              first. Moving the parentheses changed the answer, so float addition isn&apos;t associative.
+              <code>0.1 + 0.2 == 0.3</code> is false. With <code>1e20</code> meaning 10<sup>20</sup>,{" "}
+              <code>(1e20 + -1e20) + 1.0</code> is 1 but <code>1e20 + (-1e20 + 1.0)</code> is 0, so float addition
+              isn&apos;t even associative. That&apos;s why C0 leaves floats out, so the laws we use in proofs always
+              hold for its numbers.
             </p>
           </FoodForThought>
         </>
@@ -397,12 +397,13 @@ export const ints: Lesson = {
               },
             ]}
           />
-          <FoodForThought title="A clock that runs out in 2038">
+          <FoodForThought title="The same rules at any size">
             <p>
-              Many systems count time as the seconds since 1 January 1970, stored in a 32-bit signed int. That count
-              reaches <code>int_max()</code> on 19 January 2038, just after 3 in the morning UTC. One second later it
-              wraps to <code>int_min()</code>, which reads as a date in 1901. Systems are switching to 64-bit counts
-              before then.
+              Nothing here depends on 32 bits. With k bits, two&apos;s complement runs from −2<sup>k−1</sup> to 2
+              <sup>k−1</sup> − 1, so there is always one more negative number than positive. That&apos;s why the
+              absolute value of <code>int_min()</code> doesn&apos;t fit in an int. In{" "}
+              <Link href="/lectures#l19">Types in C</Link>, you&apos;ll meet signed integers of 8, 16 and 64 bits, and
+              they all follow these rules.
             </p>
           </FoodForThought>
         </>

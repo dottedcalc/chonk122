@@ -98,11 +98,14 @@ Declined, with reasons:
 
 ## Food for thought boxes
 
-Optional purple boxes, folded shut, that don't count toward the 100 word limit. Content about C moved into boxes, since it isn't examinable in Lecture 3.
+Optional purple boxes, folded shut, that don't count toward the 100 word limit. They focus on the why behind language and design choices, connections between ideas, and generalizations and facts that are useful later in the course.
 
-- Page 2, why indices start at 0 (offsets, and Dijkstra's EWD831, "Why numbering should start at zero", 1982).
+Content about C moved into boxes, since it isn't examinable in Lecture 3.
+
+- Page 2, an index is an offset (address plus i times the element size), and half-open ranges hold exactly n values, as in binary search's `lo` and `hi`.
 - Page 6, C's `malloc` doesn't clear memory, so C0's defaults keep runs repeatable.
-- Page 7, out of bounds in C. The question about C replaced by a box with undefined behavior, buffer overflows and Heartbleed (CVE-2014-0160, an OpenSSL over-read).
+- Page 7, why C0 checks every access. C's out of bounds is undefined behavior and enables buffer overflows. Java, Python and Rust check bounds. The question about C became this box, and a C0-only question replaced it.
 - Page 8, why only contracts may use `\length`. The C reasoning moved here from the page text.
-- Page 10, McCarthy invented garbage collection for Lisp (about 1959). The C sentence moved here from the answer explanation.
-- A student walkthrough subagent checked every box. Fixes applied were the Ariane wording (inertial reference systems), the Heartbleed date (found in 2014), a note on `1e20`, a clearer garbage box title, and a C0-only question on page 7 to replace the removed C question.
+- Page 9, aliasing generalizes to pointers and structs (Lectures 8 to 10).
+- Page 10, garbage means unreachable. Java, Python and JavaScript collect garbage, C doesn't. The C sentence moved here from the answer explanation.
+- A student walkthrough subagent checked the first version of every box and found no factual errors.
