@@ -2,20 +2,32 @@
 
 import { useState } from "react";
 import { Code } from "./Code";
+import { num } from "./num";
 
 export type Step = {
   line: number;
   vars: Record<string, string | number>;
   note?: string;
   checks?: { label: string; value: string; ok: boolean }[];
+  // With an array to show, the slots from seg[0] up to but not including seg[1] are shaded, and slot at is marked.
+  seg?: [number, number];
+  at?: number;
 };
 
 // Steps through precomputed states of a run, marking the current line and showing the variables.
-export function Stepper({ src, sets }: { src: string; sets: { label: string; steps: Step[] }[] }) {
+// Each set of inputs can also show an array, with a shaded segment and a marked slot.
+export function Stepper({
+  src,
+  sets,
+}: {
+  src: string;
+  sets: { label: string; steps: Step[]; array?: { name: string; cells: number[] } }[];
+}) {
   const [s, setS] = useState(0);
   const [k, setK] = useState(0);
   const steps = sets[s].steps;
   const step = steps[k];
+  const arr = sets[s].array;
 
   return (
     <div className="stepper">
@@ -57,6 +69,19 @@ export function Stepper({ src, sets }: { src: string; sets: { label: string; ste
               ))}
             </tbody>
           </table>
+          {arr && (
+            <div className="ai-cells step-arr" role="img" aria-label={`${arr.name} holds ${arr.cells.map(num).join(", ")}`}>
+              {arr.cells.map((c, j) => (
+                <span
+                  key={j}
+                  className={`ai-cell${step.seg && j >= step.seg[0] && j < step.seg[1] ? " seg" : ""}${j === step.at ? " at" : ""}`}
+                >
+                  <span className="mem-i">{j}</span>
+                  <code>{num(c)}</code>
+                </span>
+              ))}
+            </div>
+          )}
           {step.checks?.map((c) => (
             <p key={c.label} className={`check ${c.ok ? "good" : "bad"}`}>
               <code>{c.label}</code>
