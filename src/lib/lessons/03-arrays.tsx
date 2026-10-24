@@ -490,6 +490,13 @@ export const arrays: Lesson = {
             <code>alloc_array</code> fills every element with its type&apos;s <b>default value</b>. Still, code is
             clearer when it doesn&apos;t rely on defaults, so a reader can tell which starting values matter.
           </p>
+          <FoodForThought title="What does C put in a new array?">
+            <p>
+              Whatever was there before. C&apos;s <code>malloc</code> doesn&apos;t clear the memory it hands out, so a
+              new array can hold leftover bits from earlier code. A bug that reads them can act differently on every
+              run. C0 always fills in default values, so every run starts the same.
+            </p>
+          </FoodForThought>
           <Comic
             panels={[
               { who: "honk", outfit: "berry", size: "s", pose: "shrug", say: "Blank boxes?" },
@@ -516,13 +523,6 @@ export const arrays: Lesson = {
               },
             ]}
           />
-          <FoodForThought title="What does C put in a new array?">
-            <p>
-              Whatever was there before. C&apos;s <code>malloc</code> doesn&apos;t clear the memory it hands out, so a
-              new array can hold leftover bits from earlier code. A bug that reads them can act differently on every
-              run. C0 always fills in default values, so every run starts the same.
-            </p>
-          </FoodForThought>
         </>
       ),
     },
@@ -582,6 +582,13 @@ export const arrays: Lesson = {
           <p>
             <code>\length(A)</code> is the length of A, but <Hi c={1}>only contracts may use it</Hi>.
           </p>
+          <FoodForThought title="Why only contracts?">
+            <p>
+              C0 stores each array&apos;s length so it can check bounds. C doesn&apos;t store it at all, and C0 code is
+              meant to carry over to C. So C0 keeps the length out of ordinary code, and passing n along with the
+              array, as <code>goose_sum</code> does, is the habit you&apos;ll need in C.
+            </p>
+          </FoodForThought>
           <Comic
             panels={[
               { who: "honk", outfit: "irish", size: "xs", pose: "think", say: "Then how does a function know the length?" },
@@ -619,13 +626,6 @@ export const arrays: Lesson = {
               </>
             }
           />
-          <FoodForThought title="Why only contracts?">
-            <p>
-              C0 stores each array&apos;s length so it can check bounds. C doesn&apos;t store it at all, and C0 code is
-              meant to carry over to C. So C0 keeps the length out of ordinary code, and passing n along with the
-              array, as <code>goose_sum</code> does, is the habit you&apos;ll need in C.
-            </p>
-          </FoodForThought>
         </>
       ),
     },

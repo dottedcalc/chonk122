@@ -97,6 +97,14 @@ export const ints: Lesson = {
             by its position. Adding works position by position, with carries. Computers use base 2, or{" "}
             <b>binary</b>. A binary digit is a <b>bit</b>.
           </p>
+          <FoodForThought title="Everything is bits">
+            <p>
+              Chips store bits because telling two voltage levels apart is fast and reliable. So every value a program
+              uses, such as ints, bools, chars and even the addresses of arrays, is a pattern of bits. The bits alone
+              don&apos;t say what they mean. Their type tells the computer how to read them, and that idea, data
+              representation, runs through the whole course.
+            </p>
+          </FoodForThought>
           <p className="task">Try writing each number.</p>
           <Digits
             bases={[10, 2]}
@@ -107,14 +115,6 @@ export const ints: Lesson = {
               { label: "Twelve in binary", value: 12, base: 2 },
             ]}
           />
-          <FoodForThought title="Everything is bits">
-            <p>
-              Chips store bits because telling two voltage levels apart is fast and reliable. So every value a program
-              uses, such as ints, bools, chars and even the addresses of arrays, is a pattern of bits. The bits alone
-              don&apos;t say what they mean. Their type tells the computer how to read them, and that idea, data
-              representation, runs through the whole course.
-            </p>
-          </FoodForThought>
         </>
       ),
     },
@@ -219,6 +219,15 @@ export const ints: Lesson = {
             <Hi c={2}>the laws of <code>+</code> and <code>*</code> still hold</Hi>, like commutativity and
             distributivity. C0 has no floats, because floating point breaks some of these laws.
           </p>
+          <FoodForThought title="How floats break the laws">
+            <p>
+              A <code>double</code> in C keeps about 16 significant digits, so most results get rounded. In C,{" "}
+              <code>0.1 + 0.2 == 0.3</code> is false. With <code>1e20</code> meaning 10<sup>20</sup>,{" "}
+              <code>(1e20 + -1e20) + 1.0</code> is 1 but <code>1e20 + (-1e20 + 1.0)</code> is 0, so float addition
+              isn&apos;t even associative. Leaving floats out means the laws of <code>+</code> and <code>*</code> hold
+              for every C0 number.
+            </p>
+          </FoodForThought>
           <Comic
             panels={[
               {
@@ -230,15 +239,6 @@ export const ints: Lesson = {
               },
             ]}
           />
-          <FoodForThought title="How floats break the laws">
-            <p>
-              A <code>double</code> in C keeps about 16 significant digits, so most results get rounded. In C,{" "}
-              <code>0.1 + 0.2 == 0.3</code> is false. With <code>1e20</code> meaning 10<sup>20</sup>,{" "}
-              <code>(1e20 + -1e20) + 1.0</code> is 1 but <code>1e20 + (-1e20 + 1.0)</code> is 0, so float addition
-              isn&apos;t even associative. Leaving floats out means the laws of <code>+</code> and <code>*</code> hold
-              for every C0 number.
-            </p>
-          </FoodForThought>
         </>
       ),
     },
@@ -360,6 +360,14 @@ export const ints: Lesson = {
               <sup>31</sup> − 1 = 2147483647.
             </li>
           </ul>
+          <FoodForThought title="The same rules at any size">
+            <p>
+              Nothing here depends on 32 bits. With k bits, two&apos;s complement runs from −2<sup>k−1</sup> to 2
+              <sup>k−1</sup> − 1, so there is always one more negative number than positive. In{" "}
+              <Link href="/lectures#l19">Types in C</Link>, you&apos;ll meet signed integers of 8, 16 and 64 bits. They
+              use the same bit patterns and ranges, though C doesn&apos;t promise that their arithmetic wraps.
+            </p>
+          </FoodForThought>
           <Comic
             panels={[
               {
@@ -389,14 +397,6 @@ export const ints: Lesson = {
               },
             ]}
           />
-          <FoodForThought title="The same rules at any size">
-            <p>
-              Nothing here depends on 32 bits. With k bits, two&apos;s complement runs from −2<sup>k−1</sup> to 2
-              <sup>k−1</sup> − 1, so there is always one more negative number than positive. In{" "}
-              <Link href="/lectures#l19">Types in C</Link>, you&apos;ll meet signed integers of 8, 16 and 64 bits. They
-              use the same bit patterns and ranges, though C doesn&apos;t promise that their arithmetic wraps.
-            </p>
-          </FoodForThought>
         </>
       ),
     },
@@ -427,6 +427,15 @@ export const ints: Lesson = {
             </Hi>
             , and comparisons need extra care.
           </p>
+          <FoodForThought title="How other languages handle overflow">
+            <p>
+              Languages answer this question differently. Java wraps around like C0. Python lets its ints grow as big
+              as needed, so they never overflow but get slower. In C, signed overflow is undefined behavior, so the
+              compiler may assume it never happens, and anything can go wrong if it does. You&apos;ll see this in{" "}
+              <Link href="/lectures#l19">Types in C</Link>. C0 wraps so that every <code>+</code>, <code>-</code> and{" "}
+              <code>*</code> has one defined answer.
+            </p>
+          </FoodForThought>
           <p className="task">Does each expression overflow?</p>
           <Rows
             options={["Overflows", "No overflow"]}
@@ -460,15 +469,6 @@ export const ints: Lesson = {
               </>
             }
           />
-          <FoodForThought title="How other languages handle overflow">
-            <p>
-              Languages answer this question differently. Java wraps around like C0. Python lets its ints grow as big
-              as needed, so they never overflow but get slower. In C, signed overflow is undefined behavior, so the
-              compiler may assume it never happens, and anything can go wrong if it does. You&apos;ll see this in{" "}
-              <Link href="/lectures#l19">Types in C</Link>. C0 wraps so that every <code>+</code>, <code>-</code> and{" "}
-              <code>*</code> has one defined answer.
-            </p>
-          </FoodForThought>
         </>
       ),
     },
