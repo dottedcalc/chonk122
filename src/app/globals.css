@@ -379,10 +379,14 @@ button.cm-dot.sel { box-shadow: 0 0 0 3px var(--beak); }
 .big.c1 { background: color-mix(in srgb, var(--c1) 45%, transparent); }
 .big.c2 { background: color-mix(in srgb, var(--c2) 45%, transparent); }
 .big.c3 { background: color-mix(in srgb, var(--c3) 45%, transparent); }
+.big.c4 { background: color-mix(in srgb, var(--c4) 45%, transparent); }
+.big.c5 { background: color-mix(in srgb, var(--c5) 45%, transparent); }
 mark.hi { color: inherit; padding: 0 3px; border-radius: 4px; font-weight: 700; }
 mark.hi.c1 { background: var(--c1-soft); }
 mark.hi.c2 { background: var(--c2-soft); }
 mark.hi.c3 { background: var(--c3-soft); }
+mark.hi.c4 { background: var(--c4-soft); }
+mark.hi.c5 { background: var(--c5-soft); }
 
 /* code listings */
 .code {
@@ -436,6 +440,7 @@ button.opt {
 button.opt.small { font-size: 0.9rem; padding: 3px 10px; }
 button.opt:hover { background: var(--c1-soft); }
 button.opt[aria-pressed="true"] { background: var(--c1-soft); }
+.ver-tabs button.opt[aria-pressed="true"] { background: var(--c3-soft); border-color: var(--c3); box-shadow: 2px 3px 0 var(--c3); font-weight: 800; }
 button.opt.right, button.opt.right:hover { background: var(--c1-soft); border-color: var(--c1); box-shadow: 2px 3px 0 var(--c1); }
 button.opt.wrong, button.opt.wrong:hover { background: var(--c2-soft); border-color: var(--c2); box-shadow: 2px 3px 0 var(--c2); }
 button.opt:disabled, button.opt[aria-disabled="true"] { cursor: default; opacity: 1; }
@@ -444,7 +449,7 @@ button.opt[aria-disabled="true"]:not(.right):not(.wrong):hover { background: var
 button[aria-disabled="true"]:hover, button[aria-disabled="true"]:active { transform: none; }
 
 .runs { display: grid; gap: 6px; }
-.run-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 6px 0; border-top: 2px dashed var(--paper-dot); }
+.run-row { min-height: 2.9rem; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 6px 0; border-top: 2px dashed var(--paper-dot); }
 .run-call { min-width: 9.5rem; font-weight: 700; overflow-wrap: anywhere; }
 .run-out { flex: 1 1 14rem; animation: pop-in 0.2s ease-out; }
 .run-out.good { color: var(--c1); font-weight: 700; }
@@ -468,6 +473,7 @@ button[aria-disabled="true"]:hover, button[aria-disabled="true"]:active { transf
 .row.right .row-why { color: var(--c1); font-weight: 700; }
 .given-tag { font-size: 0.95rem; font-weight: 700; }
 .rows-done { margin: 4px 0 0; font-size: 0.88rem; }
+.rows-after { display: grid; gap: 10px; margin-top: 6px; animation: pop-in 0.2s ease-out; }
 
 .versions { display: grid; gap: 10px; min-width: 0; }
 .ver-body { display: grid; gap: 8px; min-width: 0; }
@@ -683,6 +689,26 @@ button.dg.tiny { box-shadow: 1px 2px 0 var(--edge); }
 .ai-cell.off.at { background: var(--c2-soft); border-color: var(--c2); box-shadow: 2px 3px 0 var(--c2); }
 .ai-out { margin: 0; min-height: 3.2em; overflow-wrap: anywhere; }
 .ai-out.bad { color: var(--c2); font-weight: 700; }
+.ai-cell.seg { background: var(--c1-soft); border-color: var(--c1); }
+.lf { display: grid; gap: 10px; min-width: 0; }
+.lf-cells { display: flex; flex-wrap: wrap; gap: 6px; }
+button.lf-cell { color: var(--fg); font: inherit; cursor: pointer; box-shadow: 2px 3px 0 var(--edge); }
+button.lf-cell[aria-disabled="true"] { cursor: default; }
+button.lf-cell:focus-visible { outline: 3px dashed var(--beak); outline-offset: 2px; }
+.lf-cell code { font-weight: 700; }
+.lf-cell:not(.open) code { color: var(--link); }
+.lf-cell.at { background: var(--c1-soft); border-color: var(--c1); box-shadow: 2px 3px 0 var(--c1); }
+.lf-status { margin: 0; font-weight: 700; min-height: 3em; }
+.lf-next { min-height: 2.4rem; }
+.step-arr { margin-top: 2px; }
+
+/* two column lesson pages */
+.cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px 24px; align-items: center; min-width: 0; }
+.cols.lead { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+.col { display: grid; gap: 14px; min-width: 0; }
+.col > * { margin: 0; min-width: 0; }
+.col .comic { border-bottom: 0; }
+@media (max-width: 640px) { .cols, .cols.lead { grid-template-columns: 1fr; } .col .comic { border-bottom: 2px dashed var(--paper-dot); } }
 
 @media (max-width: 640px) {
   .lp-page { padding: 14px 14px 18px; }

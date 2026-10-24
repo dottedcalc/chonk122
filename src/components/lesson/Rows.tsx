@@ -16,7 +16,18 @@ export type Row = {
 
 // A run of small choices that share one set of options: blame a caller, sort a fact, justify a proof step.
 // A wrong pick can be retried, and the reason appears once the row is right, in space kept for it.
-export function Rows({ options, rows, numbered = false }: { options: string[]; rows: Row[]; numbered?: boolean }) {
+// after appears once every row is right, for something that would give the answers away, such as running the code.
+export function Rows({
+  options,
+  rows,
+  numbered = false,
+  after,
+}: {
+  options: string[];
+  rows: Row[];
+  numbered?: boolean;
+  after?: React.ReactNode;
+}) {
   const [picks, setPicks] = useState<(number | null)[]>(() => rows.map((r) => (r.given ? r.answer : null)));
   const asked = rows.filter((r) => !r.given).length;
   const done = rows.filter((r, i) => !r.given && picks[i] === r.answer).length;
@@ -80,6 +91,7 @@ export function Rows({ options, rows, numbered = false }: { options: string[]; r
       <p className="rows-done">
         {done} of {asked} done{done === asked ? ". Nice!" : ""}
       </p>
+      {after && done === asked && <div className="rows-after">{after}</div>}
     </div>
   );
 }
