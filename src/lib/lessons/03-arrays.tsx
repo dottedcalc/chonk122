@@ -3,6 +3,7 @@ import { ArrayIndex } from "@/components/lesson/ArrayIndex";
 import { Big } from "@/components/lesson/Big";
 import { Code } from "@/components/lesson/Code";
 import { Comic } from "@/components/lesson/Comic";
+import { FoodForThought } from "@/components/lesson/FoodForThought";
 import { GooseVars } from "@/components/lesson/GooseVars";
 import { Hi } from "@/components/lesson/Hi";
 import { MemDiagram, MemDraw, MemStepper } from "@/components/lesson/Mem";
@@ -225,6 +226,15 @@ export const arrays: Lesson = {
               },
             ]}
           />
+          <FoodForThought title="Why start counting at 0?">
+            <p>
+              An index is an offset, how far an element sits from the start. So element i lives at the array&apos;s
+              address plus i times the size of one element, and the first one is 0 steps in. Ranges like{" "}
+              <code>0 &lt;= i &amp;&amp; i &lt; n</code> also work out neatly, since they hold exactly n values.
+              You&apos;ll write <code>lo</code> and <code>hi</code> bounds this way all through{" "}
+              <Link href="/lectures#l6">Binary search</Link>.
+            </p>
+          </FoodForThought>
         </>
       ),
     },
@@ -506,6 +516,13 @@ export const arrays: Lesson = {
               },
             ]}
           />
+          <FoodForThought title="What does C put in a new array?">
+            <p>
+              Whatever was there before. C&apos;s <code>malloc</code> doesn&apos;t clear the memory it hands out, so a
+              new array can hold leftover bits from earlier code. A bug that reads them can act differently on every
+              run. C0 always fills in default values, so every run starts the same.
+            </p>
+          </FoodForThought>
         </>
       ),
     },
@@ -523,28 +540,31 @@ export const arrays: Lesson = {
             Slide <code>i</code> past either end.
           </p>
           <ArrayIndex name="geese" cells={[12, 9, 15, 7, 11]} min={-2} max={6} start={4} />
-          <p>
-            There is no element there, so C0 stops with an error. Reading or writing out of bounds is a{" "}
-            <Big c={1}>safety</Big> violation, just like dividing by 0 in <Link href="/lessons/2">Lecture 2</Link>. C0
-            checks every access.
-          </p>
           <Pick
             question={
               <>
-                Does C also stop with an error at <code>geese[5]</code>?
+                What does C0 do when it runs <code>geese[5] = 3;</code>?
               </>
             }
-            options={["Yes, every time", "No, anything can happen"]}
-            answer={1}
-            wrong={["C doesn't check array bounds, so nothing makes it stop."]}
+            options={["It stops with an error", "It writes 3 just past the end", "It makes the array longer"]}
+            answer={0}
+            wrong={["", "C0 checks every access, so it never touches memory past the end.", "An array's length never changes."]}
             explain={
               <>
-                Reading or writing out of bounds in C is <b>undefined behavior</b>. The program may crash, or read or
-                overwrite other memory,
-                and attackers use this in <b>buffer overflow</b> attacks.
+                There is no element 5, so C0 stops with an error. Reading or writing out of bounds is a{" "}
+                <Big c={1}>safety</Big> violation, just like dividing by 0 in <Link href="/lessons/2">Lecture 2</Link>.
+                C0 checks every access.
               </>
             }
           />
+          <FoodForThought title="Why does C0 check every access?">
+            <p>
+              C0 checks so that a bug stops at the line that caused it. C skips the checks to run a little faster, so
+              in C, reading or writing out of bounds is <b>undefined behavior</b>. The program may crash or quietly
+              read or overwrite other memory, which attackers use in <b>buffer overflow</b> attacks. Most newer
+              languages, like Java, Python and Rust, check bounds the way C0 does.
+            </p>
+          </FoodForThought>
         </>
       ),
     },
@@ -560,9 +580,7 @@ export const arrays: Lesson = {
           </p>
           <Code src={arrayOps} label="Contracts of the array operations" />
           <p>
-            <code>\length(A)</code> is the length of A, but <Hi c={1}>only contracts may use it</Hi>. C0 stores the
-            length to check bounds. C doesn&apos;t store it at all, and C0 code is meant to carry over to C, so C0 code
-            can&apos;t ask for it either.
+            <code>\length(A)</code> is the length of A, but <Hi c={1}>only contracts may use it</Hi>.
           </p>
           <Comic
             panels={[
@@ -601,6 +619,13 @@ export const arrays: Lesson = {
               </>
             }
           />
+          <FoodForThought title="Why only contracts?">
+            <p>
+              C0 stores each array&apos;s length so it can check bounds. C doesn&apos;t store it at all, and C0 code is
+              meant to carry over to C. So C0 keeps the length out of ordinary code, and passing n along with the
+              array, as <code>goose_sum</code> does, is the habit you&apos;ll need in C.
+            </p>
+          </FoodForThought>
         </>
       ),
     },
@@ -719,6 +744,14 @@ export const arrays: Lesson = {
               },
             ]}
           />
+          <FoodForThought title="Aliases are everywhere">
+            <p>
+              Copying the address instead of the data is the rule for everything in allocated memory. When structs and
+              pointers arrive, as in <Link href="/lectures#l10">Linked lists</Link>, copying a pointer makes an alias in
+              just the same way. Small values that fit in a variable, like ints and bools, are copied instead. So
+              whenever two variables share an address, a change through one shows through the other.
+            </p>
+          </FoodForThought>
         </>
       ),
     },
@@ -740,8 +773,7 @@ export const arrays: Lesson = {
                 After line 4, nothing points to the first array, so it is <b>garbage</b>. In{" "}
                 <Big c={2}>allocated memory</Big>, C0&apos;s <b>garbage collector</b>{" "}
                 eventually reclaims garbage, whenever C0 decides to. Local memory is never garbage collected, since
-                frames are decommissioned instead. C has no garbage collector, so in{" "}
-                <Link href="/lectures#l18">C&apos;s memory model</Link> you&apos;ll free memory yourself.
+                frames are decommissioned instead.
                 <MemStepper
                   src={garbage}
                   label="Garbage"
@@ -773,6 +805,14 @@ export const arrays: Lesson = {
               </>
             }
           />
+          <FoodForThought title="Garbage means unreachable">
+            <p>
+              A garbage collector looks for arrays that no chain of arrows from a variable can reach. Nothing can ever
+              use them again, so reclaiming them is safe. Java, Python and JavaScript also collect garbage for you. C
+              has none, so in <Link href="/lectures#l18">C&apos;s memory model</Link> you&apos;ll free memory yourself,
+              and freeing too early or twice becomes a new kind of bug.
+            </p>
+          </FoodForThought>
         </>
       ),
     },
