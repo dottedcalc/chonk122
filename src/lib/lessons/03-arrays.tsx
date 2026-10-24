@@ -3,6 +3,7 @@ import { ArrayIndex } from "@/components/lesson/ArrayIndex";
 import { Big } from "@/components/lesson/Big";
 import { Code } from "@/components/lesson/Code";
 import { Comic } from "@/components/lesson/Comic";
+import { FoodForThought } from "@/components/lesson/FoodForThought";
 import { GooseVars } from "@/components/lesson/GooseVars";
 import { Hi } from "@/components/lesson/Hi";
 import { MemDiagram, MemDraw, MemStepper } from "@/components/lesson/Mem";
@@ -225,6 +226,14 @@ export const arrays: Lesson = {
               },
             ]}
           />
+          <FoodForThought title="Why start counting at 0?">
+            <p>
+              An index says how far an element is from the start of the array. The first element is 0 steps from the
+              start, so it&apos;s element 0. In 1982, Edsger Dijkstra also argued that ranges written as{" "}
+              <code>0 &lt;= i &amp;&amp; i &lt; n</code> are the neatest to work with, because they hold exactly n
+              values and an empty range is just n = 0.
+            </p>
+          </FoodForThought>
         </>
       ),
     },
@@ -506,6 +515,13 @@ export const arrays: Lesson = {
               },
             ]}
           />
+          <FoodForThought title="What does C put in a new array?">
+            <p>
+              Whatever was there before. C&apos;s <code>malloc</code> doesn&apos;t clear the memory it hands out, so a
+              new array can hold leftover bits from earlier code. A bug that reads them can act differently on every
+              run. C0 always fills in default values, so every run starts the same.
+            </p>
+          </FoodForThought>
         </>
       ),
     },
@@ -528,23 +544,14 @@ export const arrays: Lesson = {
             <Big c={1}>safety</Big> violation, just like dividing by 0 in <Link href="/lessons/2">Lecture 2</Link>. C0
             checks every access.
           </p>
-          <Pick
-            question={
-              <>
-                Does C also stop with an error at <code>geese[5]</code>?
-              </>
-            }
-            options={["Yes, every time", "No, anything can happen"]}
-            answer={1}
-            wrong={["C doesn't check array bounds, so nothing makes it stop."]}
-            explain={
-              <>
-                Reading or writing out of bounds in C is <b>undefined behavior</b>. The program may crash, or read or
-                overwrite other memory,
-                and attackers use this in <b>buffer overflow</b> attacks.
-              </>
-            }
-          />
+          <FoodForThought title="What happens in C?">
+            <p>
+              C doesn&apos;t check bounds, so reading or writing out of bounds is <b>undefined behavior</b>. The
+              program may crash, or quietly read or overwrite other memory, and attackers use this in{" "}
+              <b>buffer overflow</b> attacks. In 2014, the Heartbleed bug let anyone read past the end of a buffer in
+              OpenSSL and steal passwords and secret keys from web servers.
+            </p>
+          </FoodForThought>
         </>
       ),
     },
@@ -560,9 +567,7 @@ export const arrays: Lesson = {
           </p>
           <Code src={arrayOps} label="Contracts of the array operations" />
           <p>
-            <code>\length(A)</code> is the length of A, but <Hi c={1}>only contracts may use it</Hi>. C0 stores the
-            length to check bounds. C doesn&apos;t store it at all, and C0 code is meant to carry over to C, so C0 code
-            can&apos;t ask for it either.
+            <code>\length(A)</code> is the length of A, but <Hi c={1}>only contracts may use it</Hi>.
           </p>
           <Comic
             panels={[
@@ -601,6 +606,13 @@ export const arrays: Lesson = {
               </>
             }
           />
+          <FoodForThought title="Why only contracts?">
+            <p>
+              C0 stores each array&apos;s length so it can check bounds. C doesn&apos;t store it at all, and C0 code is
+              meant to carry over to C. So C0 keeps the length out of ordinary code, and passing n along with the
+              array, as <code>goose_sum</code> does, is the habit you&apos;ll need in C.
+            </p>
+          </FoodForThought>
         </>
       ),
     },
@@ -740,8 +752,7 @@ export const arrays: Lesson = {
                 After line 4, nothing points to the first array, so it is <b>garbage</b>. In{" "}
                 <Big c={2}>allocated memory</Big>, C0&apos;s <b>garbage collector</b>{" "}
                 eventually reclaims garbage, whenever C0 decides to. Local memory is never garbage collected, since
-                frames are decommissioned instead. C has no garbage collector, so in{" "}
-                <Link href="/lectures#l18">C&apos;s memory model</Link> you&apos;ll free memory yourself.
+                frames are decommissioned instead.
                 <MemStepper
                   src={garbage}
                   label="Garbage"
@@ -773,6 +784,13 @@ export const arrays: Lesson = {
               </>
             }
           />
+          <FoodForThought title="Who invented the garbage collector?">
+            <p>
+              John McCarthy did, around 1959, for his language Lisp, so that programmers wouldn&apos;t have to free
+              memory by hand. C has no garbage collector, so in <Link href="/lectures#l18">C&apos;s memory model</Link>{" "}
+              you&apos;ll free memory yourself.
+            </p>
+          </FoodForThought>
         </>
       ),
     },

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Code } from "@/components/lesson/Code";
 import { Comic } from "@/components/lesson/Comic";
+import { FoodForThought } from "@/components/lesson/FoodForThought";
 import { Big } from "@/components/lesson/Big";
 import { Hi } from "@/components/lesson/Hi";
 import { Pick } from "@/components/lesson/Pick";
@@ -425,6 +426,14 @@ export const contracts: Lesson = {
               },
             ]}
           />
+          <FoodForThought title="Why are contracts off by default?">
+            <p>
+              Checking a contract takes time on every run, and a contract can cost more than the code it guards. So we
+              turn checks on with <code>-d</code> while testing and debugging, and leave them off once we trust the
+              code. Many languages work this way. C has <code>assert</code>, which disappears when you compile with{" "}
+              <code>-DNDEBUG</code>.
+            </p>
+          </FoodForThought>
         </>
       ),
     },
@@ -669,6 +678,13 @@ export const contracts: Lesson = {
               },
             ]}
           />
+          <FoodForThought title="PRES is induction in disguise">
+            <p>
+              INIT and PRES together are a proof by induction on the number of iterations. INIT is the base case, and
+              PRES is the inductive step. That&apos;s why proving PRES for one arbitrary iteration covers every
+              iteration, however many there are.
+            </p>
+          </FoodForThought>
         </>
       ),
     },
@@ -753,6 +769,13 @@ export const contracts: Lesson = {
             This is why <code>geese &gt; 0</code> matters. In <code>f(10, 0)</code>, <code>chonk_left</code> never
             decreases, so the loop runs forever.
           </p>
+          <FoodForThought title="Why can't a tool check TERM for us?">
+            <p>
+              In 1936, Alan Turing proved that no program can decide, for every program and input, whether it
+              eventually stops. This is the <b>halting problem</b>. So no tool can prove termination for every loop,
+              and we argue it ourselves, one loop at a time, with a quantity that keeps decreasing.
+            </p>
+          </FoodForThought>
         </>
       ),
     },

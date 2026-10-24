@@ -95,3 +95,13 @@ Declined, with reasons:
 - Page 2's slider shows the indices, which is the point of the page. The row on the last index checks the link to the length.
 - Page 12 has only two arrays, but with one arrow to A and two to B the student has to trace each variable.
 - An unknown hash like #99 opening page 1 is shared player behaviour, left for a separate change.
+
+## Food for thought boxes
+
+Optional purple boxes, folded shut, that don't count toward the 100 word limit. Content about C moved into boxes, since it isn't examinable in Lecture 3.
+
+- Page 2, why indices start at 0 (offsets, and Dijkstra's EWD831, "Why numbering should start at zero", 1982).
+- Page 6, C's `malloc` doesn't clear memory, so C0's defaults keep runs repeatable.
+- Page 7, out of bounds in C. The question about C replaced by a box with undefined behavior, buffer overflows and Heartbleed (CVE-2014-0160, an OpenSSL over-read).
+- Page 8, why only contracts may use `\length`. The C reasoning moved here from the page text.
+- Page 10, McCarthy invented garbage collection for Lisp (about 1959). The C sentence moved here from the answer explanation.

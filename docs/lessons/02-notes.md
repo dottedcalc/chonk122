@@ -121,3 +121,13 @@ A second subagent walked all 18 pages and confirmed every answer with gcc, with 
 ## Proof tables
 
 The user made it a rule that point-to proofs are real tables. Page 10's proof is a `ProofTable` (step, statement, justification), where the reader drags a card into each blank or taps a card and then a blank. About half the blanks in each proof ask for the statement (from a bank with plausible wrong statements, such as `chonk_left' >= geese` in PRES) and the rest ask for the justification. Lecture 1's INIT, PRES and EXIT proofs use the same table, and its "spot the bad step" page is a `SpotStep` table with a Flag button per step.
+
+## Food for thought boxes
+
+Optional purple boxes, folded shut, that don't count toward the 100 word limit.
+
+- Page 2, why base 2. The voltage reason moved here from the page text, since it isn't examinable.
+- Page 4, Ariane 5 flight 501 (1996). A 64-bit float to 16-bit signed integer conversion raised an unhandled Operand Error and shut down both inertial reference systems (Lions inquiry board report).
+- Page 5, how floats break the laws. Checked with gcc, `0.1 + 0.2 == 0.3` is 0, `(1e20 + -1e20) + 1.0` is 1 and `1e20 + (-1e20 + 1.0)` is 0.
+- Page 7, why two's complement beats sign and magnitude and ones' complement (two zeros, extra adder logic).
+- Page 8, the year 2038 problem. `date -u -d @2147483647` gives 19 January 2038 03:14:07 UTC, and -2^31 seconds is 13 December 1901.

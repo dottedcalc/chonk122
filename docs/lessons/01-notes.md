@@ -88,3 +88,11 @@ A subagent walked through all 14 pages as a student and checked the wording rule
 - PRES now assumes that the loop guard is true, and step 6 cites steps 2, 4 and 5. TERM gets a plain definition and an extra distractor option. Page 13 names the loop invariant. Page 14 defines modular reasoning, and its explanation no longer claims that only postconditions can be cited.
 - The page counter is a split circle (current page over total) to the right of the progress bar.
 - Mascots are drawn at three sizes across the comic beats.
+
+## Food for thought boxes
+
+Optional purple boxes, folded shut, that don't count toward the 100 word limit.
+
+- Page 5, why contracts are off by default. C's `assert` is removed by `-DNDEBUG` (C standard, `<assert.h>`).
+- Page 10, INIT and PRES as induction on the number of iterations.
+- Page 12, the halting problem (Turing, "On Computable Numbers", 1936).

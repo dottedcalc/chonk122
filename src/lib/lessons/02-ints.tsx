@@ -4,6 +4,7 @@ import { BitOps } from "@/components/lesson/BitOps";
 import { Code } from "@/components/lesson/Code";
 import { Comic } from "@/components/lesson/Comic";
 import { Digits } from "@/components/lesson/Digits";
+import { FoodForThought } from "@/components/lesson/FoodForThought";
 import { Hi } from "@/components/lesson/Hi";
 import { Perms } from "@/components/lesson/Perms";
 import { Pick } from "@/components/lesson/Pick";
@@ -94,7 +95,7 @@ export const ints: Lesson = {
           <p>
             We write numbers with <b>place value</b>, where each digit is multiplied by a power of the <b>base</b>, set
             by its position. Adding works position by position, with carries. Computers use base 2, or{" "}
-            <b>binary</b>, because their chips hold two voltage levels. A binary digit is a <b>bit</b>.
+            <b>binary</b>. A binary digit is a <b>bit</b>.
           </p>
           <p className="task">Try writing each number.</p>
           <Digits
@@ -106,6 +107,13 @@ export const ints: Lesson = {
               { label: "Twelve in binary", value: 12, base: 2 },
             ]}
           />
+          <FoodForThought title="Why base 2?">
+            <p>
+              A chip stores each digit as a voltage. Telling two levels apart, high and low, is fast and reliable even
+              when the voltage wobbles a little. Telling ten levels apart would be slower and far more error prone. So
+              hardware works in bits, and every other kind of data is built out of them.
+            </p>
+          </FoodForThought>
         </>
       ),
     },
@@ -190,6 +198,14 @@ export const ints: Lesson = {
               </>
             }
           />
+          <FoodForThought title="A rocket that stopped on overflow">
+            <p>
+              In 1996, the first Ariane 5 rocket was destroyed about 37 seconds after launch. Its guidance software
+              converted a large floating point value into a 16-bit signed integer. The value didn&apos;t fit, so the
+              language raised an error, nothing handled it, and both guidance computers shut down. An overflow error
+              is only safer than wrapping when the program is ready for it.
+            </p>
+          </FoodForThought>
         </>
       ),
     },
@@ -221,6 +237,14 @@ export const ints: Lesson = {
               },
             ]}
           />
+          <FoodForThought title="How floats break the laws">
+            <p>
+              A <code>double</code> in C keeps about 16 significant digits, so most results get rounded. In C,{" "}
+              <code>0.1 + 0.2 == 0.3</code> is false. Worse, <code>(1e20 + -1e20) + 1.0</code> is 1 but{" "}
+              <code>1e20 + (-1e20 + 1.0)</code> is 0, because the 1 is lost when it&apos;s added to a huge number
+              first. Moving the parentheses changed the answer, so float addition isn&apos;t associative.
+            </p>
+          </FoodForThought>
         </>
       ),
     },
@@ -308,6 +332,14 @@ export const ints: Lesson = {
               </>
             }
           />
+          <FoodForThought title="Why not just a sign bit and a size?">
+            <p>
+              Some early computers did exactly that, which is called sign and magnitude, and others used ones&apos;
+              complement. Both have two zeros, +0 and −0, and need extra work in hardware to add negatives. Two&apos;s
+              complement has a single zero, and the same adding circuit works for signed and unsigned numbers. So
+              nearly every computer today uses it.
+            </p>
+          </FoodForThought>
         </>
       ),
     },
@@ -363,6 +395,14 @@ export const ints: Lesson = {
               },
             ]}
           />
+          <FoodForThought title="A clock that runs out in 2038">
+            <p>
+              Many systems count time as the seconds since 1 January 1970, stored in a 32-bit signed int. That count
+              reaches <code>int_max()</code> on 19 January 2038, just after 3 in the morning UTC. One second later it
+              wraps to <code>int_min()</code>, which reads as a date in 1901. Systems are switching to 64-bit counts
+              before then.
+            </p>
+          </FoodForThought>
         </>
       ),
     },
