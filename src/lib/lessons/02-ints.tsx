@@ -198,12 +198,13 @@ export const ints: Lesson = {
               </>
             }
           />
-          <FoodForThought title="A rocket that stopped on overflow">
+          <FoodForThought title="A rocket lost to an overflow error">
             <p>
               In 1996, the first Ariane 5 rocket was destroyed about 37 seconds after launch. Its guidance software
               converted a large floating point value into a 16-bit signed integer. The value didn&apos;t fit, so the
-              language raised an error, nothing handled it, and both guidance computers shut down. An overflow error
-              is only safer than wrapping when the program is ready for it.
+              language raised an error, nothing handled it, and both inertial reference systems, which tell the rocket
+              where it&apos;s pointing, shut down. So an error on overflow helps only if the program is ready to
+              handle it.
             </p>
           </FoodForThought>
         </>
@@ -240,7 +241,8 @@ export const ints: Lesson = {
           <FoodForThought title="How floats break the laws">
             <p>
               A <code>double</code> in C keeps about 16 significant digits, so most results get rounded. In C,{" "}
-              <code>0.1 + 0.2 == 0.3</code> is false. Worse, <code>(1e20 + -1e20) + 1.0</code> is 1 but{" "}
+              <code>0.1 + 0.2 == 0.3</code> is false. Worse, with <code>1e20</code> meaning 10<sup>20</sup>,{" "}
+              <code>(1e20 + -1e20) + 1.0</code> is 1 but{" "}
               <code>1e20 + (-1e20 + 1.0)</code> is 0, because the 1 is lost when it&apos;s added to a huge number
               first. Moving the parentheses changed the answer, so float addition isn&apos;t associative.
             </p>

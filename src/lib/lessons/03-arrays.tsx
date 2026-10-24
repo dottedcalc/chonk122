@@ -539,17 +539,29 @@ export const arrays: Lesson = {
             Slide <code>i</code> past either end.
           </p>
           <ArrayIndex name="geese" cells={[12, 9, 15, 7, 11]} min={-2} max={6} start={4} />
-          <p>
-            There is no element there, so C0 stops with an error. Reading or writing out of bounds is a{" "}
-            <Big c={1}>safety</Big> violation, just like dividing by 0 in <Link href="/lessons/2">Lecture 2</Link>. C0
-            checks every access.
-          </p>
+          <Pick
+            question={
+              <>
+                What does C0 do when it runs <code>geese[5] = 3;</code>?
+              </>
+            }
+            options={["It stops with an error", "It writes 3 just past the end", "It makes the array longer"]}
+            answer={0}
+            wrong={["", "C0 checks every access, so it never touches memory past the end.", "An array's length never changes."]}
+            explain={
+              <>
+                There is no element 5, so C0 stops with an error. Reading or writing out of bounds is a{" "}
+                <Big c={1}>safety</Big> violation, just like dividing by 0 in <Link href="/lessons/2">Lecture 2</Link>.
+                C0 checks every access.
+              </>
+            }
+          />
           <FoodForThought title="What happens in C?">
             <p>
               C doesn&apos;t check bounds, so reading or writing out of bounds is <b>undefined behavior</b>. The
               program may crash, or quietly read or overwrite other memory, and attackers use this in{" "}
-              <b>buffer overflow</b> attacks. In 2014, the Heartbleed bug let anyone read past the end of a buffer in
-              OpenSSL and steal passwords and secret keys from web servers.
+              <b>buffer overflow</b> attacks. The Heartbleed bug, found in OpenSSL in 2014, let anyone read past the end
+              of a buffer and steal passwords and secret keys from web servers.
             </p>
           </FoodForThought>
         </>
@@ -784,7 +796,7 @@ export const arrays: Lesson = {
               </>
             }
           />
-          <FoodForThought title="Who invented the garbage collector?">
+          <FoodForThought title="Who cleans up the garbage?">
             <p>
               John McCarthy did, around 1959, for his language Lisp, so that programmers wouldn&apos;t have to free
               memory by hand. C has no garbage collector, so in <Link href="/lectures#l18">C&apos;s memory model</Link>{" "}

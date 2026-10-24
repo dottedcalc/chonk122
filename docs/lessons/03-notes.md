@@ -105,3 +105,4 @@ Optional purple boxes, folded shut, that don't count toward the 100 word limit. 
 - Page 7, out of bounds in C. The question about C replaced by a box with undefined behavior, buffer overflows and Heartbleed (CVE-2014-0160, an OpenSSL over-read).
 - Page 8, why only contracts may use `\length`. The C reasoning moved here from the page text.
 - Page 10, McCarthy invented garbage collection for Lisp (about 1959). The C sentence moved here from the answer explanation.
+- A student walkthrough subagent checked every box. Fixes applied were the Ariane wording (inertial reference systems), the Heartbleed date (found in 2014), a note on `1e20`, a clearer garbage box title, and a C0-only question on page 7 to replace the removed C question.
