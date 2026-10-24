@@ -230,9 +230,9 @@ export const arrays: Lesson = {
             <p>
               An index is an offset, how far an element sits from the start. So element i lives at the array&apos;s
               address plus i times the size of one element, and the first one is 0 steps in. Ranges like{" "}
-              <code>0 &lt;= i &amp;&amp; i &lt; n</code> also work out neatly, since they hold exactly n values.
-              You&apos;ll write <code>lo</code> and <code>hi</code> bounds this way all through{" "}
-              <Link href="/lectures#l6">Binary search</Link>.
+              <code>0 &lt;= i &amp;&amp; i &lt; n</code> also work out neatly, since they hold exactly n values and an
+              empty range is just n = 0. You&apos;ll write <code>lo</code> and <code>hi</code> bounds this way all
+              through <Link href="/lectures#l6">Binary search</Link>.
             </p>
           </FoodForThought>
         </>
@@ -490,6 +490,13 @@ export const arrays: Lesson = {
             <code>alloc_array</code> fills every element with its type&apos;s <b>default value</b>. Still, code is
             clearer when it doesn&apos;t rely on defaults, so a reader can tell which starting values matter.
           </p>
+          <FoodForThought title="What does C put in a new array?">
+            <p>
+              Whatever was there before. C&apos;s <code>malloc</code> doesn&apos;t clear the memory it hands out, so a
+              new array can hold leftover bits from earlier code. A bug that reads them can act differently on every
+              run. C0 always fills in default values, so every run starts the same.
+            </p>
+          </FoodForThought>
           <Comic
             panels={[
               { who: "honk", outfit: "berry", size: "s", pose: "shrug", say: "Blank boxes?" },
@@ -516,13 +523,6 @@ export const arrays: Lesson = {
               },
             ]}
           />
-          <FoodForThought title="What does C put in a new array?">
-            <p>
-              Whatever was there before. C&apos;s <code>malloc</code> doesn&apos;t clear the memory it hands out, so a
-              new array can hold leftover bits from earlier code. A bug that reads them can act differently on every
-              run. C0 always fills in default values, so every run starts the same.
-            </p>
-          </FoodForThought>
         </>
       ),
     },
@@ -557,12 +557,12 @@ export const arrays: Lesson = {
               </>
             }
           />
-          <FoodForThought title="Why does C0 check every access?">
+          <FoodForThought title="What happens in C?">
             <p>
-              C0 checks so that a bug stops at the line that caused it. C skips the checks to run a little faster, so
-              in C, reading or writing out of bounds is <b>undefined behavior</b>. The program may crash or quietly
-              read or overwrite other memory, which attackers use in <b>buffer overflow</b> attacks. Most newer
-              languages, like Java, Python and Rust, check bounds the way C0 does.
+              C doesn&apos;t store array lengths, so it can&apos;t check bounds. Reading or writing out of bounds in C
+              is <b>undefined behavior</b>. The program may crash or quietly read or overwrite other memory, which
+              attackers use in <b>buffer overflow</b> attacks. Java and Rust check every access, like C0, so a bad
+              index can never touch memory outside the array.
             </p>
           </FoodForThought>
         </>
@@ -582,6 +582,13 @@ export const arrays: Lesson = {
           <p>
             <code>\length(A)</code> is the length of A, but <Hi c={1}>only contracts may use it</Hi>.
           </p>
+          <FoodForThought title="Why only contracts?">
+            <p>
+              C0 stores each array&apos;s length so it can check bounds. C doesn&apos;t store it at all, and C0 code is
+              meant to carry over to C. So C0 keeps the length out of ordinary code, and passing n along with the
+              array, as <code>goose_sum</code> does, is the habit you&apos;ll need in C.
+            </p>
+          </FoodForThought>
           <Comic
             panels={[
               { who: "honk", outfit: "irish", size: "xs", pose: "think", say: "Then how does a function know the length?" },
@@ -619,13 +626,6 @@ export const arrays: Lesson = {
               </>
             }
           />
-          <FoodForThought title="Why only contracts?">
-            <p>
-              C0 stores each array&apos;s length so it can check bounds. C doesn&apos;t store it at all, and C0 code is
-              meant to carry over to C. So C0 keeps the length out of ordinary code, and passing n along with the
-              array, as <code>goose_sum</code> does, is the habit you&apos;ll need in C.
-            </p>
-          </FoodForThought>
         </>
       ),
     },
@@ -746,10 +746,11 @@ export const arrays: Lesson = {
           />
           <FoodForThought title="Aliases are everywhere">
             <p>
-              Copying the address instead of the data is the rule for everything in allocated memory. When structs and
-              pointers arrive, as in <Link href="/lectures#l10">Linked lists</Link>, copying a pointer makes an alias in
-              just the same way. Small values that fit in a variable, like ints and bools, are copied instead. So
-              whenever two variables share an address, a change through one shows through the other.
+              Whether assigning shares or copies depends on the type. An array variable holds an address, so copying
+              it makes both names lead to the same array. When structs and pointers arrive, as in{" "}
+              <Link href="/lectures#l10">Linked lists</Link>, a pointer holds an address too, and copying it makes an
+              alias the same way. An int or bool variable holds the value itself, so copying it gives a separate copy
+              that changes on its own.
             </p>
           </FoodForThought>
         </>

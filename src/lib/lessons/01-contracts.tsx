@@ -408,6 +408,14 @@ export const contracts: Lesson = {
               },
             ]}
           />
+          <FoodForThought title="Why are contracts off by default?">
+            <p>
+              Checking a contract takes time on every run, and a contract can cost more than the code it guards. So we
+              turn checks on with <code>-d</code> while testing and debugging, and leave them off once we trust the
+              code. Many languages work this way. C has <code>assert</code>, which disappears when you compile with{" "}
+              <code>-DNDEBUG</code>.
+            </p>
+          </FoodForThought>
           <p>
             <Hi>
               But <code>-d</code> only checks the inputs you actually run.
@@ -426,14 +434,6 @@ export const contracts: Lesson = {
               },
             ]}
           />
-          <FoodForThought title="Why are contracts off by default?">
-            <p>
-              Checking a contract takes time on every run, and a contract can cost more than the code it guards. So we
-              turn checks on with <code>-d</code> while testing and debugging, and leave them off once we trust the
-              code. Many languages work this way. C has <code>assert</code>, which disappears when you compile with{" "}
-              <code>-DNDEBUG</code>.
-            </p>
-          </FoodForThought>
         </>
       ),
     },
@@ -623,6 +623,13 @@ export const contracts: Lesson = {
             <Hi>One arbitrary iteration stands for all of them.</Hi> A prime marks a value after the iteration, as in{" "}
             <code>chonk_left&apos;</code>.
           </p>
+          <FoodForThought title="PRES is induction in disguise">
+            <p>
+              INIT and PRES together are a proof by induction on the number of iterations. INIT is the base case, and
+              PRES is the inductive step. That&apos;s why proving PRES for one arbitrary iteration covers every
+              iteration, however many there are.
+            </p>
+          </FoodForThought>
           <Peek />
           <p className="task">Fill in each blank.</p>
           <Comic
@@ -678,13 +685,6 @@ export const contracts: Lesson = {
               },
             ]}
           />
-          <FoodForThought title="PRES is induction in disguise">
-            <p>
-              INIT and PRES together are a proof by induction on the number of iterations. INIT is the base case, and
-              PRES is the inductive step. That&apos;s why proving PRES for one arbitrary iteration covers every
-              iteration, however many there are.
-            </p>
-          </FoodForThought>
         </>
       ),
     },
@@ -765,18 +765,19 @@ export const contracts: Lesson = {
               },
             ]}
           />
-          <p>
-            This is why <code>geese &gt; 0</code> matters. In <code>f(10, 0)</code>, <code>chonk_left</code> never
-            decreases, so the loop runs forever.
-          </p>
           <FoodForThought title="The same argument works for recursion">
             <p>
               TERM&apos;s template isn&apos;t only for loops. A recursive function stops if some quantity strictly
               decreases on every recursive call and can&apos;t go below a bound, like a size that shrinks toward 0.
               You&apos;ll use this for recursion from <Link href="/lectures#l7">Quicksort</Link> on. No tool can do it
-              for us in general, because Turing proved in 1936 that no program can decide whether every program stops.
+              for us in general, because Turing proved in 1936 that no program can decide, for every program and
+              input, whether it stops.
             </p>
           </FoodForThought>
+          <p>
+            This is why <code>geese &gt; 0</code> matters. In <code>f(10, 0)</code>, <code>chonk_left</code> never
+            decreases, so the loop runs forever.
+          </p>
         </>
       ),
     },

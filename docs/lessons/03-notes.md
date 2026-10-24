@@ -104,7 +104,7 @@ Content about C moved into boxes, since it isn't examinable in Lecture 3.
 
 - Page 2, an index is an offset (address plus i times the element size), and half-open ranges hold exactly n values, as in binary search's `lo` and `hi`.
 - Page 6, C's `malloc` doesn't clear memory, so C0's defaults keep runs repeatable.
-- Page 7, why C0 checks every access. C's out of bounds is undefined behavior and enables buffer overflows. Java, Python and Rust check bounds. The question about C became this box, and a C0-only question replaced it.
+- Page 7, why C0 checks every access. C's out of bounds is undefined behavior and enables buffer overflows. Java and Rust check bounds (Python allows negative indexes, so it is left out). The question about C became this box, and a C0-only question replaced it.
 - Page 8, why only contracts may use `\length`. The C reasoning moved here from the page text.
 - Page 9, aliasing generalizes to pointers and structs (Lectures 8 to 10).
 - Page 10, garbage means unreachable. Java, Python and JavaScript collect garbage, C doesn't. The C sentence moved here from the answer explanation.

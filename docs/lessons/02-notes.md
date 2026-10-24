@@ -127,7 +127,7 @@ The user made it a rule that point-to proofs are real tables. Page 10's proof is
 Optional purple boxes, folded shut, that don't count toward the 100 word limit. They focus on the why behind language and design choices, connections between ideas, and generalizations and facts that are useful later in the course.
 
 - Page 2, everything is bits, and the type says how to read them (data representation). The voltage reason moved here from the page text.
-- Page 4, how other languages handle overflow. Java `int` wraps (JLS 15.18.2), Python ints are arbitrary precision, C signed overflow is undefined (C standard 6.5).
+- Page 9, how other languages handle overflow (moved from page 4 so it sits after that page's question). Java `int` wraps (JLS 15.18.2), Python ints are arbitrary precision, C signed overflow is undefined (C standard 6.5).
 - Page 5, how floats break the laws, and why C0 leaves them out. Checked with gcc, `0.1 + 0.2 == 0.3` is 0, `(1e20 + -1e20) + 1.0` is 1 and `1e20 + (-1e20 + 1.0)` is 0.
 - Page 7, why two's complement beats sign and magnitude and ones' complement (two zeros, extra adder logic).
-- Page 8, the same rules at any width k, the range is -2^(k-1) to 2^(k-1) - 1, so |int_min()| doesn't fit.
+- Page 8, the same rules at any width k, the range is -2^(k-1) to 2^(k-1) - 1. C's fixed-width signed types share the range but not guaranteed wrapping.
