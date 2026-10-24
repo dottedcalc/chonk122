@@ -14,6 +14,8 @@ export type ProofRow = {
   claimAnswer?: number;
   // Starts a new labelled part of the proof, such as the steps for one loop invariant.
   group?: string;
+  // Why a wrong card is wrong here, indexed by the card's place in its bank.
+  miss?: React.ReactNode[];
 };
 
 type Chip = { kind: "claim" | "why"; j: number };
@@ -36,6 +38,7 @@ export function ProofTable({
   const [placed, setPlaced] = useState<(Chip | null)[]>(() => rows.map(() => null));
   const [held, setHeld] = useState<Chip | null>(null);
   const [over, setOver] = useState<number | null>(null);
+  const [miss, setMiss] = useState<number | null>(null);
   const isRight = (i: number) => {
     const c = placed[i];
     return c !== null && c.kind === kindOf(rows[i]) && c.j === rightOf(rows[i]);
@@ -49,6 +52,7 @@ export function ProofTable({
     if (isRight(i)) return;
     setPlaced(placed.map((x, k) => (k === i ? c : x)));
     setHeld(null);
+    setMiss(i);
   }
 
   function chips(kind: "claim" | "why", items: React.ReactNode[], name: string) {
@@ -88,7 +92,7 @@ export function ProofTable({
         type="button"
         className={`proof-slot${over === i ? " over" : ""}${right ? " right" : c !== null ? " wrong" : ""}`}
         aria-label={`${kindOf(rows[i]) === "claim" ? "Statement" : "Justification"} for step ${i + 1}${c !== null ? `, now ${text(c)}` : ", empty"}`}
-        disabled={right}
+        aria-disabled={right}
         onClick={() => held !== null && place(i, held)}
         onDragOver={(e) => {
           e.preventDefault();
@@ -138,7 +142,6 @@ export function ProofTable({
                   <td className="proof-n">{i + 1}</td>
                   <td className="proof-claim">
                     {blankClaim ? slot(i) : r.claim}
-                    {!r.given && right && r.why && <span className="proof-why">✓ {r.why}</span>}
                   </td>
                   <td className="proof-j">
                     {blankWhy ? slot(i) : <span className="proof-given">{options[r.answer]}</span>}
@@ -149,6 +152,25 @@ export function ProofTable({
           })}
         </tbody>
       </table>
+      {/* The latest card is explained below the table, so nothing above it moves. */}
+      <p className={`proof-miss${miss !== null && isRight(miss) ? " good" : ""}`} aria-live="polite">
+        {miss !== null &&
+          placed[miss] !== null &&
+          (isRight(miss) ? (
+            <>
+              ✓ Step {miss + 1}. {rows[miss].why}
+            </>
+          ) : placed[miss]!.kind !== kindOf(rows[miss]) ? (
+            <>
+              ✗ Step {miss + 1} needs a {kindOf(rows[miss]) === "claim" ? "statement" : "justification"}, so pick a card
+              from the {kindOf(rows[miss]) === "claim" ? "statements" : "justifications"}.
+            </>
+          ) : (
+            <>
+              ✗ Step {miss + 1}, not quite. {rows[miss].miss?.[placed[miss]!.j]} Try another.
+            </>
+          ))}
+      </p>
       <p className="rows-done" aria-live="polite">
         {done} of {asked} done{done === asked ? ". Nice!" : ""}
       </p>

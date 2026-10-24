@@ -33,8 +33,8 @@ export function Pick({
               type="button"
               className={cls}
               aria-pressed={picked === i}
-              disabled={picked !== null}
-              onClick={() => setPicked(i)}
+              aria-disabled={picked !== null}
+              onClick={() => picked === null && setPicked(i)}
             >
               {o}
             </button>
