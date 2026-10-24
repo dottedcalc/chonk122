@@ -233,7 +233,8 @@ button.link:hover { transform: none; box-shadow: none; }
 @media (min-width: 961px) {
   .cm-cats { width: min(1280px, calc(100vw - 48px)); margin-left: calc(50% - min(640px, 50vw - 24px)); }
 }
-.cm-cat { padding: 12px 10px 14px; display: grid; gap: 10px; align-content: start; box-shadow: 5px 6px 0 var(--k); }
+/* Its own layer, or Safari leaves the tilted card's shadow on screen for a few seconds after leaving the page. */
+.cm-cat { padding: 12px 10px 14px; display: grid; gap: 10px; align-content: start; box-shadow: 5px 6px 0 var(--k); will-change: transform; }
 .cm-cat:nth-child(odd) { transform: rotate(-0.6deg); }
 .cm-cat:nth-child(even) { transform: rotate(0.5deg); }
 .cm-cat h3 { color: var(--k); font-size: 1.3rem; margin: 0; line-height: 1.05; }
