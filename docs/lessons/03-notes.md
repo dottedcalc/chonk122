@@ -79,3 +79,19 @@ Declined, with reasons:
 - Rows on page 6 can be matched by type. Knowing each type's default is the point, and the reasons teach it.
 - `weigh` and `n` on page 1 stay undefined, since the page is about the shape of the code.
 - The site header name and the tab title differ site-wide, which is outside this lesson.
+
+## Second walkthrough (fresh subagent) and fixes
+
+A second subagent walked all 17 pages and confirmed every output with gcc, with no sideways scroll, no console errors and no copy-rule breaks. Fixes applied:
+
+- Give-aways removed. Page 8's second question now appears only after the first is answered, and Chonk's bubble no longer hints at the fix. Page 9 shows the `goose` lines without saying "also starts with 7". Page 11's takeaway sits behind "Show the memory". Two wrong-answer reasons on page 15 no longer name other answers, and page 17's reasons no longer describe the other rows.
+- Keyboard focus moves to the output after Run, to the revealed content after a reveal button, and to the next variable after a right arrow on page 12.
+- Picks no longer widen when an explanation with code opens, so options don't rewrap on a phone.
+- Page 7 says reading or writing out of bounds in C is undefined behavior and may crash. Page 11 asks for the values after line 13 instead of using `printint`, which would need `#use <conio>`. Page 1 names n in its question.
+- Smaller wording fixes on pages 6, 9, 10, 16 and 17, including one "X, not Y" contrast and the undefined "worklist".
+
+Declined, with reasons:
+
+- Page 2's slider shows the indices, which is the point of the page. The row on the last index checks the link to the length.
+- Page 12 has only two arrays, but with one arrow to A and two to B the student has to trace each variable.
+- An unknown hash like #99 opening page 1 is shared player behaviour, left for a separate change.

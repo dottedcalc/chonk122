@@ -644,10 +644,11 @@ button.dg.tiny { box-shadow: 1px 2px 0 var(--edge); }
 .mem-draw-why p { margin: 0; font-weight: 700; }
 .mem-draw-why .good { color: var(--c1); }
 .mem-draw-why .bad { color: var(--c2); }
+.reveal:focus:not(:focus-visible), .run-out:focus:not(:focus-visible), .mem-draw-done:focus:not(:focus-visible) { outline: none; }
 .reveal { display: grid; gap: 10px; min-width: 0; animation: pop-in 0.2s ease-out; }
 .proof-miss { margin: 0; font-weight: 700; color: var(--c2); }
 .proof-miss.good { color: var(--c1); }
-.pick, .pick-why { min-width: 0; }
+.pick, .pick-why, .pick > div { min-width: 0; }
 .mem-draw .mem-vars tr { height: 2.5rem; }
 .proof-miss:empty { display: none; }
 

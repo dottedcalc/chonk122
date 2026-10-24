@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { Code } from "./Code";
 
 // A variable in a frame. `to` names the array its address points at, drawn as an arrow.
@@ -179,6 +179,16 @@ export function MemDraw({
   arrays: MemArray[];
 }) {
   const [picks, setPicks] = useState<(string | null)[]>(() => vars.map(() => null));
+  const wrap = useRef<HTMLDivElement>(null);
+  const moveFocus = useRef(false);
+
+  // A right pick replaces its buttons with an arrow, so keyboard focus moves on to the next variable.
+  useEffect(() => {
+    if (!moveFocus.current) return;
+    moveFocus.current = false;
+    const next = wrap.current?.querySelector<HTMLButtonElement>(".mem-vars button");
+    (next ?? wrap.current?.querySelector<HTMLElement>(".mem-draw-done"))?.focus({ preventScroll: true });
+  }, [picks]);
   const state: MemState = {
     frames: [
       {
@@ -192,7 +202,7 @@ export function MemDraw({
   const done = vars.filter((v, i) => picks[i] === v.answer).length;
 
   return (
-    <div className="mem-draw">
+    <div className="mem-draw" ref={wrap}>
       <MemDiagram
         state={state}
         pick={(name) => {
@@ -205,7 +215,10 @@ export function MemDraw({
                   type="button"
                   className={`opt small${picks[i] === a.id ? " wrong" : ""}`}
                   aria-pressed={picks[i] === a.id}
-                  onClick={() => setPicks(picks.map((p, j) => (j === i ? a.id : p)))}
+                  onClick={() => {
+                    moveFocus.current = a.id === vars[i].answer;
+                    setPicks(picks.map((p, j) => (j === i ? a.id : p)));
+                  }}
                 >
                   {a.id}
                 </button>
@@ -225,7 +238,7 @@ export function MemDraw({
           );
         })}
       </div>
-      <p className="rows-done">
+      <p className="rows-done mem-draw-done" tabIndex={-1}>
         {done} of {vars.length} arrows drawn{done === vars.length ? ". Nice!" : ""}
       </p>
     </div>

@@ -67,8 +67,6 @@ int main() {
   int[] honk = alloc_array(int, 2);
   int goose = 8;
   honk_reset(honk, 2, goose);
-  printint(honk[0]);
-  printint(goose);
   return 0;
 }`;
 
@@ -127,13 +125,8 @@ const defaults = ["0", "false", "'\\0'", '""'];
 // Why each default is wrong for an array of another type.
 const notDefault = (t: number) => defaults.map((d, j) => (j === t ? undefined : `${d} is ${kinds[j]}, but this array holds ${kinds[t].replace(/^an? /, "")}s.`));
 
-const laterUse = [
-  "Searching arrays looks at elements one at a time.",
-  "Binary search halves a sorted range.",
-  "Quicksort splits an array around a pivot.",
-  "Unbounded arrays grow by copying.",
-];
-const laterMiss = (k: number) => laterUse.map((m, j) => (j === k ? undefined : m));
+const laterNames = ["Searching arrays", "Binary search", "Quicksort", "Unbounded arrays"];
+const laterMiss = (k: number) => laterNames.map((m, j) => (j === k ? undefined : `${m} fits another row better.`));
 
 export const arrays: Lesson = {
   n: 3,
@@ -167,7 +160,7 @@ export const arrays: Lesson = {
           <p className="task">Slide the size of the flock, then switch versions.</p>
           <GooseVars />
           <Pick
-            question="Chonk only learns how many geese came once the program runs. Which version still works?"
+            question="Chonk only learns the number of geese, n, once the program runs. Which version still works?"
             options={["One variable per goose", "One array", "Both"]}
             answer={1}
             wrong={[
@@ -177,8 +170,7 @@ export const arrays: Lesson = {
             ]}
             explain={
               <>
-                An <b>array</b> holds as many values as we ask for while the program runs. Arrays show up through
-                much of the course, since <Hi c={1}>looping over arrays leads to loop invariants, sorting and searching</Hi>.
+                An <b>array</b> holds as many values as we ask for while the program runs.
               </>
             }
           />
@@ -484,7 +476,7 @@ export const arrays: Lesson = {
       body: (
         <>
           <p>
-            In our picture, the elements we never set were blank. What&apos;s really in them?{" "}
+            What&apos;s in the elements of a new array before we set them?{" "}
             <code>alloc_array</code> fills every element with its type&apos;s <b>default value</b>. Still, code is
             clearer when it doesn&apos;t rely on defaults, so a reader can tell which starting values matter.
           </p>
@@ -544,10 +536,11 @@ export const arrays: Lesson = {
             }
             options={["Yes, every time", "No, anything can happen"]}
             answer={1}
-            wrong={["C never checks array bounds, so nothing stops the program."]}
+            wrong={["C doesn't check array bounds, so nothing makes it stop."]}
             explain={
               <>
-                Reading out of bounds in C is <b>undefined behavior</b>. The program may read or overwrite other memory,
+                Reading or writing out of bounds in C is <b>undefined behavior</b>. The program may crash, or read or
+                overwrite other memory,
                 and attackers use this in <b>buffer overflow</b> attacks.
               </>
             }
@@ -574,7 +567,7 @@ export const arrays: Lesson = {
           <Comic
             panels={[
               { who: "honk", outfit: "irish", size: "xs", pose: "think", say: "Then how does a function know the length?" },
-              { who: "chonk", outfit: "tidy", size: "m", pose: "point", say: "We pass it in!" },
+              { who: "chonk", outfit: "tidy", size: "m", pose: "point", say: "Let's look at an example." },
             ]}
           />
           <Code src={sum} label="goose_sum" />
@@ -586,10 +579,7 @@ export const arrays: Lesson = {
             explain={
               <>
                 Line 5 uses <code>\length</code> in code, outside any contract.
-              </>
-            }
-          />
-          <Pick
+                <Pick
             question={
               <>
                 Which loop guard should line 5 use instead?
@@ -607,6 +597,9 @@ export const arrays: Lesson = {
               </>,
             ]}
             explain={<>Line 2 says n is the length, so every <code>geese[i]</code> stays in bounds.</>}
+                />
+              </>
+            }
           />
         </>
       ),
@@ -617,7 +610,7 @@ export const arrays: Lesson = {
       body: (
         <>
           <p>
-            We saw that <code>int[] chonk = geese;</code> compiles. What does it do?
+            Page 5 showed that assigning one array variable to another compiles. What does it do?
           </p>
           <Comic
             panels={[
@@ -706,7 +699,7 @@ export const arrays: Lesson = {
             }
           />
           <p>
-            Lines 4 and 5 then make <code>goose</code>, a new array that also starts with 7. What does{" "}
+            Then <code>int[] goose = alloc_array(int, 3);</code> and <code>goose[0] = 7;</code> run. What does{" "}
             <code>==</code> say about these arrays?
           </p>
           <Rows
@@ -741,7 +734,7 @@ export const arrays: Lesson = {
             question="After line 4, which array can no variable reach?"
             options={["The first array, with 3 elements", "The second array, with 2 elements", "Neither"]}
             answer={0}
-            wrong={["", "honk and chonk both point to it.", "After line 4, no arrow leads to the first array."]}
+            wrong={["", "honk and chonk both point to it.", "Check where honk and chonk point after line 4."]}
             explain={
               <>
                 After line 4, nothing points to the first array, so it is <b>garbage</b>. In{" "}
@@ -799,12 +792,12 @@ export const arrays: Lesson = {
             ]}
           />
           <Code src={reset} label="honk_reset and main" />
-          <p className="task">What does each line print?</p>
+          <p className="task">After line 13, what is each value?</p>
           <Rows
             options={["0", "8", "9", "99"]}
             rows={[
               {
-                prompt: "Line 14 prints",
+                prompt: <code>honk[0]</code>,
                 answer: 2,
                 why: "On line 4, geese and honk were aliases, so main sees the 9.",
                 miss: [
@@ -815,7 +808,7 @@ export const arrays: Lesson = {
                 ],
               },
               {
-                prompt: "Line 15 prints",
+                prompt: <code>goose</code>,
                 answer: 1,
                 why: "chonk got a copy of goose, so line 5 changed only the copy.",
                 miss: [
@@ -827,10 +820,10 @@ export const arrays: Lesson = {
               },
             ]}
           />
-          <p>
-            <Hi c={2}>A function can only affect its caller by returning a value or by changing shared allocated memory.</Hi>
-          </p>
           <Reveal label="Show the memory">
+            <p>
+              <Hi c={2}>A function can only affect its caller by returning a value or by changing shared allocated memory.</Hi>
+            </p>
             <MemStepper
               src={reset}
               label="honk_reset and main, step by step"
@@ -1204,8 +1197,8 @@ export const arrays: Lesson = {
                 miss: [
                   "That's step 3.",
                   undefined,
-                  "That's about the next value, step 6.",
-                  "The guard gives the stronger i < n.",
+                  "That's about the value after the iteration.",
+                  "That's weaker than what the guard says.",
                   "i++ changes i, so i' isn't i.",
                   "That's not what the guard says.",
                 ],
@@ -1281,8 +1274,8 @@ export const arrays: Lesson = {
             wrong={["", "That's already the precondition, and it says nothing about the result.", "It's true, but it says nothing about the length."]}
             explain={
               <>
-                The first one is right. It holds, since <code>goose_reverse</code> returns the <code>chonk</code> it
-                allocated with length n. Now the caller can point to it.
+                <code>\length(\result) == n</code> holds, since <code>goose_reverse</code> returns the{" "}
+                <code>chonk</code> it allocated with length n. Now the caller can point to it.
                 <ProofTable
                   options={[
                     "Line 2 and the postcondition of alloc_array",
@@ -1309,7 +1302,7 @@ export const arrays: Lesson = {
                       answer: 1,
                       why: "goose_reverse promises a result of length n, which is 3.",
                       miss: [
-                        "chonk comes from goose_reverse on line 3, not from alloc_array.",
+                        "chonk comes from the call to goose_reverse on line 3.",
                         undefined,
                         "That's operational reasoning. A caller can only use contracts.",
                       ],
@@ -1334,8 +1327,8 @@ export const arrays: Lesson = {
             ]}
           />
           <p>
-            Most of the first half of the course uses arrays. Looping over them gives us invariants, sorting and
-            worklists.
+            Most of the first half of the course uses arrays, and looping over them leads to loop invariants and
+            sorting.
           </p>
           <p className="task">Match each idea to its lecture.</p>
           <Rows
@@ -1349,7 +1342,8 @@ export const arrays: Lesson = {
           />
           <ul>
             <li>
-              <Link href="/lectures#l9">Stacks and queues</Link> hold worklists.
+              <Link href="/lectures#l9">Stacks and queues</Link> hold a worklist, the items a program still has to
+              process.
             </li>
             <li>
               <Link href="/lectures#l12">Hashing</Link> stores a hash table in an array.
