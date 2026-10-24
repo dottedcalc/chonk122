@@ -774,7 +774,8 @@ export const contracts: Lesson = {
               TERM&apos;s template isn&apos;t only for loops. A recursive function stops if some quantity strictly
               decreases on every recursive call and can&apos;t go below a bound, like a size that shrinks toward 0.
               You&apos;ll use this for recursion from <Link href="/lectures#l7">Quicksort</Link> on. No tool can do it
-              for us in general, because Turing proved in 1936 that no program can decide whether every program stops.
+              for us in general, because Turing proved in 1936 that no program can decide, for every program and
+              input, whether it stops.
             </p>
           </FoodForThought>
         </>
