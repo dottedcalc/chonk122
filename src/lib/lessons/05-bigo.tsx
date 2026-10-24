@@ -902,7 +902,7 @@ export const bigO: Lesson = {
             postcondition when the loop ends, EXIT.
           </p>
           <Code src={sort} label="goose_sort" />
-          <Comic panels={[{ who: "chonk", outfit: "reader", size: "m", pose: "think", say: "Empty segments make INIT easy." }]} />
+          <Comic panels={[{ who: "chonk", outfit: "reader", size: "m", pose: "think", say: "Safe isn't the same as sorted." }]} />
           <ProofTable
             options={["Line 2", "Line 5, i = hi", "Line 5, negated guard", "Line 6", "Math on steps 1 and 2", "Empty segment", "Math on steps 6 and 7", "Line 7 and step 8"]}
             claims={[<code key="a">i == lo</code>, <code key="b">is_sorted(geese, hi, hi)</code>, <code key="c">lo &lt;= hi</code>, <code key="d">is_sorted(geese, lo, lo)</code>]}
